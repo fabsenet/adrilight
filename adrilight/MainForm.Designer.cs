@@ -15,7 +15,8 @@
         {
             if (disposing && (components != null))
             {
-                mDxScreenCapture.Dispose();
+                //todo
+                //mDxScreenCapture.Dispose();
                 mSerialStream.Dispose();
                 components.Dispose();
             }

@@ -13,7 +13,7 @@ namespace Bambilight {
         private NotifyIcon mNotifyIcon;
         private ContextMenu mContextMenu;
 
-        DxScreenCapture mDxScreenCapture;
+       // DxScreenCapture mDxScreenCapture;
         SerialStream mSerialStream;
         Overlay mOverlay;
 
@@ -317,16 +317,17 @@ namespace Bambilight {
         }
 
         private void RefreshCapturingState() {
-            if (null == mDxScreenCapture) {
-                mDxScreenCapture = new DxScreenCapture();
-            }
+            //TODO
+            //if (null == mDxScreenCapture) {
+            //    mDxScreenCapture = new DxScreenCapture();
+            //}
 
-            if (Settings.TransferActive || Settings.OverlayActive) {
-                mDxScreenCapture.Start();
-            } else {
-                mDxScreenCapture.Stop();
-                mDxScreenCapture = null;
-            }
+            //if (Settings.TransferActive || Settings.OverlayActive) {
+            //    mDxScreenCapture.Start();
+            //} else {
+            //    mDxScreenCapture.Stop();
+            //    mDxScreenCapture = null;
+            //}
         }
 
         private void RefreshTransferState() {
@@ -374,10 +375,11 @@ namespace Bambilight {
                 mSerialStream.Stop();
                 mSerialStream = null;
             }
-            if (null != mDxScreenCapture) {
-                mDxScreenCapture.Stop();
-                mDxScreenCapture = null;
-            }
+            //TODO
+            //if (null != mDxScreenCapture) {
+            //    mDxScreenCapture.Stop();
+            //    mDxScreenCapture = null;
+            //}
         }
     }
 }

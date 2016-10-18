@@ -1,7 +1,5 @@
 ﻿/* See the file "LICENSE" for the full license governing this code. */
 
-using SlimDX;
-using SlimDX.Direct3D9;
 using System;
 using System.ComponentModel;
 using System.IO.Ports;
