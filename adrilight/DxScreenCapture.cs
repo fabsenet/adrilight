@@ -1,4 +1,40 @@
-﻿///* See the file "LICENSE" for the full license governing this code. */
+﻿/* See the file "LICENSE" for the full license governing this code. */
+
+using System;
+using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using DesktopDuplication;
+
+namespace Bambilight
+{
+    class DesktopDuplicatorReader
+    {
+        public bool IsRunning { get; private set; } = false;
+
+        public void Run(CancellationToken token)
+        {
+            if(IsRunning) throw new Exception(nameof(DesktopDuplicatorReader) +" is already running!");
+
+            IsRunning = true;
+            try
+            {
+                var desktopDuplicator = new DesktopDuplicator(0);//main window
+                while (!token.IsCancellationRequested)
+                {
+                    var frame = desktopDuplicator.GetLatestFrame();
+                    frame.DesktopImage.GetPixel()
+                }
+            }
+            finally
+            {
+                IsRunning = false;
+            }
+        }
+    }
+}
+
 
 //using System;
 //using System.ComponentModel;
@@ -97,7 +133,7 @@
 
 //                surface.UnlockRectangle();
 //                surface.Dispose();
-                
+
 //            }
 
 //            device.Dispose();
