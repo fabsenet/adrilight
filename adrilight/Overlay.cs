@@ -112,7 +112,7 @@ namespace Bambilight {
                         lock (SpotSet.Lock) {
                             foreach (Spot spot in SpotSet.Spots) {
                                 mGraphics.DrawRectangle(penSpotBorder, spot.RectangleOverlayBorder);
-                                mGraphics.FillRectangle(spot.Brush, spot.RectangleOverlayFilling);
+                                mGraphics.FillRectangle(spot.OnDemandBrush, spot.RectangleOverlayFilling);
 
                                 if (spot == SpotSet.Spots[0]) {
                                     mGraphics.DrawString("1.", font, solidBrushBlack, spot.BottomRight.X + 3, spot.BottomRight.Y + 3);

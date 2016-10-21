@@ -1,6 +1,7 @@
 ﻿/* See the file "LICENSE" for the full license governing this code. */
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
 using System.Threading;
@@ -24,6 +25,10 @@ namespace Bambilight {
 
             Application.ApplicationExit += OnApplicationExit;
             SystemEvents.PowerModeChanged += OnPowerModeChanged;
+
+
+            Settings.OverlayActive = checkBoxOverlayActive.Checked;
+        
         }
 
         private void initTrayIcon() {
@@ -47,6 +52,10 @@ namespace Bambilight {
             if (Settings.StartMinimized) {
                 WindowState = FormWindowState.Minimized;
             }
+            refreshAll();
+
+            RefreshCapturingState();
+            RefreshOverlayState();
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
@@ -328,6 +337,9 @@ namespace Bambilight {
             var isRunning = _cancellationTokenSource!=null && _desktopDuplicatorReader != null && _desktopDuplicatorReader.IsRunning;
             var shouldBeRunning = Settings.TransferActive || Settings.OverlayActive;
 
+#if DEBUG
+            shouldBeRunning = shouldBeRunning || Debugger.IsAttached; //always run capturing if there is a debugger!
+#endif
             if (isRunning && !shouldBeRunning)
             {
                 //stop it!

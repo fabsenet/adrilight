@@ -34,28 +34,9 @@ namespace DesktopDuplication
         public Rectangle[] UpdatedRegions { get; internal set; }
 
         /// <summary>
-        /// The number of frames that the operating system accumulated in the desktop image surface since the last retrieved frame.
-        /// </summary>
-        public int AccumulatedFrames { get; internal set; }
-
-        /// <summary>
-        /// Gets the location of the top-left-hand corner of the cursor. This is not necessarily the same position as the cursor's hot spot, which is the location in the cursor that interacts with other elements on the screen.
-        /// </summary>
-        public Point CursorLocation { get; internal set; }
-
-        /// <summary>
-        /// Gets whether the cursor on the last retrieved desktop image was visible.
-        /// </summary>
-        public bool CursorVisible { get; internal set; }
-
-        /// <summary>
         /// Gets whether the desktop image contains protected content that was already blacked out in the desktop image.
         /// </summary>
         public bool ProtectedContentMaskedOut { get; internal set; }
-
-        /// <summary>
-        /// Gets whether the operating system accumulated updates by coalescing updated regions. If so, the updated regions might contain unmodified pixels.
-        /// </summary>
-        public bool RectanglesCoalesced { get; internal set; }
+        
     }
 }

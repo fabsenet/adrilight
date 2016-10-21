@@ -265,9 +265,6 @@ namespace DesktopDuplication
                     throw new DesktopDuplicationException("Failed to get frame pointer shape.");
                 }
             }
-
-            //frame.CursorVisible = pointerInfo.Visible;
-            frame.CursorLocation = new System.Drawing.Point(pointerInfo.Position.X, pointerInfo.Position.Y);
         }
         
         private void ProcessFrame(DesktopFrame frame)

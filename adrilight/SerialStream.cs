@@ -47,9 +47,9 @@ namespace Bambilight {
                     
                     for (int i = 0; i < Settings.LedsPerSpot; i++) {
                         
-                        outputStream[counter++] = spot.Brush.Color.B; // blue
-                        outputStream[counter++] = spot.Brush.Color.G; // green
-                        outputStream[counter++] = spot.Brush.Color.R; // red
+                        outputStream[counter++] = spot.Blue; // blue
+                        outputStream[counter++] = spot.Green; // green
+                        outputStream[counter++] = spot.Red; // red
                     }
                 }
             }

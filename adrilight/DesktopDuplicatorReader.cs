@@ -2,7 +2,10 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -27,16 +30,22 @@ namespace Bambilight
                     _desktopDuplicator = new DesktopDuplicator(0);
                 }
                 var desktopDuplicator = _desktopDuplicator; //main window
+
                 while (!token.IsCancellationRequested)
                 {
-                        Thread.Sleep(16);
-                    var frame = desktopDuplicator.GetLatestFrame();
+                 var frame = desktopDuplicator.GetLatestFrame();
                     if (frame == null)
                     {
                         continue;
                     }
+                    var image = frame.DesktopImage;
+
+              var bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
                     lock (SpotSet.Lock)
                     {
+                        var firstSpot = SpotSet.Spots.FirstOrDefault();
+                        if (firstSpot == null) continue;
+
                         foreach (Spot spot in SpotSet.Spots)
                         {
                             if (spot.TopLeft.DxPos >= 0
@@ -46,26 +55,38 @@ namespace Bambilight
                             {
                                 var minX = spot.TopLeft.X;
                                 var minY = spot.TopLeft.Y;
-                                var dx = spot.Width;
-                                var dy = spot.Height;
+                                var width = spot.Width;
+                                var height = spot.Height;
 
                                 int count = 0;
                                 int r = 0, g = 0, b = 0;
-                                for (int x = 0; x < dx; x+=4)
+
+                                int stepx = Math.Max(1, width/10);
+                                int stepy = Math.Max(1, height/10);
+
+
+                                unsafe
                                 {
-                                    for (int y = 0; y < dy; y+=4)
+                                        for (int y = 0; y < height; y += stepy)
                                     {
-                                        var color = frame.DesktopImage.GetPixel(minX + x, minY + y);
-                                        r += color.R;
-                                        g += color.G;
-                                        b += color.B;
-                                        count++;
+                                        byte* pointer = (byte*) bitmapData.Scan0;
+                                        pointer += bitmapData.Stride*(minY+y);
+
+                                        for (int x = 0; x < width; x += stepx)
+                                        {
+                                            //var color = frame.DesktopImage.GetPixel(minX + x, minY + y);
+                                            var offsetX = (minX+x)*4;
+                                            r += pointer[offsetX+2];
+                                            g += pointer[offsetX+1];
+                                            b += pointer[offsetX+0];
+                                            count++;
+                                        }
                                     }
                                 }
-//                            White balance    1,0000  0,8730  0,7453
+                                //                            White balance    1,0000  0,8730  0,7453
 
-                                var avgColor = Color.FromArgb((int) (r*1.0f/count), (int) (g* 0.8730f/ count), (int) (b* 0.7453f/ count));
-                                spot.SetColor(avgColor);
+                              //  spot.SetColor((byte)(r  / count), (byte)(g / count), (byte)(b  / count));
+                                spot.SetColor((byte)(r * 1.0f / count), (byte)(g * 0.8730f / count), (byte)(b * 0.7453f / count));
 
                                 //dataStream.Position = spot.TopLeft.DxPos;
                                 //dataStream.Read(mColorBufferTopLeft, 0, 4);
@@ -92,6 +113,7 @@ namespace Bambilight
                             }
                         }
                     }
+                    image.UnlockBits(bitmapData);
                 }
             }
             finally

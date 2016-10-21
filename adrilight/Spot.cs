@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace Bambilight {
 
-    class Spot : IDisposable {
+    sealed class Spot : IDisposable {
 
         public Spot(int x, int y, int aWidth, int aHeight) : this(new DxPoint(x, y), aWidth, aHeight) { }
 
@@ -42,10 +42,25 @@ namespace Bambilight {
         public Rectangle RectangleOverlayBorder { get; private set; }
         public Rectangle RectangleOverlayFilling { get; private set; }
 
-        public SolidBrush Brush { get; private set; }
+        private SolidBrush Brush { get; set; }
 
-        public void SetColor(int red, int green, int blue) {
-            Brush.Color = Color.FromArgb(red, green, blue);
+        public SolidBrush OnDemandBrush
+        {
+            get
+            {
+                 Brush.Color = Color.FromArgb(Red, Green, Blue);
+                 return Brush;
+            }
+        }
+        public byte Red { get; set; }
+        public byte Green { get; set; }
+        public byte Blue { get; set; }
+
+        public void SetColor(byte red, byte green, byte blue)
+        {
+            Red = red;
+            Green = green;
+            Blue = blue;
         }
 
         public void SetColor(Color color)
