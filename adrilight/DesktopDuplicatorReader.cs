@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,6 +12,7 @@ namespace Bambilight
 {
     class DesktopDuplicatorReader
     {
+        private static DesktopDuplicator _desktopDuplicator;
         public bool IsRunning { get; private set; } = false;
 
         public void Run(CancellationToken token)
@@ -20,11 +22,76 @@ namespace Bambilight
             IsRunning = true;
             try
             {
-                var desktopDuplicator = new DesktopDuplicator(0);//main window
+                if (_desktopDuplicator == null)
+                {
+                    _desktopDuplicator = new DesktopDuplicator(0);
+                }
+                var desktopDuplicator = _desktopDuplicator; //main window
                 while (!token.IsCancellationRequested)
                 {
+                        Thread.Sleep(16);
                     var frame = desktopDuplicator.GetLatestFrame();
-                    frame.DesktopImage.GetPixel()
+                    if (frame == null)
+                    {
+                        continue;
+                    }
+                    lock (SpotSet.Lock)
+                    {
+                        foreach (Spot spot in SpotSet.Spots)
+                        {
+                            if (spot.TopLeft.DxPos >= 0
+                                && spot.TopRight.DxPos >= 0
+                                && spot.BottomLeft.DxPos >= 0
+                                && spot.BottomRight.DxPos >= 0)
+                            {
+                                var minX = spot.TopLeft.X;
+                                var minY = spot.TopLeft.Y;
+                                var dx = spot.Width;
+                                var dy = spot.Height;
+
+                                int count = 0;
+                                int r = 0, g = 0, b = 0;
+                                for (int x = 0; x < dx; x+=4)
+                                {
+                                    for (int y = 0; y < dy; y+=4)
+                                    {
+                                        var color = frame.DesktopImage.GetPixel(minX + x, minY + y);
+                                        r += color.R;
+                                        g += color.G;
+                                        b += color.B;
+                                        count++;
+                                    }
+                                }
+//                            White balance    1,0000  0,8730  0,7453
+
+                                var avgColor = Color.FromArgb((int) (r*1.0f/count), (int) (g* 0.8730f/ count), (int) (b* 0.7453f/ count));
+                                spot.SetColor(avgColor);
+
+                                //dataStream.Position = spot.TopLeft.DxPos;
+                                //dataStream.Read(mColorBufferTopLeft, 0, 4);
+
+                                //dataStream.Position = spot.TopRight.DxPos;
+                                //dataStream.Read(mColorBufferTopRight, 0, 4);
+
+                                //dataStream.Position = spot.Center.DxPos;
+                                //dataStream.Read(mColorBufferCenter, 0, 4);
+
+                                //dataStream.Position = spot.BottomLeft.DxPos;
+                                //dataStream.Read(mColorBufferBottomLeft, 0, 4);
+
+                                //dataStream.Position = spot.BottomRight.DxPos;
+                                //dataStream.Read(mColorBufferBottomRight, 0, 4);
+
+                                //averageValues();
+
+                                //if (mColorBuffer[0] <= Settings.SaturationTreshold) { mColorBuffer[0] = 0x00; } //blue
+                                //if (mColorBuffer[1] <= Settings.SaturationTreshold) { mColorBuffer[1] = 0x00; } // green
+                                //if (mColorBuffer[2] <= Settings.SaturationTreshold) { mColorBuffer[2] = 0x00; } // red
+
+                                //spot.SetColor(mColorBuffer[2] /* red */, mColorBuffer[1] /* green */, mColorBuffer[0] /* blue */);
+                            }
+                        }
+                    }
                 }
             }
             finally

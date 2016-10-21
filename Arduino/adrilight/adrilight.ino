@@ -1,10 +1,10 @@
 #include "FastLED.h"
 
-#define NUM_LEDS 28
+#define NUM_LEDS (2*73+2*41)
 #define LED_DATA_PIN 3
 #define NUM_BYTES (NUM_LEDS*3) // 3 colors  
 
-#define BRIGHTNESS 50
+#define BRIGHTNESS 100
 #define UPDATES_PER_SECOND 100
 
 #define TIMEOUT 3000
@@ -19,8 +19,8 @@ uint8_t current_preamble_position = 0;
 
 unsigned long last_serial_available = -1L;
 
-uint8_t led_counter = 0;
-uint8_t byte_counter = 0;
+int led_counter = 0;
+int byte_counter = 0;
 
 CRGB leds[NUM_LEDS];
 byte buffer[NUM_BYTES];

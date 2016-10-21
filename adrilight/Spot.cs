@@ -48,6 +48,11 @@ namespace Bambilight {
             Brush.Color = Color.FromArgb(red, green, blue);
         }
 
+        public void SetColor(Color color)
+        {
+            Brush.Color = color;
+        }
+
         public void Dispose() {
             Brush.Dispose();
         }

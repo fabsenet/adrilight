@@ -3,6 +3,7 @@
 using System;
 using System.Drawing;
 using System.IO.Ports;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
@@ -48,7 +49,10 @@ namespace Bambilight {
             }
         }
 
-        private void MainForm_Resize(object sender, EventArgs e) {
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (mNotifyIcon == null) return;
+
             if (FormWindowState.Minimized == WindowState) {
                 mNotifyIcon.Visible = true;
                 ShowInTaskbar = false;
@@ -316,7 +320,33 @@ namespace Bambilight {
             // can be changed on the fly without refreshing
         }
 
-        private void RefreshCapturingState() {
+       private  DesktopDuplicatorReader _desktopDuplicatorReader;
+        private CancellationTokenSource _cancellationTokenSource;
+        private void RefreshCapturingState()
+        {
+
+            var isRunning = _cancellationTokenSource!=null && _desktopDuplicatorReader != null && _desktopDuplicatorReader.IsRunning;
+            var shouldBeRunning = Settings.TransferActive || Settings.OverlayActive;
+
+            if (isRunning && !shouldBeRunning)
+            {
+                //stop it!
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource = null;
+                _desktopDuplicatorReader = null;
+            }
+
+            if (!isRunning && shouldBeRunning)
+            {
+                //start it
+                _cancellationTokenSource = new CancellationTokenSource();
+                _desktopDuplicatorReader = new DesktopDuplicatorReader();
+                var thread = new Thread(() => _desktopDuplicatorReader.Run(_cancellationTokenSource.Token))
+                {
+                    IsBackground = true,Priority = ThreadPriority.BelowNormal
+                };
+                thread.Start();
+            }
             //TODO
             //if (null == mDxScreenCapture) {
             //    mDxScreenCapture = new DxScreenCapture();
