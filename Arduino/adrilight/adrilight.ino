@@ -4,8 +4,8 @@
 #define LED_DATA_PIN 3
 #define NUM_BYTES (NUM_LEDS*3) // 3 colors  
 
-#define BRIGHTNESS 100
-#define UPDATES_PER_SECOND 100
+#define BRIGHTNESS 255
+#define UPDATES_PER_SECOND 60
 
 #define TIMEOUT 3000
 
