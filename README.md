@@ -43,6 +43,7 @@ How to figure out what numbers to enter?! **TODO**
 The following list of things is more a list to not forget things. If something is on here, it does not necessarily mean, it will ever be developed.
 
 * White balance (provide a way to align LEDs with TV white balance)
+* better support for high dpi / font scaling
 * WPF based modern UI
 * Better logging
 * Better preview (currently the preview is very slow and flickering)
