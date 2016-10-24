@@ -33,14 +33,14 @@ namespace Bambilight
 
                 while (!token.IsCancellationRequested)
                 {
-                 var frame = desktopDuplicator.GetLatestFrame();
+                    var frame = desktopDuplicator.GetLatestFrame();
                     if (frame == null)
                     {
                         continue;
                     }
                     var image = frame.DesktopImage;
 
-              var bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
+                    var bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
                     lock (SpotSet.Lock)
                     {
                         var firstSpot = SpotSet.Spots.FirstOrDefault();
@@ -67,26 +67,26 @@ namespace Bambilight
 
                                 unsafe
                                 {
-                                        for (int y = 0; y < height; y += stepy)
+                                    for (int y = 0; y < height; y += stepy)
                                     {
                                         byte* pointer = (byte*) bitmapData.Scan0;
-                                        pointer += bitmapData.Stride*(minY+y);
+                                        pointer += bitmapData.Stride*(minY + y);
 
                                         for (int x = 0; x < width; x += stepx)
                                         {
                                             //var color = frame.DesktopImage.GetPixel(minX + x, minY + y);
-                                            var offsetX = (minX+x)*4;
-                                            r += pointer[offsetX+2];
-                                            g += pointer[offsetX+1];
-                                            b += pointer[offsetX+0];
+                                            var offsetX = (minX + x)*4;
+                                            r += pointer[offsetX + 2];
+                                            g += pointer[offsetX + 1];
+                                            b += pointer[offsetX + 0];
                                             count++;
                                         }
                                     }
                                 }
                                 //                            White balance    1,0000  0,8730  0,7453
 
-                              //  spot.SetColor((byte)(r  / count), (byte)(g / count), (byte)(b  / count));
-                                spot.SetColor((byte)(r * 1.0f / count), (byte)(g * 0.8730f / count), (byte)(b * 0.7453f / count));
+                                //  spot.SetColor((byte)(r  / count), (byte)(g / count), (byte)(b  / count));
+                                spot.SetColor((byte) (r*1.0f/count), (byte) (g*0.8730f/count), (byte) (b*0.7453f/count));
 
                                 //dataStream.Position = spot.TopLeft.DxPos;
                                 //dataStream.Read(mColorBufferTopLeft, 0, 4);
