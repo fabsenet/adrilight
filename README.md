@@ -33,6 +33,7 @@ This should be improved but a quick rundown on what to do:
   * configure the settings at the top of the script
   * program the arduino
   * start adrilight.exe and setup the same config
+  * Number of LEDs in arduino code differs from the number of spots in the app!!
 * *enjoy ambient lighting!*
 
 # White balance
