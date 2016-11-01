@@ -1,6 +1,7 @@
 ﻿/* See the file "LICENSE" for the full license governing this code. */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -13,7 +14,7 @@ using DesktopDuplication;
 
 namespace Bambilight
 {
-    class DesktopDuplicatorReader
+  public  class DesktopDuplicatorReader
     {
         private static DesktopDuplicator _desktopDuplicator;
         public bool IsRunning { get; private set; } = false;
@@ -23,6 +24,7 @@ namespace Bambilight
             if(IsRunning) throw new Exception(nameof(DesktopDuplicatorReader) +" is already running!");
 
             IsRunning = true;
+                Debug.WriteLine("Started Desktop Duplication Reader.");
             try
             {
                 if (_desktopDuplicator == null)
@@ -30,6 +32,7 @@ namespace Bambilight
                     _desktopDuplicator = new DesktopDuplicator(0);
                 }
                 var desktopDuplicator = _desktopDuplicator; //main window
+                BitmapData bitmapData = new BitmapData();
 
                 while (!token.IsCancellationRequested)
                 {
@@ -38,89 +41,70 @@ namespace Bambilight
                     {
                         continue;
                     }
-                    var image = frame.DesktopImage;
 
-                    var bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb);
+                    var image = frame.DesktopImage;
+                     image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb, bitmapData);
                     lock (SpotSet.Lock)
                     {
-                        var firstSpot = SpotSet.Spots.FirstOrDefault();
-                        if (firstSpot == null) continue;
 
-                        foreach (Spot spot in SpotSet.Spots)
+                        Parallel.ForEach(SpotSet.Spots, spot =>
                         {
-                            if (spot.TopLeft.DxPos >= 0
-                                && spot.TopRight.DxPos >= 0
-                                && spot.BottomLeft.DxPos >= 0
-                                && spot.BottomRight.DxPos >= 0)
+
+                            const int numberOfSteps = 15;
+                            int stepx = Math.Max(1, spot.Width/numberOfSteps);
+                            int stepy = Math.Max(1, spot.Height/numberOfSteps);
+
+                            int sumR;
+                            int sumG;
+                            int sumB;
+                            int count;
+                            GetAverageColorOfRectangularRegion(spot.Rectangle, stepy, stepx, bitmapData, out sumR, out sumG, out sumB, out count);
+                            //                            White balance    1,0000  0,8730  0,7453
+
+                            if (sumR <= Settings.SaturationTreshold && sumG <= Settings.SaturationTreshold && sumB <= Settings.SaturationTreshold)
                             {
-                                var minX = spot.TopLeft.X;
-                                var minY = spot.TopLeft.Y;
-                                var width = spot.Width;
-                                var height = spot.Height;
-
-                                int count = 0;
-                                int r = 0, g = 0, b = 0;
-
-                                int stepx = Math.Max(1, width/10);
-                                int stepy = Math.Max(1, height/10);
-
-
-                                unsafe
-                                {
-                                    for (int y = 0; y < height; y += stepy)
-                                    {
-                                        byte* pointer = (byte*) bitmapData.Scan0;
-                                        pointer += bitmapData.Stride*(minY + y);
-
-                                        for (int x = 0; x < width; x += stepx)
-                                        {
-                                            //var color = frame.DesktopImage.GetPixel(minX + x, minY + y);
-                                            var offsetX = (minX + x)*4;
-                                            r += pointer[offsetX + 2];
-                                            g += pointer[offsetX + 1];
-                                            b += pointer[offsetX + 0];
-                                            count++;
-                                        }
-                                    }
-                                }
-                                //                            White balance    1,0000  0,8730  0,7453
-
-                                //  spot.SetColor((byte)(r  / count), (byte)(g / count), (byte)(b  / count));
-                                spot.SetColor((byte) (r*1.0f/count), (byte) (g*0.8730f/count), (byte) (b*0.7453f/count));
-
-                                //dataStream.Position = spot.TopLeft.DxPos;
-                                //dataStream.Read(mColorBufferTopLeft, 0, 4);
-
-                                //dataStream.Position = spot.TopRight.DxPos;
-                                //dataStream.Read(mColorBufferTopRight, 0, 4);
-
-                                //dataStream.Position = spot.Center.DxPos;
-                                //dataStream.Read(mColorBufferCenter, 0, 4);
-
-                                //dataStream.Position = spot.BottomLeft.DxPos;
-                                //dataStream.Read(mColorBufferBottomLeft, 0, 4);
-
-                                //dataStream.Position = spot.BottomRight.DxPos;
-                                //dataStream.Read(mColorBufferBottomRight, 0, 4);
-
-                                //averageValues();
-
-                                //if (mColorBuffer[0] <= Settings.SaturationTreshold) { mColorBuffer[0] = 0x00; } //blue
-                                //if (mColorBuffer[1] <= Settings.SaturationTreshold) { mColorBuffer[1] = 0x00; } // green
-                                //if (mColorBuffer[2] <= Settings.SaturationTreshold) { mColorBuffer[2] = 0x00; } // red
-
-                                //spot.SetColor(mColorBuffer[2] /* red */, mColorBuffer[1] /* green */, mColorBuffer[0] /* blue */);
+                                spot.SetColor(Color.Black);
                             }
-                        }
+                            else
+                            {
+                                spot.SetColor((byte) (sumR*1.0f/count), (byte) (sumG*0.8730f/count), (byte) (sumB*0.7453f/count));
+                            }
+                        });
                     }
                     image.UnlockBits(bitmapData);
                 }
             }
             finally
             {
+                Debug.WriteLine("Stopped Desktop Duplication Reader.");
                 IsRunning = false;
             }
         }
+
+        public static unsafe void GetAverageColorOfRectangularRegion(Rectangle spotRectangle, int stepy, int stepx, BitmapData bitmapData, out int sumR, out int sumG, out int sumB, out int count)
+        {
+            sumR = 0;
+            sumG = 0;
+            sumB = 0;
+            count = 0;
+
+            var stepCount = spotRectangle.Width / stepx;
+            var stepxTimes4 = stepx * 4;
+            for (var y = spotRectangle.Top; y < spotRectangle.Bottom; y += stepy)
+            {
+                byte* pointer = (byte*)bitmapData.Scan0 + bitmapData.Stride * y + 4 * spotRectangle.Left;
+                for (int i = 0; i < stepCount; i++)
+                {
+                    sumR += pointer[2];
+                    sumG += pointer[1];
+                    sumB += pointer[0];
+
+                    pointer += stepxTimes4;
+                }
+                count += stepCount;
+            }
+        }
+
     }
 }
 

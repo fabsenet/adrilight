@@ -1,5 +1,7 @@
 ﻿/* See the file "LICENSE" for the full license governing this code. */
 
+using System;
+
 namespace Bambilight {
 
     class SpotSet {
@@ -41,8 +43,8 @@ namespace Bambilight {
 
                         if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
                         {
-                            x = xRemainingOffset + Settings.BorderDistanceX + Settings.OffsetX + i * (xResolution) + Settings.SpotWidth / 2;
-                            y = yRemainingOffset + Settings.BorderDistanceY + Settings.OffsetY + j * (yResolution) + Settings.SpotHeight / 2;
+                            x = Math.Max(0, Math.Min(Program.ScreenWidth, xRemainingOffset + Settings.BorderDistanceX + Settings.OffsetX + i * (xResolution) + Settings.SpotWidth / 2));
+                            y = Math.Max(0, Math.Min(Program.ScreenHeight, yRemainingOffset + Settings.BorderDistanceY + Settings.OffsetY + j * (yResolution) + Settings.SpotHeight / 2));
 
                             int index = counter++; // in first row index is always counter
 
@@ -59,8 +61,9 @@ namespace Bambilight {
                                     index += relationIndex - (i * 2);
                                 }
                             }
-
-                            SpotSet.Spots[index] = new Spot(x, y, Settings.SpotWidth, Settings.SpotHeight);
+                            var spotWidth = Math.Min(Settings.SpotWidth, Math.Min(x, Program.ScreenWidth - x));
+                            var spotHeight = Math.Min(Settings.SpotHeight, Math.Min(y, Program.ScreenHeight- y));
+                            SpotSet.Spots[index] = new Spot(x, y, spotWidth, spotHeight);
                         }
                     }
                 }

@@ -47,7 +47,7 @@ namespace Bambilight {
             initTags();
             initFieldLimits();
 
-            refreshFields();
+            RefreshFields();
 
             if (Settings.StartMinimized) {
                 WindowState = FormWindowState.Minimized;
@@ -153,7 +153,7 @@ namespace Bambilight {
             numericUpDownMinimumRefreshRateMs.Maximum = 1000;
         }
 
-        private void refreshFields() {
+        private void RefreshFields() {
             numericUpDownSpotsX.Value = Settings.SpotsX;
 
             numericUpDownSpotsY.Value = Settings.SpotsY;
@@ -213,7 +213,7 @@ namespace Bambilight {
 
         private void refreshAll() {
             SpotSet.Refresh();
-            refreshFields();
+            RefreshFields();
             RefreshOverlay();
         }
 
@@ -337,9 +337,9 @@ namespace Bambilight {
             var isRunning = _cancellationTokenSource!=null && _desktopDuplicatorReader != null && _desktopDuplicatorReader.IsRunning;
             var shouldBeRunning = Settings.TransferActive || Settings.OverlayActive;
 
-#if DEBUG
-            shouldBeRunning = shouldBeRunning || Debugger.IsAttached; //always run capturing if there is a debugger!
-#endif
+//#if DEBUG
+//            shouldBeRunning = shouldBeRunning || Debugger.IsAttached; //always run capturing if there is a debugger!
+//#endif
             if (isRunning && !shouldBeRunning)
             {
                 //stop it!
@@ -422,6 +422,18 @@ namespace Bambilight {
             //    mDxScreenCapture.Stop();
             //    mDxScreenCapture = null;
             //}
+        }
+
+        private void resetOffsetXButton_Click(object sender, EventArgs e)
+        {
+            Settings.OffsetX = 0;
+            refreshAll();
+        }
+
+        private void resetOffsetYButton_Click(object sender, EventArgs e)
+        {
+            Settings.OffsetY = 0;
+            refreshAll();
         }
     }
 }

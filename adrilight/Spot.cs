@@ -1,25 +1,24 @@
 ﻿/* See the file "LICENSE" for the full license governing this code. */
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 
 namespace Bambilight {
 
+    [DebuggerDisplay("Spot: TopLeft={TopLeft}, BottomRight={BottomRight}, Color={Red},{Green},{Blue}")]
     sealed class Spot : IDisposable {
 
         public Spot(int x, int y, int aWidth, int aHeight) : this(new DxPoint(x, y), aWidth, aHeight) { }
 
         public Spot(DxPoint aCenter, int aWidth, int aHeight) {
-            Center = aCenter;
             Width = aWidth;
             Height = aHeight;
 
             int distanceX = aWidth / 2;
             int distanceY = aHeight / 2;
-            TopLeft = new DxPoint(Center.X - distanceX, Center.Y - distanceY);
-            TopRight = new DxPoint(Center.X + distanceX, Center.Y - distanceY);
-            BottomLeft = new DxPoint(Center.X - distanceX, Center.Y + distanceY);
-            BottomRight = new DxPoint(Center.X + distanceX, Center.Y + distanceY);
+            TopLeft = new DxPoint(aCenter.X - distanceX, aCenter.Y - distanceY);
+            BottomRight = new DxPoint(aCenter.X + distanceX, aCenter.Y + distanceY);
 
             Rectangle = new Rectangle(TopLeft.X, TopLeft.Y, Width, Height);
             RectangleOverlayBorder = new Rectangle(TopLeft.X + 2, TopLeft.Y + 2, Width - 4, Height - 4);
@@ -28,14 +27,11 @@ namespace Bambilight {
             Brush = new SolidBrush(Color.Black);
         }
 
-        public DxPoint Center { get; private set; }
 
         public int Width { get; private set; }
         public int Height { get; private set; }
 
         public DxPoint TopLeft { get; private set; }
-        public DxPoint TopRight { get; private set; }
-        public DxPoint BottomLeft { get; private set; }
         public DxPoint BottomRight { get; private set; }
 
         public Rectangle Rectangle { get; private set; }
@@ -52,9 +48,9 @@ namespace Bambilight {
                  return Brush;
             }
         }
-        public byte Red { get; set; }
-        public byte Green { get; set; }
-        public byte Blue { get; set; }
+        public byte Red { get; private set; }
+        public byte Green { get; private set; }
+        public byte Blue { get; private set; }
 
         public void SetColor(byte red, byte green, byte blue)
         {
@@ -69,7 +65,7 @@ namespace Bambilight {
         }
 
         public void Dispose() {
-            Brush.Dispose();
+            Brush?.Dispose();
         }
     }
 }

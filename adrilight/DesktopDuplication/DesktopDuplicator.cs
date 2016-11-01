@@ -26,6 +26,7 @@ namespace DesktopDuplication
 
         private Texture2D desktopImageTexture = null;
         private OutputDuplicateFrameInformation frameInfo = new OutputDuplicateFrameInformation();
+        private readonly int _whichGraphicsCardAdapter;
         private int mWhichOutputDevice = -1;
 
         private Bitmap finalImage1, finalImage2;
@@ -66,11 +67,24 @@ namespace DesktopDuplication
         /// <param name="whichOutputDevice">The output device to duplicate (i.e. monitor). Begins with zero, which seems to correspond to the primary monitor.</param>
         public DesktopDuplicator(int whichGraphicsCardAdapter, int whichOutputDevice)
         {
+            _whichGraphicsCardAdapter = whichGraphicsCardAdapter;
             this.mWhichOutputDevice = whichOutputDevice;
+
+            ReInit();
+        }
+
+        private void ReInit()
+        {
+            //dispose old stuff
+            mDevice?.Dispose();
+            mDevice = null;
+            mDeskDupl?.Dispose();
+            mDeskDupl = null;
+
             Adapter1 adapter = null;
             try
             {
-                adapter = new Factory1().GetAdapter1(whichGraphicsCardAdapter);
+                adapter = new Factory1().GetAdapter1(_whichGraphicsCardAdapter);
             }
             catch (SharpDXException)
             {
@@ -80,7 +94,7 @@ namespace DesktopDuplication
             Output output = null;
             try
             {
-                output = adapter.GetOutput(whichOutputDevice);
+                output = adapter.GetOutput(mWhichOutputDevice);
             }
             catch (SharpDXException)
             {
@@ -160,6 +174,12 @@ namespace DesktopDuplication
                 if (ex.ResultCode.Code == SharpDX.DXGI.ResultCode.WaitTimeout.Result.Code)
                 {
                     return true;
+                }
+                if (ex.Message.Contains("DXGI_ERROR_ACCESS_LOST"))
+                {
+                    //known cause is going through standby!
+                    ReInit();
+                    return RetrieveFrame();
                 }
                 if (ex.ResultCode.Failure)
                 {
