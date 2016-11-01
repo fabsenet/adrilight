@@ -1,4 +1,4 @@
-﻿namespace Bambilight
+﻿namespace adrilight
 {
     partial class Overlay
     {

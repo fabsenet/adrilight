@@ -1,11 +1,11 @@
-﻿/* See the file "LICENSE" for the full license governing this code. */
+﻿
 
 using System;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Bambilight {
+namespace adrilight {
 
     static class Program {
 

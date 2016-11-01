@@ -1,28 +1,28 @@
-﻿/* See the file "LICENSE" for the full license governing this code. */
+﻿
 
-using Microsoft.Win32;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
-namespace Bambilight {
+namespace adrilight {
 
     static class Autostart {
 
-        private static RegistryKey AutostartKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        private static readonly RegistryKey _autostartKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
         public static void Add() {
             if (!IsStartupItem()) {
-                AutostartKey.SetValue("Bambilight", Application.ExecutablePath.ToString());
+                _autostartKey.SetValue("adrilight", Application.ExecutablePath.ToString());
             }
         }
 
         public static void Remove() {
             if (IsStartupItem()) {
-                AutostartKey.DeleteValue("Bambilight", false);
+                _autostartKey.DeleteValue("adrilight", false);
             }
         }
 
         private static bool IsStartupItem() {
-            if (null != AutostartKey.GetValue("Bambilight")) {
+            if (null != _autostartKey.GetValue("adrilight")) {
                 return true;
             }
             return false;

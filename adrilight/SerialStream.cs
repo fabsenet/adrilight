@@ -1,47 +1,47 @@
-﻿/* See the file "LICENSE" for the full license governing this code. */
+﻿
 
 using System;
 using System.ComponentModel;
-using System.IO.Ports;
 using System.Diagnostics;
+using System.IO.Ports;
 using System.Threading;
 
-namespace Bambilight {
+namespace adrilight {
 
     class SerialStream : IDisposable {
 
-       private readonly byte[] MESSAGE_PREAMBLE = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
-        private const int COLORS_PER_LED = 3;
+       private readonly byte[] _messagePreamble = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
+        private const int ColorsPerLed = 3;
 
-        private BackgroundWorker mBackgroundWorker = new BackgroundWorker();
-        private Stopwatch mStopwatch = new Stopwatch();
+        private BackgroundWorker _mBackgroundWorker = new BackgroundWorker();
+        private Stopwatch _mStopwatch = new Stopwatch();
 
-        private SerialPort mSerialPort;
+        private SerialPort _mSerialPort;
 
         public SerialStream() {
-            mBackgroundWorker.DoWork += mBackgroundWorker_DoWork;
-            mBackgroundWorker.WorkerSupportsCancellation = true;
+            _mBackgroundWorker.DoWork += mBackgroundWorker_DoWork;
+            _mBackgroundWorker.WorkerSupportsCancellation = true;
         }
 
         public void Start() {
-            if (!mBackgroundWorker.IsBusy) {
-                mBackgroundWorker.RunWorkerAsync();
+            if (!_mBackgroundWorker.IsBusy) {
+                _mBackgroundWorker.RunWorkerAsync();
             }
         }
 
         public void Stop() {
-            if (mBackgroundWorker.IsBusy) {
-                mBackgroundWorker.CancelAsync();
+            if (_mBackgroundWorker.IsBusy) {
+                _mBackgroundWorker.CancelAsync();
             }
         }
 
         private byte[] GetOutputStream() {
             byte[] outputStream;
 
-            int counter = MESSAGE_PREAMBLE.Length;
+            int counter = _messagePreamble.Length;
             lock (SpotSet.Lock) {
-                outputStream = new byte[MESSAGE_PREAMBLE.Length + (Settings.LedsPerSpot * SpotSet.Spots.Length * COLORS_PER_LED)];
-                Buffer.BlockCopy(MESSAGE_PREAMBLE, 0, outputStream, 0, MESSAGE_PREAMBLE.Length);
+                outputStream = new byte[_messagePreamble.Length + (Settings.LedsPerSpot * SpotSet.Spots.Length * ColorsPerLed)];
+                Buffer.BlockCopy(_messagePreamble, 0, outputStream, 0, _messagePreamble.Length);
 
                 foreach (Spot spot in SpotSet.Spots) {
                     
@@ -59,29 +59,29 @@ namespace Bambilight {
 
         private void mBackgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
             try {
-                mSerialPort = new SerialPort(Settings.ComPort, 115200);
-                mSerialPort.Open();
+                _mSerialPort = new SerialPort(Settings.ComPort, 115200);
+                _mSerialPort.Open();
 
-                while (!mBackgroundWorker.CancellationPending) {
-                    mStopwatch.Start();
+                while (!_mBackgroundWorker.CancellationPending) {
+                    _mStopwatch.Start();
 
                     byte[] outputStream = GetOutputStream();
-                    mSerialPort.Write(outputStream, 0, outputStream.Length);
+                    _mSerialPort.Write(outputStream, 0, outputStream.Length);
 
-                    int timespan = Settings.MinimumRefreshRateMs - (int)mStopwatch.ElapsedMilliseconds;
+                    int timespan = Settings.MinimumRefreshRateMs - (int)_mStopwatch.ElapsedMilliseconds;
                     if (timespan > 0) {
                         Thread.Sleep(timespan);
                     }
 
-                    mStopwatch.Stop();
-                    mStopwatch.Reset();
+                    _mStopwatch.Stop();
+                    _mStopwatch.Reset();
                 }
             } catch (Exception ex) {
                 Console.Write(ex);
             } finally {
-                if (null != mSerialPort && mSerialPort.IsOpen) {
-                    mSerialPort.Close();
-                    mSerialPort.Dispose();
+                if (null != _mSerialPort && _mSerialPort.IsOpen) {
+                    _mSerialPort.Close();
+                    _mSerialPort.Dispose();
                 }
             }
 

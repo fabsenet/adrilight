@@ -1,10 +1,10 @@
-﻿/* See the file "LICENSE" for the full license governing this code. */
+﻿
 
 using System;
 using System.Diagnostics;
 using System.Drawing;
 
-namespace Bambilight {
+namespace adrilight {
 
     [DebuggerDisplay("Spot: TopLeft={TopLeft}, BottomRight={BottomRight}, Color={Red},{Green},{Blue}")]
     sealed class Spot : IDisposable {

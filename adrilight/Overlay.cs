@@ -1,4 +1,4 @@
-﻿/* See the file "LICENSE" for the full license governing this code. */
+﻿
 
 using System;
 using System.ComponentModel;
@@ -7,7 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Bambilight {
+namespace adrilight {
 
     public partial class Overlay : Form {
 
@@ -17,62 +17,62 @@ namespace Bambilight {
         static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         // Arrow Points
-        private Point mTopEnd;
-        private Point mTopHead;
-        private Point mRightEnd;
-        private Point mRightHead;
-        private Point mBottomEnd;
-        private Point mBottomHead;
-        private Point mLeftEnd;
-        private Point mLeftHead;
+        private Point _mTopEnd;
+        private Point _mTopHead;
+        private Point _mRightEnd;
+        private Point _mRightHead;
+        private Point _mBottomEnd;
+        private Point _mBottomHead;
+        private Point _mLeftEnd;
+        private Point _mLeftHead;
 
-        private Graphics mGraphics;
-        private readonly object mGraphicsLock = new object();
+        private Graphics _mGraphics;
+        private readonly object _mGraphicsLock = new object();
 
-        private const int GWL_EXSTYLE = -20;
-        private const int WS_EX_TRANSPARENT = 0x20;
+        private const int GwlExstyle = -20;
+        private const int WsExTransparent = 0x20;
 
-        private BackgroundWorker mBackgroundWorker = new BackgroundWorker();
+        private BackgroundWorker _mBackgroundWorker = new BackgroundWorker();
 
         public Overlay() {
             InitializeComponent();
 
             ShowInTaskbar = false;
-            initArrowPoints();
+            InitArrowPoints();
 
-            int exstyle = GetWindowLong(this.Handle, GWL_EXSTYLE);
-            exstyle |= WS_EX_TRANSPARENT;
-            SetWindowLong(this.Handle, GWL_EXSTYLE, exstyle);
+            int exstyle = GetWindowLong(this.Handle, GwlExstyle);
+            exstyle |= WsExTransparent;
+            SetWindowLong(this.Handle, GwlExstyle, exstyle);
 
-            mBackgroundWorker.DoWork += mBackgroundWorker_DoWork;
-            mBackgroundWorker.RunWorkerCompleted += mBackgroundWorker_Completed;
-            mBackgroundWorker.WorkerSupportsCancellation = true;
+            _mBackgroundWorker.DoWork += mBackgroundWorker_DoWork;
+            _mBackgroundWorker.RunWorkerCompleted += mBackgroundWorker_Completed;
+            _mBackgroundWorker.WorkerSupportsCancellation = true;
         }
 
-        private void initArrowPoints() {
-            mTopEnd = new Point(1 * (Program.ScreenWidth / 4), 1 * (Program.ScreenHeight / 4));
-            mTopHead = new Point(3 * (Program.ScreenWidth / 4), 1 * (Program.ScreenHeight / 4));
+        private void InitArrowPoints() {
+            _mTopEnd = new Point(1 * (Program.ScreenWidth / 4), 1 * (Program.ScreenHeight / 4));
+            _mTopHead = new Point(3 * (Program.ScreenWidth / 4), 1 * (Program.ScreenHeight / 4));
 
-            mRightEnd = new Point(4 * (Program.ScreenWidth / 5), 1 * (Program.ScreenHeight / 4));
-            mRightHead = new Point(4 * (Program.ScreenWidth / 5), 3 * (Program.ScreenHeight / 4));
+            _mRightEnd = new Point(4 * (Program.ScreenWidth / 5), 1 * (Program.ScreenHeight / 4));
+            _mRightHead = new Point(4 * (Program.ScreenWidth / 5), 3 * (Program.ScreenHeight / 4));
 
-            mBottomEnd = new Point(3 * (Program.ScreenWidth / 4), 3 * (Program.ScreenHeight / 4));
-            mBottomHead = new Point(1 * (Program.ScreenWidth / 4), 3 * (Program.ScreenHeight / 4));
+            _mBottomEnd = new Point(3 * (Program.ScreenWidth / 4), 3 * (Program.ScreenHeight / 4));
+            _mBottomHead = new Point(1 * (Program.ScreenWidth / 4), 3 * (Program.ScreenHeight / 4));
 
-            mLeftEnd = new Point(1 * (Program.ScreenWidth / 5), 3 * (Program.ScreenHeight / 4));
-            mLeftHead = new Point(1 * (Program.ScreenWidth / 5), 1 * (Program.ScreenHeight / 4));
+            _mLeftEnd = new Point(1 * (Program.ScreenWidth / 5), 3 * (Program.ScreenHeight / 4));
+            _mLeftHead = new Point(1 * (Program.ScreenWidth / 5), 1 * (Program.ScreenHeight / 4));
         }
 
         public void Start() {
             Show();
-            if (!mBackgroundWorker.IsBusy) {
-                mBackgroundWorker.RunWorkerAsync();
+            if (!_mBackgroundWorker.IsBusy) {
+                _mBackgroundWorker.RunWorkerAsync();
             }
         }
 
         public void Stop() {
-            if (mBackgroundWorker.IsBusy) {
-                mBackgroundWorker.CancelAsync();
+            if (_mBackgroundWorker.IsBusy) {
+                _mBackgroundWorker.CancelAsync();
             }
         }
 
@@ -89,33 +89,33 @@ namespace Bambilight {
 
             SolidBrush solidBrushBlack = new SolidBrush(Color.Black);
 
-            while (!mBackgroundWorker.CancellationPending) {
+            while (!_mBackgroundWorker.CancellationPending) {
                 
-                lock (mGraphicsLock) {
+                lock (_mGraphicsLock) {
                     try {
-                        mGraphics = CreateGraphics();
+                        _mGraphics = CreateGraphics();
 
                         if (Settings.SpotsX > 1 && Settings.SpotsY > 1) {
                             if ((Settings.MirrorX && Settings.MirrorY) || (!Settings.MirrorX && !Settings.MirrorY)) {
-                                mGraphics.DrawLine(penArrow, mTopEnd, mTopHead);
-                                mGraphics.DrawLine(penArrow, mBottomEnd, mBottomHead);
-                                mGraphics.DrawLine(penArrow, mRightEnd, mRightHead);
-                                mGraphics.DrawLine(penArrow, mLeftEnd, mLeftHead);
+                                _mGraphics.DrawLine(penArrow, _mTopEnd, _mTopHead);
+                                _mGraphics.DrawLine(penArrow, _mBottomEnd, _mBottomHead);
+                                _mGraphics.DrawLine(penArrow, _mRightEnd, _mRightHead);
+                                _mGraphics.DrawLine(penArrow, _mLeftEnd, _mLeftHead);
                             } else {
-                                mGraphics.DrawLine(penArrow, mTopHead, mTopEnd);
-                                mGraphics.DrawLine(penArrow, mBottomHead, mBottomEnd);
-                                mGraphics.DrawLine(penArrow, mRightHead, mRightEnd);
-                                mGraphics.DrawLine(penArrow, mLeftHead, mLeftEnd);
+                                _mGraphics.DrawLine(penArrow, _mTopHead, _mTopEnd);
+                                _mGraphics.DrawLine(penArrow, _mBottomHead, _mBottomEnd);
+                                _mGraphics.DrawLine(penArrow, _mRightHead, _mRightEnd);
+                                _mGraphics.DrawLine(penArrow, _mLeftHead, _mLeftEnd);
                             }
                         }
 
                         lock (SpotSet.Lock) {
                             foreach (Spot spot in SpotSet.Spots) {
-                                mGraphics.DrawRectangle(penSpotBorder, spot.RectangleOverlayBorder);
-                                mGraphics.FillRectangle(spot.OnDemandBrush, spot.RectangleOverlayFilling);
+                                _mGraphics.DrawRectangle(penSpotBorder, spot.RectangleOverlayBorder);
+                                _mGraphics.FillRectangle(spot.OnDemandBrush, spot.RectangleOverlayFilling);
 
                                 if (spot == SpotSet.Spots[0]) {
-                                    mGraphics.DrawString("1.", font, solidBrushBlack, spot.BottomRight.X + 3, spot.BottomRight.Y + 3);
+                                    _mGraphics.DrawString("1.", font, solidBrushBlack, spot.BottomRight.X + 3, spot.BottomRight.Y + 3);
                                 }
                             }
                         }
@@ -135,8 +135,8 @@ namespace Bambilight {
 
         public void RefreshGraphics() {
             try { // dirty but graphics clear is not stable to use
-                lock (mGraphicsLock) {
-                    if (null != mGraphics) mGraphics.Clear(BackColor);
+                lock (_mGraphicsLock) {
+                    if (null != _mGraphics) _mGraphics.Clear(BackColor);
                 }
             } catch (Exception ex) {
                 Console.Write(ex);

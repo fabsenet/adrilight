@@ -1,8 +1,6 @@
-﻿/* See the file "LICENSE" for the full license governing this code. */
+﻿using System;
 
-using System;
-
-namespace Bambilight {
+namespace adrilight {
 
     class SpotSet {
 
@@ -69,60 +67,60 @@ namespace Bambilight {
                 }
 
 
-                if (Settings.OffsetLed != 0) offset(Settings.OffsetLed);
-                if (Settings.SpotsY > 1 && Settings.MirrorX) mirrorX();
-                if (Settings.SpotsX > 1 && Settings.MirrorY) mirrorY();
+                if (Settings.OffsetLed != 0) Offset(Settings.OffsetLed);
+                if (Settings.SpotsY > 1 && Settings.MirrorX) MirrorX();
+                if (Settings.SpotsX > 1 && Settings.MirrorY) MirrorY();
             }
         }
 
-        private static void mirror(int startIndex, int length) {
+        private static void Mirror(int startIndex, int length) {
             int halfLength = (length / 2);
             int endIndex = startIndex + length - 1;
 
             for (int i = 0; i < halfLength; i++) {
-                swap(startIndex + i, endIndex - i);
+                Swap(startIndex + i, endIndex - i);
             }
         }
 
-        private static void swap(int index1, int index2) {
+        private static void Swap(int index1, int index2) {
             Spot temp = Spots[index1];
             Spots[index1] = Spots[index2];
             Spots[index2] = temp;
         }
 
-        private static void mirrorX() {
+        private static void MirrorX() {
             // copy swap last row to first row inverse
             for (int i = 0; i < Settings.SpotsX; i++) {
                 int index1 = i;
                 int index2 = (Spots.Length - 1) - (Settings.SpotsY - 2) - i;
-                swap(index1, index2);
+                Swap(index1, index2);
             }
 
             // mirror first column
-            mirror(Settings.SpotsX, Settings.SpotsY - 2);
+            Mirror(Settings.SpotsX, Settings.SpotsY - 2);
 
             // mirror last column
             if (Settings.SpotsX > 1)
-                mirror(2 * Settings.SpotsX + Settings.SpotsY - 2, Settings.SpotsY - 2);
+                Mirror(2 * Settings.SpotsX + Settings.SpotsY - 2, Settings.SpotsY - 2);
         }
 
-        private static void mirrorY() {
+        private static void MirrorY() {
             // copy swap last row to first row inverse
             for (int i = 0; i < Settings.SpotsY - 2; i++) {
                 int index1 = Settings.SpotsX + i;
                 int index2 = (Spots.Length - 1) - i;
-                swap(index1, index2);
+                Swap(index1, index2);
             }
 
             // mirror first row
-            mirror(0, Settings.SpotsX);
+            Mirror(0, Settings.SpotsX);
 
             // mirror last row
             if (Settings.SpotsY > 1)
-                mirror(Settings.SpotsX + Settings.SpotsY - 2, Settings.SpotsX);
+                Mirror(Settings.SpotsX + Settings.SpotsY - 2, Settings.SpotsX);
         }
 
-        private static void offset(int offset) {
+        private static void Offset(int offset) {
             Spot[] temp = new Spot[Spots.Length];
             for (int i = 0; i < Spots.Length; i++) {
                 temp[(i + temp.Length + offset) % temp.Length] = Spots[i];

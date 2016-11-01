@@ -1,4 +1,4 @@
-﻿namespace Bambilight
+﻿namespace adrilight
 {
     partial class MainForm
     {
@@ -17,7 +17,7 @@
             {
                 //todo
                 //mDxScreenCapture.Dispose();
-                mSerialStream.Dispose();
+                _mSerialStream.Dispose();
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -595,7 +595,7 @@
             this.MinimumSize = new System.Drawing.Size(784, 524);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Bambilight by MrBoe";
+            this.Text = "adrilight";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.groupBoxSpots.ResumeLayout(false);

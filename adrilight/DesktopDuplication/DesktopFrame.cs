@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
-namespace DesktopDuplication
+namespace adrilight.DesktopDuplication
 {
     /// <summary>
     /// Provides image data, cursor data, and image metadata about the retrieved desktop frame.

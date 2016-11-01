@@ -1,27 +1,26 @@
-﻿/* See the file "LICENSE" for the full license governing this code. */
+﻿
 
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace Bambilight {
+namespace adrilight {
 
     public partial class MainForm : Form {
 
-        private NotifyIcon mNotifyIcon;
-        private ContextMenu mContextMenu;
+        private NotifyIcon _mNotifyIcon;
+        private ContextMenu _mContextMenu;
 
        // DxScreenCapture mDxScreenCapture;
-        SerialStream mSerialStream;
-        Overlay mOverlay;
+        SerialStream _mSerialStream;
+        Overlay _mOverlay;
 
         public MainForm() {
             InitializeComponent();
-            initTrayIcon();
+            InitTrayIcon();
 
             Application.ApplicationExit += OnApplicationExit;
             SystemEvents.PowerModeChanged += OnPowerModeChanged;
@@ -31,28 +30,27 @@ namespace Bambilight {
         
         }
 
-        private void initTrayIcon() {
-            mContextMenu = new ContextMenu();
-            mContextMenu.MenuItems.Add("Exit", NotifyIcon_ExitClick);
+        private void InitTrayIcon() {
+            _mContextMenu = new ContextMenu();
+            _mContextMenu.MenuItems.Add("Exit", NotifyIcon_ExitClick);
 
-            mNotifyIcon = new NotifyIcon();
-            mNotifyIcon.Text = "Bambilight";
-            mNotifyIcon.Icon = new Icon(Properties.Resources.deer, 40, 40);
-            mNotifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
+            _mNotifyIcon = new NotifyIcon();
+            _mNotifyIcon.Text = "adrilight";
+            _mNotifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
 
-            mNotifyIcon.ContextMenu = mContextMenu;
+            _mNotifyIcon.ContextMenu = _mContextMenu;
         }
 
         private void MainForm_Load(object sender, EventArgs e) {
-            initTags();
-            initFieldLimits();
+            InitTags();
+            InitFieldLimits();
 
             RefreshFields();
 
             if (Settings.StartMinimized) {
                 WindowState = FormWindowState.Minimized;
             }
-            refreshAll();
+            RefreshAll();
 
             RefreshCapturingState();
             RefreshOverlayState();
@@ -60,13 +58,13 @@ namespace Bambilight {
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            if (mNotifyIcon == null) return;
+            if (_mNotifyIcon == null) return;
 
             if (FormWindowState.Minimized == WindowState) {
-                mNotifyIcon.Visible = true;
+                _mNotifyIcon.Visible = true;
                 ShowInTaskbar = false;
             } else if (FormWindowState.Normal == WindowState) {
-                mNotifyIcon.Visible = false;
+                _mNotifyIcon.Visible = false;
             }
         }
 
@@ -80,7 +78,7 @@ namespace Bambilight {
         }
 
         private void OnApplicationExit(object sender, EventArgs e) {
-            mNotifyIcon.Dispose();
+            _mNotifyIcon.Dispose();
         }
 
         private void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e) {
@@ -94,7 +92,7 @@ namespace Bambilight {
         }
 
         // for universal change of track bar value labels => see setTrackBarValue
-        private void initTags() {
+        private void InitTags() {
             trackBarSpotWidth.Tag = labelSpotWidth;
             labelSpotWidth.Tag = labelSpotWidth.Text;
 
@@ -115,7 +113,7 @@ namespace Bambilight {
         }
 
         // TODO min and max values should be dynamic
-        private void initFieldLimits() {
+        private void InitFieldLimits() {
             numericUpDownSpotsX.Minimum = 1;
             numericUpDownSpotsX.Maximum = 100;
 
@@ -160,9 +158,9 @@ namespace Bambilight {
 
             numericUpDownLedsPerSpot.Value = Settings.LedsPerSpot;
 
-            setTrackBarValue(trackBarOffsetX, Settings.OffsetX);
+            SetTrackBarValue(trackBarOffsetX, Settings.OffsetX);
 
-            setTrackBarValue(trackBarOffsetY, Settings.OffsetY);
+            SetTrackBarValue(trackBarOffsetY, Settings.OffsetY);
 
             checkBoxTransferActive.Checked = Settings.TransferActive;
 
@@ -179,9 +177,9 @@ namespace Bambilight {
 
             numericUpDownSaturationTreshold.Value = Settings.SaturationTreshold;
 
-            setTrackBarValue(trackBarSpotWidth, Settings.SpotWidth);
+            SetTrackBarValue(trackBarSpotWidth, Settings.SpotWidth);
 
-            setTrackBarValue(trackBarSpotHeight, Settings.SpotHeight);
+            SetTrackBarValue(trackBarSpotHeight, Settings.SpotHeight);
 
             checkBoxMirrorX.Checked = Settings.MirrorX;
 
@@ -189,9 +187,9 @@ namespace Bambilight {
 
             numericUpDownLedOffset.Value = Settings.OffsetLed;
 
-            setTrackBarValue(trackBarBorderDistanceX, Settings.BorderDistanceX);
+            SetTrackBarValue(trackBarBorderDistanceX, Settings.BorderDistanceX);
 
-            setTrackBarValue(trackBarBorderDistanceY, Settings.BorderDistanceY);
+            SetTrackBarValue(trackBarBorderDistanceY, Settings.BorderDistanceY);
 
             checkBoxAutostart.Checked = Settings.Autostart;
 
@@ -202,7 +200,7 @@ namespace Bambilight {
             groupBoxLEDs.Text = "LEDs (" + (SpotSet.CountSpots(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot) + ")";
         }
 
-        private void setTrackBarValue(TrackBar trackBar, int value) {
+        private void SetTrackBarValue(TrackBar trackBar, int value) {
             if (value < trackBar.Minimum) value = (int)trackBar.Minimum;
             if (value > trackBar.Maximum) value = (int)trackBar.Maximum;
 
@@ -211,7 +209,7 @@ namespace Bambilight {
             label.Text = (string)label.Tag + ":" + System.Environment.NewLine + "   " + value;
         }
 
-        private void refreshAll() {
+        private void RefreshAll() {
             SpotSet.Refresh();
             RefreshFields();
             RefreshOverlay();
@@ -219,27 +217,27 @@ namespace Bambilight {
 
         private void numericUpDownSpotsX_ValueChanged(object sender, EventArgs e) {
             Settings.SpotsX = (int)numericUpDownSpotsX.Value;
-            refreshAll();
+            RefreshAll();
         }
 
         private void numericUpDownSpotsY_ValueChanged(object sender, EventArgs e) {
             Settings.SpotsY = (int)numericUpDownSpotsY.Value;
-            refreshAll();
+            RefreshAll();
         }
 
         private void numericUpDownLedsPerSpot_ValueChanged(object sender, EventArgs e) {
             Settings.LedsPerSpot = (int)numericUpDownLedsPerSpot.Value;
-            refreshAll();
+            RefreshAll();
         }
 
         private void trackBarOffsetX_Scroll(object sender, EventArgs e) {
             Settings.OffsetX = trackBarOffsetX.Value;
-            refreshAll();
+            RefreshAll();
         }
 
         private void trackBarOffsetY_Scroll(object sender, EventArgs e) {
             Settings.OffsetY = trackBarOffsetY.Value;
-            refreshAll();
+            RefreshAll();
         }
 
         private void comboBoxComPort_SelectedIndexChanged(object sender, EventArgs e) {
@@ -254,12 +252,12 @@ namespace Bambilight {
 
         private void trackBarSpotWidth_Scroll(object sender, EventArgs e) {
             Settings.SpotWidth = trackBarSpotWidth.Value;
-            refreshAll();
+            RefreshAll();
         }
 
         private void trackBarSpotHeight_Scroll(object sender, EventArgs e) {
             Settings.SpotHeight = trackBarSpotHeight.Value;
-            refreshAll();
+            RefreshAll();
         }
 
         private void buttonResetPosition_Click(object sender, EventArgs e) {
@@ -271,17 +269,17 @@ namespace Bambilight {
 
         private void checkBoxMirrorX_CheckedChanged(object sender, EventArgs e) {
             Settings.MirrorX = checkBoxMirrorX.Checked;
-            refreshAll();
+            RefreshAll();
         }
 
         private void checkBoxMirrorY_CheckedChanged(object sender, EventArgs e) {
             Settings.MirrorY = checkBoxMirrorY.Checked;
-            refreshAll();
+            RefreshAll();
         }
 
         private void checkBoxTransferActive_CheckedChanged(object sender, EventArgs e) {
             Settings.TransferActive = checkBoxTransferActive.Checked;
-            refreshAll();
+            RefreshAll();
 
             RefreshCapturingState();
             RefreshTransferState();
@@ -289,7 +287,7 @@ namespace Bambilight {
 
         private void checkBoxOverlayActive_CheckedChanged(object sender, EventArgs e) {
             Settings.OverlayActive = checkBoxOverlayActive.Checked;
-            refreshAll();
+            RefreshAll();
 
             RefreshCapturingState();
             RefreshOverlayState();
@@ -297,17 +295,17 @@ namespace Bambilight {
 
         private void numericUpDownLedOffset_ValueChanged(object sender, EventArgs e) {
             Settings.OffsetLed = (int)numericUpDownLedOffset.Value;
-            refreshAll();
+            RefreshAll();
         }
 
         private void trackBarBorderDistanceX_Scroll(object sender, EventArgs e) {
             Settings.BorderDistanceX = trackBarBorderDistanceX.Value;
-            refreshAll();
+            RefreshAll();
         }
 
         private void trackBarBorderDistanceY_Scroll(object sender, EventArgs e) {
             Settings.BorderDistanceY = trackBarBorderDistanceY.Value;
-            refreshAll();
+            RefreshAll();
         }
 
         private void checkBoxAutostart_CheckedChanged(object sender, EventArgs e) {
@@ -373,49 +371,49 @@ namespace Bambilight {
         }
 
         private void RefreshTransferState() {
-            if (null == mSerialStream) {
-                mSerialStream = new SerialStream();
+            if (null == _mSerialStream) {
+                _mSerialStream = new SerialStream();
             }
 
             if (Settings.TransferActive) {
                 comboBoxComPort.Enabled = false;
-                mSerialStream.Start();
+                _mSerialStream.Start();
             } else {
-                mSerialStream.Stop();
-                mSerialStream = null;
+                _mSerialStream.Stop();
+                _mSerialStream = null;
                 comboBoxComPort.Enabled = true;
             }
         }
 
         private void RefreshOverlayState() {
-            if (null == mOverlay) {
-                mOverlay = new Overlay();
+            if (null == _mOverlay) {
+                _mOverlay = new Overlay();
             }
 
             if (Settings.OverlayActive) {
                 TopMost = true;
-                mOverlay.Start();
+                _mOverlay.Start();
             } else {
-                mOverlay.Stop();
-                mOverlay = null;
+                _mOverlay.Stop();
+                _mOverlay = null;
                 TopMost = false;
             }
         }
 
         private void RefreshOverlay() {
-            if (null != mOverlay) {
-                mOverlay.RefreshGraphics();
+            if (null != _mOverlay) {
+                _mOverlay.RefreshGraphics();
             }
         }
 
         private void StopBackgroundWorkers() {
-            if (null != mOverlay) {
-                mOverlay.Stop();
-                mOverlay = null;
+            if (null != _mOverlay) {
+                _mOverlay.Stop();
+                _mOverlay = null;
             }
-            if (null != mSerialStream) {
-                mSerialStream.Stop();
-                mSerialStream = null;
+            if (null != _mSerialStream) {
+                _mSerialStream.Stop();
+                _mSerialStream = null;
             }
             //TODO
             //if (null != mDxScreenCapture) {
@@ -427,13 +425,13 @@ namespace Bambilight {
         private void resetOffsetXButton_Click(object sender, EventArgs e)
         {
             Settings.OffsetX = 0;
-            refreshAll();
+            RefreshAll();
         }
 
         private void resetOffsetYButton_Click(object sender, EventArgs e)
         {
             Settings.OffsetY = 0;
-            refreshAll();
+            RefreshAll();
         }
     }
 }

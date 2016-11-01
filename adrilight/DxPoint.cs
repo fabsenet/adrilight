@@ -1,8 +1,8 @@
-﻿/* See the file "LICENSE" for the full license governing this code. */
+﻿
 
 using System.Diagnostics;
 
-namespace Bambilight {
+namespace adrilight {
 
     [DebuggerDisplay("DxPoint {X}, {Y}")]
     class DxPoint {
