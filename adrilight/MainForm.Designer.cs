@@ -31,8 +31,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBoxSpots = new System.Windows.Forms.GroupBox();
+            this.resetOffsetXButton = new System.Windows.Forms.Button();
+            this.resetOffsetYButton = new System.Windows.Forms.Button();
             this.numericUpDownSpotsY = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownSpotsX = new System.Windows.Forms.NumericUpDown();
             this.labelOffsetY = new System.Windows.Forms.Label();
@@ -68,8 +69,6 @@
             this.groupBoxRun = new System.Windows.Forms.GroupBox();
             this.checkBoxAutostart = new System.Windows.Forms.CheckBox();
             this.checkBoxStartMinimized = new System.Windows.Forms.CheckBox();
-            this.resetOffsetYButton = new System.Windows.Forms.Button();
-            this.resetOffsetXButton = new System.Windows.Forms.Button();
             this.groupBoxSpots.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsX)).BeginInit();
@@ -116,6 +115,26 @@
             this.groupBoxSpots.TabIndex = 6;
             this.groupBoxSpots.TabStop = false;
             this.groupBoxSpots.Text = "Spots";
+            // 
+            // resetOffsetXButton
+            // 
+            this.resetOffsetXButton.Location = new System.Drawing.Point(194, 325);
+            this.resetOffsetXButton.Name = "resetOffsetXButton";
+            this.resetOffsetXButton.Size = new System.Drawing.Size(27, 38);
+            this.resetOffsetXButton.TabIndex = 38;
+            this.resetOffsetXButton.Text = "0";
+            this.resetOffsetXButton.UseVisualStyleBackColor = true;
+            this.resetOffsetXButton.Click += new System.EventHandler(this.resetOffsetXButton_Click);
+            // 
+            // resetOffsetYButton
+            // 
+            this.resetOffsetYButton.Location = new System.Drawing.Point(194, 380);
+            this.resetOffsetYButton.Name = "resetOffsetYButton";
+            this.resetOffsetYButton.Size = new System.Drawing.Size(27, 38);
+            this.resetOffsetYButton.TabIndex = 38;
+            this.resetOffsetYButton.Text = "0";
+            this.resetOffsetYButton.UseVisualStyleBackColor = true;
+            this.resetOffsetYButton.Click += new System.EventHandler(this.resetOffsetYButton_Click);
             // 
             // numericUpDownSpotsY
             // 
@@ -559,26 +578,6 @@
             this.checkBoxStartMinimized.UseVisualStyleBackColor = true;
             this.checkBoxStartMinimized.CheckedChanged += new System.EventHandler(this.checkBoxStartMinimized_CheckedChanged);
             // 
-            // resetOffsetYButton
-            // 
-            this.resetOffsetYButton.Location = new System.Drawing.Point(194, 380);
-            this.resetOffsetYButton.Name = "resetOffsetYButton";
-            this.resetOffsetYButton.Size = new System.Drawing.Size(27, 38);
-            this.resetOffsetYButton.TabIndex = 38;
-            this.resetOffsetYButton.Text = "0";
-            this.resetOffsetYButton.UseVisualStyleBackColor = true;
-            this.resetOffsetYButton.Click += new System.EventHandler(this.resetOffsetYButton_Click);
-            // 
-            // resetOffsetXButton
-            // 
-            this.resetOffsetXButton.Location = new System.Drawing.Point(194, 325);
-            this.resetOffsetXButton.Name = "resetOffsetXButton";
-            this.resetOffsetXButton.Size = new System.Drawing.Size(27, 38);
-            this.resetOffsetXButton.TabIndex = 38;
-            this.resetOffsetXButton.Text = "0";
-            this.resetOffsetXButton.UseVisualStyleBackColor = true;
-            this.resetOffsetXButton.Click += new System.EventHandler(this.resetOffsetXButton_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -588,7 +587,6 @@
             this.Controls.Add(this.groupBoxTransfer);
             this.Controls.Add(this.groupBoxLEDs);
             this.Controls.Add(this.groupBoxSpots);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(784, 524);
