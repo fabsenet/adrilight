@@ -40,6 +40,16 @@ This should be improved but a quick rundown on what to do:
 
 How to figure out what numbers to enter?! **TODO**
 
+# What is my maximum LED framerate?
+
+There are 3 tasks which take time and might limit the framerate of the LEDs:
+* **Analyzing the screen content:** 
+The process is optimized and runs in parallel to the other two tasks and as such should be fairly capable to meet your screen refresh rate of most probably 60 fps at minor CPU usage. 
+* **Transmitting the data to the arduino:** The USB simulates a serial port and this is currently using a baudrate of 115200 Baud (=Bit/s). Each frame has a size of `10+number_of_LEDs*3 Byte`. Considering an example installation of  228 LEDs, the data package has a size of 694 Byte or 5552 Bit. Transmitting this data takes  `5552/115200 = 48.19ms`.
+* **The arduino transmitting the data to the LEDs:** The data protocol of WS2812b LED strips needs 0.030ms per LED to transmit the color data. In the given example of 228 LEDs, doing this takes `6.84ms`.
+
+The strict timing requirements of the WS2812b protocol require the arduino code to either receive serial data *or* transmit LED data. Therefore, a single frame in our example needs at least `48.19ms+6.84ms = 55ms`. So the maximum framerate for this setup is (only) `1000ms/55ms = 18 fps`.
+
 # Possible future features
 The following list of things is more a list to not forget things. If something is on here, it does not necessarily mean, it will ever be developed.
 
