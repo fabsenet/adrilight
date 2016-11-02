@@ -59,7 +59,8 @@ namespace adrilight {
 
         private void mBackgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
             try {
-                _mSerialPort = new SerialPort(Settings.ComPort, 115200);
+                const int baudRate = 115200;
+                _mSerialPort = new SerialPort(Settings.ComPort, baudRate);
                 _mSerialPort.Open();
 
                 while (!_mBackgroundWorker.CancellationPending) {
@@ -68,7 +69,12 @@ namespace adrilight {
                     byte[] outputStream = GetOutputStream();
                     _mSerialPort.Write(outputStream, 0, outputStream.Length);
 
-                    int timespan = Settings.MinimumRefreshRateMs - (int)_mStopwatch.ElapsedMilliseconds;
+                    //ws2812b LEDs need 30 µs = 0.030 ms for each led to set its color so there is a lower minimum to the allowed refresh rate
+                    //receiving over serial takes it time as well and the arduino does both tasks in sequence
+                    //+1 ms extra safe zone
+                    var minTimespan = (int)( (outputStream.Length - _messagePreamble.Length)*0.030d + outputStream.Length*8.0*1000.0/baudRate)+1;
+
+                    int timespan = Math.Max(minTimespan, Settings.MinimumRefreshRateMs - (int)_mStopwatch.ElapsedMilliseconds);
                     if (timespan > 0) {
                         Thread.Sleep(timespan);
                     }
