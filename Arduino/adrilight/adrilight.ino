@@ -33,7 +33,7 @@ uint8_t startIndex = 0;
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(1000000); // 115200
     FastLED.clear(true);
     FastLED.addLeds<WS2812B, LED_DATA_PIN, GRB>(leds, NUM_LEDS);
     FastLED.setBrightness(BRIGHTNESS);
@@ -73,7 +73,10 @@ void processIncomingData()
         }
 
         FastLED.show();
-
+        
+        // flush the serial buffer to avoid flickering
+        while(Serial.available()) { Serial.read(); } 
+        
         byte_counter = 0;
         led_counter = 0;
     }
@@ -88,6 +91,7 @@ void processIncomingData()
 bool waitForPreamble(int timeout)
 {
     last_serial_available = millis();
+    current_preamble_position = 0;
     while (current_preamble_position < PREAMBLE_LENGTH)
     {
         if (Serial.available() > 0)
@@ -109,7 +113,6 @@ bool waitForPreamble(int timeout)
             return false;
         }
     }
-    current_preamble_position = 0;
     return true;
 }
 

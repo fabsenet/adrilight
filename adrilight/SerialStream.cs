@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace adrilight {
 
@@ -57,9 +58,13 @@ namespace adrilight {
             return outputStream;
         }
 
-        private void mBackgroundWorker_DoWork(object sender, DoWorkEventArgs e) {
-            try {
-                const int baudRate = 115200;
+        private void mBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (String.IsNullOrEmpty(Settings.ComPort)) return;
+
+            try
+            {
+                const int baudRate = 1000000; // 115200;
                 _mSerialPort = new SerialPort(Settings.ComPort, baudRate);
                 _mSerialPort.Open();
 
@@ -72,7 +77,9 @@ namespace adrilight {
                     //ws2812b LEDs need 30 µs = 0.030 ms for each led to set its color so there is a lower minimum to the allowed refresh rate
                     //receiving over serial takes it time as well and the arduino does both tasks in sequence
                     //+1 ms extra safe zone
-                    var minTimespan = (int)( (outputStream.Length - _messagePreamble.Length)*0.030d + outputStream.Length*8.0*1000.0/baudRate)+1;
+                    var fastLedTime = (outputStream.Length - _messagePreamble.Length)/3.0*0.030d;
+                    var serialTransferTime = outputStream.Length*10.0*1000.0/baudRate;
+                    var minTimespan = (int)(fastLedTime + serialTransferTime)+1;
 
                     int timespan = Math.Max(minTimespan, Settings.MinimumRefreshRateMs - (int)_mStopwatch.ElapsedMilliseconds);
                     if (timespan > 0) {
@@ -83,7 +90,7 @@ namespace adrilight {
                     _mStopwatch.Reset();
                 }
             } catch (Exception ex) {
-                Console.Write(ex);
+                MessageBox.Show(ex.ToString(), "error in serial send routine");
             } finally {
                 if (null != _mSerialPort && _mSerialPort.IsOpen) {
                     _mSerialPort.Close();
