@@ -20,13 +20,14 @@ namespace adrilight {
         static void Main() {
             Settings.Refresh();
 
-            Application.EnableVisualStyles();
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) => ApplicationOnThreadException(sender, args.ExceptionObject as Exception);
+                Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.ThreadException += ApplicationOnThreadException;
+            Application.ThreadException += (sender,args) => ApplicationOnThreadException(sender, args.Exception);
             Application.Run(new MainForm());
         }
 
-        private static void ApplicationOnThreadException(object sender, ThreadExceptionEventArgs args)
+        private static void ApplicationOnThreadException(object sender, Exception ex)
         {
             var sb = new StringBuilder();
             sb.AppendLine($"Sender: {sender}");
@@ -35,12 +36,11 @@ namespace adrilight {
                 sb.AppendLine($"Sender Type: {sender.GetType().FullName}");
             }
             sb.AppendLine("-------");
-            var ex = args.Exception;
             do
             {
-                sb.AppendLine($"exception type: {args.Exception.GetType().FullName}");
-                sb.AppendLine($"exception message: {args.Exception.Message}");
-                sb.AppendLine($"exception stacktrace: {args.Exception.StackTrace}");
+                sb.AppendLine($"exception type: {ex.GetType().FullName}");
+                sb.AppendLine($"exception message: {ex.Message}");
+                sb.AppendLine($"exception stacktrace: {ex.StackTrace}");
                 sb.AppendLine("-------");
                 ex = ex.InnerException;
             } while (ex != null);

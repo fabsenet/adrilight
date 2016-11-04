@@ -7,15 +7,20 @@ using System.Drawing.Imaging;
 using System.Threading;
 using System.Threading.Tasks;
 using adrilight.DesktopDuplication;
+using Polly;
 
 namespace adrilight
 {
-  public  class DesktopDuplicatorReader
+  public class DesktopDuplicatorReader
     {
-        private static DesktopDuplicator _desktopDuplicator;
         public bool IsRunning { get; private set; } = false;
 
-        public void Run(CancellationToken token)
+      private readonly Policy _retryPolicy = Policy.Handle<Exception>().
+            WaitAndRetry(13, index => index < 3 ? TimeSpan.FromMilliseconds(100) : TimeSpan.FromSeconds(3));
+
+      private DesktopDuplicator _desktopDuplicator;
+
+      public void Run(CancellationToken token)
         {
             if(IsRunning) throw new Exception(nameof(DesktopDuplicatorReader) +" is already running!");
 
@@ -23,16 +28,12 @@ namespace adrilight
                 Debug.WriteLine("Started Desktop Duplication Reader.");
             try
             {
-                if (_desktopDuplicator == null)
-                {
-                    _desktopDuplicator = new DesktopDuplicator(0);
-                }
-                var desktopDuplicator = _desktopDuplicator; //main window
                 BitmapData bitmapData = new BitmapData();
 
                 while (!token.IsCancellationRequested)
                 {
-                    var frame = desktopDuplicator.GetLatestFrame();
+
+                    var frame = _retryPolicy.Execute<DesktopFrame>(GetNextFrame);
                     if (frame == null)
                     {
                         continue;
@@ -72,12 +73,33 @@ namespace adrilight
             }
             finally
             {
+                _desktopDuplicator?.Dispose();
                 Debug.WriteLine("Stopped Desktop Duplication Reader.");
                 IsRunning = false;
             }
         }
 
-        public static unsafe void GetAverageColorOfRectangularRegion(Rectangle spotRectangle, int stepy, int stepx, BitmapData bitmapData, out int sumR, out int sumG, out int sumB, out int count)
+      private DesktopFrame GetNextFrame()
+      {
+          if (_desktopDuplicator == null)
+          {
+              _desktopDuplicator = new DesktopDuplicator(0);
+          }
+
+          try
+          {
+              var frame = _desktopDuplicator.GetLatestFrame();
+              return frame;
+          }
+          catch (Exception)
+          {
+              _desktopDuplicator?.Dispose();
+              _desktopDuplicator = null;
+              throw;
+          }
+      }
+
+      public static unsafe void GetAverageColorOfRectangularRegion(Rectangle spotRectangle, int stepy, int stepx, BitmapData bitmapData, out int sumR, out int sumG, out int sumB, out int count)
         {
             sumR = 0;
             sumG = 0;

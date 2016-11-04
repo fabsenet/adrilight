@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using Polly;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -14,7 +15,7 @@ namespace adrilight.DesktopDuplication
     /// <summary>
     /// Provides access to frame-by-frame updates of a particular desktop (i.e. one monitor), with image and cursor information.
     /// </summary>
-    public class DesktopDuplicator
+    public class DesktopDuplicator : IDisposable
     {
         private Device _mDevice;
         private Texture2DDescription _mTextureDesc;
@@ -66,26 +67,15 @@ namespace adrilight.DesktopDuplication
         {
             _whichGraphicsCardAdapter = whichGraphicsCardAdapter;
             this._mWhichOutputDevice = whichOutputDevice;
-
-            ReInit();
-        }
-
-        private void ReInit()
-        {
-            //dispose old stuff
-            _mDevice?.Dispose();
-            _mDevice = null;
-            _mDeskDupl?.Dispose();
-            _mDeskDupl = null;
-
+            
             Adapter1 adapter = null;
             try
             {
                 adapter = new Factory1().GetAdapter1(_whichGraphicsCardAdapter);
             }
-            catch (SharpDXException)
+            catch (SharpDXException ex)
             {
-                throw new DesktopDuplicationException("Could not find the specified graphics card adapter.");
+                throw new DesktopDuplicationException("Could not find the specified graphics card adapter.", ex);
             }
             this._mDevice = new Device(adapter);
             Output output = null;
@@ -93,9 +83,9 @@ namespace adrilight.DesktopDuplication
             {
                 output = adapter.GetOutput(_mWhichOutputDevice);
             }
-            catch (SharpDXException)
+            catch (SharpDXException ex)
             {
-                throw new DesktopDuplicationException("Could not find the specified output device.");
+                throw new DesktopDuplicationException("Could not find the specified output device.", ex);
             }
             var output1 = output.QueryInterface<Output1>();
             this._mOutputDesc = output.Description;
@@ -109,7 +99,7 @@ namespace adrilight.DesktopDuplication
                 OptionFlags = ResourceOptionFlags.None,
                 MipLevels = 1,
                 ArraySize = 1,
-                SampleDescription = { Count = 1, Quality = 0 },
+                SampleDescription = {Count = 1, Quality = 0},
                 Usage = ResourceUsage.Staging
             };
 
@@ -121,7 +111,8 @@ namespace adrilight.DesktopDuplication
             {
                 if (ex.ResultCode.Code == SharpDX.DXGI.ResultCode.NotCurrentlyAvailable.Result.Code)
                 {
-                    throw new DesktopDuplicationException("There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.");
+                    throw new DesktopDuplicationException(
+                        "There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.");
                 }
             }
         }
@@ -172,17 +163,10 @@ namespace adrilight.DesktopDuplication
                 {
                     return true;
                 }
-                if (ex.Message.Contains("DXGI_ERROR_ACCESS_LOST"))
-                {
-                    //known cause is going through standby!
-                    ReInit();
-                    return RetrieveFrame();
-                }
-                if (ex.ResultCode.Failure)
-                {
-                    throw new DesktopDuplicationException("Failed to acquire next frame.");
-                }
+
+                throw new DesktopDuplicationException("Failed to acquire next frame.", ex);
             }
+
             using (var tempTexture = desktopResource.QueryInterface<Texture2D>())
                 _mDevice.ImmediateContext.CopyResource(tempTexture, _desktopImageTexture);
             desktopResource.Dispose();
@@ -324,6 +308,15 @@ namespace adrilight.DesktopDuplication
                     throw new DesktopDuplicationException("Failed to release frame.");
                 }
             }
+        }
+
+        public void Dispose()
+        {
+            _desktopImageTexture?.Dispose();
+            _mDeskDupl?.Dispose();
+            _mDevice?.Dispose();
+            _finalImage1?.Dispose();
+            _finalImage2?.Dispose();
         }
     }
 }
