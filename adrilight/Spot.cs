@@ -59,11 +59,6 @@ namespace adrilight {
             Blue = blue;
         }
 
-        public void SetColor(Color color)
-        {
-            Brush.Color = color;
-        }
-
         public void Dispose() {
             Brush?.Dispose();
         }
