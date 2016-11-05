@@ -69,5 +69,14 @@ You have another idea for a feature? Please create an issue.
 
 in order of newest changes first:
 
+* Upped the serial connection speed to allow a more fluent experience
+* the ambilight goes dark (instead of back to the animation mode) after the connection to the pc is lost (for example when in goes into standby)
+* Performance work in how the color of each spot is detected
 * Converted screen capturing to use the Desktop Duplication API (heavily based on the [sample code from jasonpang](https://github.com/jasonpang/desktop-duplication-net)) 
 * initally forked from [bambilight by MrBoe](https://github.com/MrBoe/Bambilight) because of missing Windows 10 support
+
+
+# Thanks
+
+* This is a fork from the originally ambilight clone project [bambilight by MrBoe](https://github.com/MrBoe/Bambilight) and therefore (and to met the MIT licence) a big thank you goes to [MrBoe](https://github.com/MrBoe)
+* More thanks goes to [jasonpong](https://github.com/jasonpang) for his [sample code for the Desktop Duplication API](https://github.com/jasonpang/desktop-duplication-net)
