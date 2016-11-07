@@ -69,6 +69,10 @@ You have another idea for a feature? Please create an issue.
 
 in order of newest changes first:
 
+## Release v0.1.1
+* added a proper icon for the window and the notification tray
+
+## Release v0.1
 * Upped the serial connection speed to allow a more fluent experience
 * the ambilight goes dark (instead of back to the animation mode) after the connection to the pc is lost (for example when in goes into standby)
 * Performance work in how the color of each spot is detected
