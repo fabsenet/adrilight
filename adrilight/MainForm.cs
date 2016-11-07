@@ -36,6 +36,7 @@ namespace adrilight {
 
             _mNotifyIcon = new NotifyIcon();
             _mNotifyIcon.Text = "adrilight";
+            _mNotifyIcon.Icon = this.Icon;
             _mNotifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
 
             _mNotifyIcon.ContextMenu = _mContextMenu;

@@ -31,6 +31,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBoxSpots = new System.Windows.Forms.GroupBox();
             this.resetOffsetXButton = new System.Windows.Forms.Button();
             this.resetOffsetYButton = new System.Windows.Forms.Button();
@@ -587,6 +588,7 @@
             this.Controls.Add(this.groupBoxTransfer);
             this.Controls.Add(this.groupBoxLEDs);
             this.Controls.Add(this.groupBoxSpots);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(784, 524);
