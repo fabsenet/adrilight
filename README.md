@@ -28,17 +28,22 @@ This should be improved but a quick rundown on what to do:
   * connect power with the strip
   * connect the arduino with the data in and ground from the strip
 * Software setup
-  * download arduino IDE 
-  * add FastLED module
-  * configure the settings at the top of the script
-  * program the arduino
-  * start adrilight.exe and setup the same config
-  * Number of LEDs in arduino code differs from the number of spots in the app!!
+  * Download latest adrilight release
+    * [releases page](https://github.com/fabsenet/adrilight/releases)
+    * alternatively: clone the adrilight repo and build it yourself
+  * Arduino
+    * download arduino IDE 
+    * add FastLED module
+    * configure the settings at the top of the script `adrilight.ino` (included in adrilight release)
+    * program the arduino
+  * Adrilight setup on the HTPC
+    * start `adrilight.exe` (included in adrilight release) and setup the same config
+    * Number of LEDs in arduino code differs from the number of spots in the app!!
 * *enjoy ambient lighting!*
 
 # White balance
 
-How to figure out what numbers to enter?! **TODO**
+**TODO** The white balance need to be exposed on the GUI and there should be a tutorial on what numbers to enter?!
 
 # What is my maximum LED framerate?
 
