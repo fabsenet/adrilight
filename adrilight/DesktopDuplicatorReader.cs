@@ -1,11 +1,10 @@
-﻿
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using adrilight.DesktopDuplication;
 using Polly;
 
@@ -16,7 +15,24 @@ namespace adrilight
         public bool IsRunning { get; private set; } = false;
 
         private readonly Policy _retryPolicy = Policy.Handle<Exception>().
-            WaitAndRetry(13, index => index < 3 ? TimeSpan.FromMilliseconds(100) : TimeSpan.FromSeconds(3));
+            WaitAndRetryForever(ProvideDelayDuration);
+
+        private static TimeSpan ProvideDelayDuration(int index)
+        {
+            if (index < 10)
+            {
+                //first second
+                return TimeSpan.FromMilliseconds(100);
+            }
+
+            if (index < 10 + 256)
+            {
+                //steps where there is also led dimming
+                SpotSet.IndicateMissingValues();
+                return TimeSpan.FromMilliseconds(5000d/256);
+            }
+            return TimeSpan.FromMilliseconds(1000);
+        }
 
         private DesktopDuplicator _desktopDuplicator;
 
@@ -36,6 +52,7 @@ namespace adrilight
                     var frame = _retryPolicy.Execute<DesktopFrame>(GetNextFrame);
                     if (frame == null)
                     {
+                        //there was a timeout before there was the next frame, simply retry!
                         continue;
                     }
 
@@ -43,28 +60,33 @@ namespace adrilight
                     image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb, bitmapData);
                     lock (SpotSet.Lock)
                     {
+                        var imageRectangle = new Rectangle(0, 0, image.Width, image.Height);
+                        Parallel.ForEach(SpotSet.Spots
+                            , spot =>
+                            {
+                                const int numberOfSteps = 15;
+                                int stepx = Math.Max(1, spot.Rectangle.Width/numberOfSteps);
+                                int stepy = Math.Max(1, spot.Rectangle.Height/numberOfSteps);
 
-                        Parallel.ForEach(SpotSet.Spots, spot =>
-                        {
+                                int sumR;
+                                int sumG;
+                                int sumB;
+                                int count;
+                                if (imageRectangle.Width != SpotSet.ExpectedScreenBound.Width || imageRectangle.Height != SpotSet.ExpectedScreenBound.Height)
+                                {
+                                    //the screen was resized or this is some kind of powersaving state
+                                    SpotSet.IndicateMissingValues();
+                                    return;
+                                }
+                                GetAverageColorOfRectangularRegion(spot.Rectangle, stepy, stepx, bitmapData, out sumR, out sumG, out sumB, out count);
 
-                            const int numberOfSteps = 15;
-                            int stepx = Math.Max(1, spot.Width/numberOfSteps);
-                            int stepy = Math.Max(1, spot.Height/numberOfSteps);
+                                var countInverse = 1f/count;
+                                byte finalR, finalG, finalB;
+                                ApplyColorCorrections(sumR*countInverse, sumG*countInverse, sumB*countInverse, out finalR, out finalG, out finalB);
 
-                            int sumR;
-                            int sumG;
-                            int sumB;
-                            int count;
-                            GetAverageColorOfRectangularRegion(spot.Rectangle, stepy, stepx, bitmapData, out sumR, out sumG, out sumB, out count);
-                            //                            White balance    1,0000  0,8730  0,7453
+                                spot.SetColor(finalR, finalG, finalB);
 
-                            var countInverse = 1f/count;
-                            byte finalR, finalG, finalB;
-                            ApplyColorCorrections(sumR*countInverse, sumG*countInverse, sumB*countInverse, out finalR, out finalG, out finalB);
-
-                            spot.SetColor(finalR, finalG, finalB);
-
-                        });
+                            });
                     }
                     image.UnlockBits(bitmapData);
                 }
@@ -72,6 +94,8 @@ namespace adrilight
             finally
             {
                 _desktopDuplicator?.Dispose();
+                _desktopDuplicator = null;
+
                 Debug.WriteLine("Stopped Desktop Duplication Reader.");
                 IsRunning = false;
             }
@@ -93,9 +117,9 @@ namespace adrilight
 
             //white balance
             //todo: introduce settings for white balance adjustments
-            r = 1f * r;
-            g = 0.8730f * g;
-            b = 0.7453f * b;
+            r = 1f*r;
+            g = 0.8730f*g;
+            b = 0.7453f*b;
 
             //output
             finalR = (byte) r;
@@ -115,7 +139,7 @@ namespace adrilight
         {
             if (_desktopDuplicator == null)
             {
-                _desktopDuplicator = new DesktopDuplicator(0);
+                _desktopDuplicator = new DesktopDuplicator(0, 0);
             }
 
             try

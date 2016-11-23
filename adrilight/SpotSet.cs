@@ -1,66 +1,91 @@
 ﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
 
-namespace adrilight {
-
-    class SpotSet {
+namespace adrilight
+{
+    internal static class SpotSet
+    {
 
         public static Spot[] Spots { get; set; }
         public static readonly object Lock = new object();
 
-        public static int CountSpots(int spotsX, int spotsY) {
-            int counter = spotsX * spotsY;
-
-            if (spotsX > 1 && spotsY > 1) {
-                counter -= ((spotsX - 2) * (spotsY - 2));
+        /// <summary>
+        /// returns the number of leds
+        /// </summary>
+        public static int CountLeds(int spotsX, int spotsY)
+        {
+            if (spotsX <= 1 || spotsY <= 1)
+            {
+                //special case because it is not really a rectangle of lights but a single light or a line of lights
+                return spotsX*spotsY;
             }
 
-            return counter;
+            //normal case
+            return 2*spotsX + 2*spotsY - 4;
         }
 
-        public static void Refresh() {
-            lock (Lock) {
-                Spots = new Spot[CountSpots(Settings.SpotsX, Settings.SpotsY)];
+        public static Rectangle ExpectedScreenBound { get; private set; }
+        public static void Refresh()
+        {
+            lock (Lock)
+            {
+                Spots = new Spot[CountLeds(Settings.SpotsX, Settings.SpotsY)];
 
-                int canvasSizeX = (Program.ScreenWidth - 2 * Settings.BorderDistanceX);
-                int canvasSizeY = (Program.ScreenHeight - 2 * Settings.BorderDistanceY);
+                var rectangle = ExpectedScreenBound = Screen.PrimaryScreen.Bounds;
 
-                int xResolution = Settings.SpotsX > 1 ? (canvasSizeX - Settings.SpotWidth) / (Settings.SpotsX - 1) : 0;
-                int xRemainingOffset = Settings.SpotsX > 1 ? ((canvasSizeX - Settings.SpotWidth) % (Settings.SpotsX - 1)) / 2 : 0;
-                int yResolution = Settings.SpotsY > 1 ? (canvasSizeY - Settings.SpotHeight) / (Settings.SpotsY - 1) : 0;
-                int yRemainingOffset = Settings.SpotsY > 1 ? ((canvasSizeY - Settings.SpotHeight) % (Settings.SpotsY - 1)) / 2 : 0;
+                var canvasSizeX = (rectangle.Width - 2*Settings.BorderDistanceX);
+                var screenHeight = rectangle.Height;
+                var canvasSizeY = (screenHeight - 2*Settings.BorderDistanceY);
 
-                int x, y, counter = 0;
-                int relationIndex = Settings.SpotsX - Settings.SpotsY + 1;
+                var xResolution = Settings.SpotsX > 1 ? (canvasSizeX - Settings.SpotWidth)/(Settings.SpotsX - 1) : 0;
+                var xRemainingOffset = Settings.SpotsX > 1 ? ((canvasSizeX - Settings.SpotWidth)%(Settings.SpotsX - 1))/2 : 0;
+                var yResolution = Settings.SpotsY > 1 ? (canvasSizeY - Settings.SpotHeight)/(Settings.SpotsY - 1) : 0;
+                var yRemainingOffset = Settings.SpotsY > 1 ? ((canvasSizeY - Settings.SpotHeight)%(Settings.SpotsY - 1))/2 : 0;
 
-                for (int j = 0; j < Settings.SpotsY; j++) {
-                    for (int i = 0; i < Settings.SpotsX; i++) {
-                        bool isFirstColumn = (i == 0);
-                        bool isLastColumn = (i == Settings.SpotsX - 1);
-                        bool isFirstRow = (j == 0);
-                        bool isLastRow = (j == Settings.SpotsY - 1);
+                var counter = 0;
+                var relationIndex = Settings.SpotsX - Settings.SpotsY + 1;
+
+                for (var j = 0; j < Settings.SpotsY; j++)
+                {
+                    for (var i = 0; i < Settings.SpotsX; i++)
+                    {
+                        var isFirstColumn = i == 0;
+                        var isLastColumn = i == Settings.SpotsX - 1;
+                        var isFirstRow = j == 0;
+                        var isLastRow = j == Settings.SpotsY - 1;
 
                         if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
                         {
-                            x = Math.Max(0, Math.Min(Program.ScreenWidth, xRemainingOffset + Settings.BorderDistanceX + Settings.OffsetX + i * (xResolution) + Settings.SpotWidth / 2));
-                            y = Math.Max(0, Math.Min(Program.ScreenHeight, yRemainingOffset + Settings.BorderDistanceY + Settings.OffsetY + j * (yResolution) + Settings.SpotHeight / 2));
+                            var x = Math.Max(0,
+                                Math.Min(rectangle.Width,
+                                    xRemainingOffset + Settings.BorderDistanceX + Settings.OffsetX + i*(xResolution) + Settings.SpotWidth/2));
+                            var y = Math.Max(0,
+                                Math.Min(screenHeight, yRemainingOffset + Settings.BorderDistanceY + Settings.OffsetY + j*(yResolution) + Settings.SpotHeight/2));
 
-                            int index = counter++; // in first row index is always counter
+                            var index = counter++; // in first row index is always counter
 
-                            if (Settings.SpotsX > 1 && Settings.SpotsY > 1) {
-                                if (!isFirstRow && !isLastRow) {
-                                    if (isFirstColumn) {
-                                        index += relationIndex + ((Settings.SpotsY - 1 - j) * 3);
-                                    } else if (isLastColumn) {
+                            if (Settings.SpotsX > 1 && Settings.SpotsY > 1)
+                            {
+                                if (!isFirstRow && !isLastRow)
+                                {
+                                    if (isFirstColumn)
+                                    {
+                                        index += relationIndex + ((Settings.SpotsY - 1 - j)*3);
+                                    }
+                                    else if (isLastColumn)
+                                    {
                                         index -= j;
                                     }
                                 }
 
-                                if (!isFirstRow && isLastRow) {
-                                    index += relationIndex - (i * 2);
+                                if (!isFirstRow && isLastRow)
+                                {
+                                    index += relationIndex - (i*2);
                                 }
                             }
-                            var spotWidth = Math.Min(Settings.SpotWidth, Math.Min(x, Program.ScreenWidth - x));
-                            var spotHeight = Math.Min(Settings.SpotHeight, Math.Min(y, Program.ScreenHeight- y));
+                            var spotWidth = Math.Min(Settings.SpotWidth, Math.Min(x, rectangle.Width - x));
+                            var spotHeight = Math.Min(Settings.SpotHeight, Math.Min(y, screenHeight - y));
                             SpotSet.Spots[index] = new Spot(x, y, spotWidth, spotHeight);
                         }
                     }
@@ -73,26 +98,31 @@ namespace adrilight {
             }
         }
 
-        private static void Mirror(int startIndex, int length) {
-            int halfLength = (length / 2);
-            int endIndex = startIndex + length - 1;
+        private static void Mirror(int startIndex, int length)
+        {
+            var halfLength = (length/2);
+            var endIndex = startIndex + length - 1;
 
-            for (int i = 0; i < halfLength; i++) {
+            for (var i = 0; i < halfLength; i++)
+            {
                 Swap(startIndex + i, endIndex - i);
             }
         }
 
-        private static void Swap(int index1, int index2) {
-            Spot temp = Spots[index1];
+        private static void Swap(int index1, int index2)
+        {
+            var temp = Spots[index1];
             Spots[index1] = Spots[index2];
             Spots[index2] = temp;
         }
 
-        private static void MirrorX() {
+        private static void MirrorX()
+        {
             // copy swap last row to first row inverse
-            for (int i = 0; i < Settings.SpotsX; i++) {
-                int index1 = i;
-                int index2 = (Spots.Length - 1) - (Settings.SpotsY - 2) - i;
+            for (var i = 0; i < Settings.SpotsX; i++)
+            {
+                var index1 = i;
+                var index2 = (Spots.Length - 1) - (Settings.SpotsY - 2) - i;
                 Swap(index1, index2);
             }
 
@@ -101,14 +131,16 @@ namespace adrilight {
 
             // mirror last column
             if (Settings.SpotsX > 1)
-                Mirror(2 * Settings.SpotsX + Settings.SpotsY - 2, Settings.SpotsY - 2);
+                Mirror(2*Settings.SpotsX + Settings.SpotsY - 2, Settings.SpotsY - 2);
         }
 
-        private static void MirrorY() {
+        private static void MirrorY()
+        {
             // copy swap last row to first row inverse
-            for (int i = 0; i < Settings.SpotsY - 2; i++) {
-                int index1 = Settings.SpotsX + i;
-                int index2 = (Spots.Length - 1) - i;
+            for (var i = 0; i < Settings.SpotsY - 2; i++)
+            {
+                var index1 = Settings.SpotsX + i;
+                var index2 = (Spots.Length - 1) - i;
                 Swap(index1, index2);
             }
 
@@ -120,12 +152,22 @@ namespace adrilight {
                 Mirror(Settings.SpotsX + Settings.SpotsY - 2, Settings.SpotsX);
         }
 
-        private static void Offset(int offset) {
-            Spot[] temp = new Spot[Spots.Length];
-            for (int i = 0; i < Spots.Length; i++) {
-                temp[(i + temp.Length + offset) % temp.Length] = Spots[i];
+        private static void Offset(int offset)
+        {
+            var temp = new Spot[Spots.Length];
+            for (var i = 0; i < Spots.Length; i++)
+            {
+                temp[(i + temp.Length + offset)%temp.Length] = Spots[i];
             }
             Spots = temp;
+        }
+
+        public static void IndicateMissingValues()
+        {
+            foreach (var spot in Spots)
+            {
+                spot.IndicateMissingValue();
+            }
         }
     }
 

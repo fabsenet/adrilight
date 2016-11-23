@@ -6,46 +6,33 @@ using System.Drawing;
 
 namespace adrilight {
 
-    [DebuggerDisplay("Spot: TopLeft={TopLeft}, BottomRight={BottomRight}, Color={Red},{Green},{Blue}")]
+    [DebuggerDisplay("Spot: Rectangle={Rectangle}, Color={Red},{Green},{Blue}")]
     sealed class Spot : IDisposable {
 
-        public Spot(int x, int y, int aWidth, int aHeight) : this(new DxPoint(x, y), aWidth, aHeight) { }
+        public Spot(int x, int y, int aWidth, int aHeight)
+        {
+            var topLeft = new DxPoint(x - aWidth/2, y - aHeight/2);
+            Rectangle = new Rectangle(topLeft.X, topLeft.Y, aWidth, aHeight);
 
-        public Spot(DxPoint aCenter, int aWidth, int aHeight) {
-            Width = aWidth;
-            Height = aHeight;
-
-            int distanceX = aWidth / 2;
-            int distanceY = aHeight / 2;
-            TopLeft = new DxPoint(aCenter.X - distanceX, aCenter.Y - distanceY);
-            BottomRight = new DxPoint(aCenter.X + distanceX, aCenter.Y + distanceY);
-
-            Rectangle = new Rectangle(TopLeft.X, TopLeft.Y, Width, Height);
-            RectangleOverlayBorder = new Rectangle(TopLeft.X + 2, TopLeft.Y + 2, Width - 4, Height - 4);
-            RectangleOverlayFilling = new Rectangle(TopLeft.X + 4, TopLeft.Y + 4, Width - 8, Height - 8);
-
-            Brush = new SolidBrush(Color.Black);
+            RectangleOverlayBorder = new Rectangle(topLeft.X + 2, topLeft.Y + 2, aWidth - 4, aHeight - 4);
+            RectangleOverlayFilling = new Rectangle(topLeft.X + 4, topLeft.Y + 4, aWidth - 8, aHeight - 8);
         }
 
 
-        public int Width { get; private set; }
-        public int Height { get; private set; }
 
-        public DxPoint TopLeft { get; private set; }
-        public DxPoint BottomRight { get; private set; }
 
         public Rectangle Rectangle { get; private set; }
         public Rectangle RectangleOverlayBorder { get; private set; }
         public Rectangle RectangleOverlayFilling { get; private set; }
 
-        private SolidBrush Brush { get; set; }
+        private readonly SolidBrush _brush = new SolidBrush(Color.Black);
 
         public SolidBrush OnDemandBrush
         {
             get
             {
-                 Brush.Color = Color.FromArgb(Red, Green, Blue);
-                 return Brush;
+                _brush.Color = Color.FromArgb(Red, Green, Blue);
+                 return _brush;
             }
         }
         public byte Red { get; private set; }
@@ -57,10 +44,35 @@ namespace adrilight {
             Red = red;
             Green = green;
             Blue = blue;
+            _lastMissingValueIndication = null;
         }
 
         public void Dispose() {
-            Brush?.Dispose();
+            _brush?.Dispose();
+        }
+
+        private DateTime? _lastMissingValueIndication;
+        private readonly double _dimToBlackIntervalInMs = TimeSpan.FromMilliseconds(10000).TotalMilliseconds;
+
+        private float _dimR, _dimG, _dimB;
+
+        public void IndicateMissingValue()
+        {
+            if (!_lastMissingValueIndication.HasValue)
+            {
+                //a new period of missing values starts, copy last values
+                _dimR = Red;
+                _dimG = Green;
+                _dimB = Blue;
+                _lastMissingValueIndication = DateTime.UtcNow;
+            }
+
+            var dimFactor =(float) (1 - (DateTime.UtcNow - _lastMissingValueIndication.Value).TotalMilliseconds / _dimToBlackIntervalInMs);
+            dimFactor = Math.Max(0, Math.Min(1, dimFactor));
+
+            Red = (byte) (dimFactor*_dimR);
+            Green = (byte) (dimFactor*_dimG);
+            Blue = (byte) (dimFactor*_dimB);
         }
     }
 }

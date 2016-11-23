@@ -1,6 +1,7 @@
 ﻿
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
 using System.Threading;
@@ -13,8 +14,6 @@ namespace adrilight {
 
         private NotifyIcon _mNotifyIcon;
         private ContextMenu _mContextMenu;
-
-       // DxScreenCapture mDxScreenCapture;
         SerialStream _mSerialStream;
         Overlay _mOverlay;
 
@@ -24,22 +23,21 @@ namespace adrilight {
 
             Application.ApplicationExit += OnApplicationExit;
             SystemEvents.PowerModeChanged += OnPowerModeChanged;
-
-
             Settings.OverlayActive = checkBoxOverlayActive.Checked;
-        
         }
 
         private void InitTrayIcon() {
             _mContextMenu = new ContextMenu();
             _mContextMenu.MenuItems.Add("Exit", NotifyIcon_ExitClick);
 
-            _mNotifyIcon = new NotifyIcon();
-            _mNotifyIcon.Text = "adrilight";
-            _mNotifyIcon.Icon = this.Icon;
+            _mNotifyIcon = new NotifyIcon
+            {
+                Text = "adrilight",
+                Icon = this.Icon,
+                Visible = true,
+                ContextMenu = _mContextMenu
+            };
             _mNotifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
-
-            _mNotifyIcon.ContextMenu = _mContextMenu;
         }
 
         private void MainForm_Load(object sender, EventArgs e) {
@@ -49,7 +47,7 @@ namespace adrilight {
             RefreshFields();
 
             if (Settings.StartMinimized) {
-                WindowState = FormWindowState.Minimized;
+                Visible = false;
             }
             RefreshAll();
 
@@ -59,18 +57,13 @@ namespace adrilight {
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            if (_mNotifyIcon == null) return;
-
-            if (FormWindowState.Minimized == WindowState) {
-                _mNotifyIcon.Visible = true;
-                ShowInTaskbar = false;
-            } else if (FormWindowState.Normal == WindowState) {
-                _mNotifyIcon.Visible = false;
-            }
+            ShowInTaskbar = WindowState != FormWindowState.Minimized;
+            Visible = WindowState != FormWindowState.Minimized;
+            Trace.WriteLine("WindowState is "+WindowState);
         }
 
         private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e) {
-            ShowInTaskbar = true;
+            Visible = true;
             WindowState = FormWindowState.Normal;
         }
 
@@ -82,13 +75,19 @@ namespace adrilight {
             _mNotifyIcon.Dispose();
         }
 
+        private bool _isSuspending;
         private void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e) {
-            if (e.Mode == PowerModes.Resume) {
+            if (e.Mode == PowerModes.Resume)
+            {
+                _isSuspending = false;
                 RefreshTransferState();
                 RefreshOverlayState();
                 RefreshCapturingState();
-            } else if(e.Mode == PowerModes.Suspend) {
+            } else if(e.Mode == PowerModes.Suspend)
+            {
+                _isSuspending = true;
                 StopBackgroundWorkers();
+                RefreshCapturingState();
             }
         }
 
@@ -122,22 +121,24 @@ namespace adrilight {
             numericUpDownSpotsY.Maximum = 100;
 
             trackBarSpotWidth.Minimum = 10;
-            trackBarSpotWidth.Maximum = Program.ScreenWidth;
+            var screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            trackBarSpotWidth.Maximum = screenWidth;
 
             trackBarSpotHeight.Minimum = 10;
-            trackBarSpotHeight.Maximum = Program.ScreenHeight;
+            var screenHeight = Screen.PrimaryScreen.Bounds.Height;
+            trackBarSpotHeight.Maximum = screenHeight;
 
             trackBarBorderDistanceX.Minimum = 0;
-            trackBarBorderDistanceX.Maximum = Program.ScreenWidth / 2;
+            trackBarBorderDistanceX.Maximum = Screen.PrimaryScreen.Bounds.Width / 2;
 
             trackBarBorderDistanceY.Minimum = 0;
-            trackBarBorderDistanceY.Maximum = Program.ScreenHeight / 2;
+            trackBarBorderDistanceY.Maximum = screenHeight / 2;
 
-            trackBarOffsetX.Minimum = -Program.ScreenWidth;
-            trackBarOffsetX.Maximum = Program.ScreenWidth;
+            trackBarOffsetX.Minimum = -Screen.PrimaryScreen.Bounds.Width;
+            trackBarOffsetX.Maximum = screenWidth;
 
-            trackBarOffsetY.Minimum = -Program.ScreenHeight;
-            trackBarOffsetY.Maximum = Program.ScreenHeight;
+            trackBarOffsetY.Minimum = -screenHeight;
+            trackBarOffsetY.Maximum = screenHeight;
 
             numericUpDownLedsPerSpot.Minimum = 1;
             numericUpDownLedsPerSpot.Maximum = 100;
@@ -198,7 +199,7 @@ namespace adrilight {
 
             numericUpDownMinimumRefreshRateMs.Value = Settings.MinimumRefreshRateMs;
 
-            groupBoxLEDs.Text = "LEDs (" + (SpotSet.CountSpots(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot) + ")";
+            groupBoxLEDs.Text = "LEDs (" + (SpotSet.CountLeds(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot) + ")";
         }
 
         private void SetTrackBarValue(TrackBar trackBar, int value) {
@@ -328,17 +329,15 @@ namespace adrilight {
             // can be changed on the fly without refreshing
         }
 
-       private  DesktopDuplicatorReader _desktopDuplicatorReader;
+        private DesktopDuplicatorReader _desktopDuplicatorReader;
         private CancellationTokenSource _cancellationTokenSource;
+
         private void RefreshCapturingState()
         {
 
             var isRunning = _cancellationTokenSource!=null && _desktopDuplicatorReader != null && _desktopDuplicatorReader.IsRunning;
-            var shouldBeRunning = Settings.TransferActive || Settings.OverlayActive;
+            var shouldBeRunning = !_isSuspending && ( Settings.TransferActive || Settings.OverlayActive);
 
-//#if DEBUG
-//            shouldBeRunning = shouldBeRunning || Debugger.IsAttached; //always run capturing if there is a debugger!
-//#endif
             if (isRunning && !shouldBeRunning)
             {
                 //stop it!
@@ -358,17 +357,6 @@ namespace adrilight {
                 };
                 thread.Start();
             }
-            //TODO
-            //if (null == mDxScreenCapture) {
-            //    mDxScreenCapture = new DxScreenCapture();
-            //}
-
-            //if (Settings.TransferActive || Settings.OverlayActive) {
-            //    mDxScreenCapture.Start();
-            //} else {
-            //    mDxScreenCapture.Stop();
-            //    mDxScreenCapture = null;
-            //}
         }
 
         private void RefreshTransferState() {
@@ -416,11 +404,6 @@ namespace adrilight {
                 _mSerialStream.Stop();
                 _mSerialStream = null;
             }
-            //TODO
-            //if (null != mDxScreenCapture) {
-            //    mDxScreenCapture.Stop();
-            //    mDxScreenCapture = null;
-            //}
         }
 
         private void resetOffsetXButton_Click(object sender, EventArgs e)

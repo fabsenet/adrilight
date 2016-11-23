@@ -50,17 +50,18 @@ namespace adrilight {
         }
 
         private void InitArrowPoints() {
-            _mTopEnd = new Point(1 * (Program.ScreenWidth / 4), 1 * (Program.ScreenHeight / 4));
-            _mTopHead = new Point(3 * (Program.ScreenWidth / 4), 1 * (Program.ScreenHeight / 4));
+            var screenHeight = Screen.PrimaryScreen.Bounds.Height;
+            _mTopEnd = new Point(1 * (Screen.PrimaryScreen.Bounds.Width / 4), 1 * (screenHeight / 4));
+            _mTopHead = new Point(3 * (Screen.PrimaryScreen.Bounds.Width / 4), 1 * (screenHeight / 4));
 
-            _mRightEnd = new Point(4 * (Program.ScreenWidth / 5), 1 * (Program.ScreenHeight / 4));
-            _mRightHead = new Point(4 * (Program.ScreenWidth / 5), 3 * (Program.ScreenHeight / 4));
+            _mRightEnd = new Point(4 * (Screen.PrimaryScreen.Bounds.Width / 5), 1 * (screenHeight / 4));
+            _mRightHead = new Point(4 * (Screen.PrimaryScreen.Bounds.Width / 5), 3 * (screenHeight / 4));
 
-            _mBottomEnd = new Point(3 * (Program.ScreenWidth / 4), 3 * (Program.ScreenHeight / 4));
-            _mBottomHead = new Point(1 * (Program.ScreenWidth / 4), 3 * (Program.ScreenHeight / 4));
+            _mBottomEnd = new Point(3 * (Screen.PrimaryScreen.Bounds.Width / 4), 3 * (screenHeight / 4));
+            _mBottomHead = new Point(1 * (Screen.PrimaryScreen.Bounds.Width / 4), 3 * (screenHeight / 4));
 
-            _mLeftEnd = new Point(1 * (Program.ScreenWidth / 5), 3 * (Program.ScreenHeight / 4));
-            _mLeftHead = new Point(1 * (Program.ScreenWidth / 5), 1 * (Program.ScreenHeight / 4));
+            _mLeftEnd = new Point(1 * (Screen.PrimaryScreen.Bounds.Width / 5), 3 * (screenHeight / 4));
+            _mLeftHead = new Point(1 * (Screen.PrimaryScreen.Bounds.Width / 5), 1 * (screenHeight / 4));
         }
 
         public void Start() {
@@ -115,7 +116,7 @@ namespace adrilight {
                                 _mGraphics.FillRectangle(spot.OnDemandBrush, spot.RectangleOverlayFilling);
 
                                 if (spot == SpotSet.Spots[0]) {
-                                    _mGraphics.DrawString("1.", font, solidBrushBlack, spot.BottomRight.X + 3, spot.BottomRight.Y + 3);
+                                    _mGraphics.DrawString("1.", font, solidBrushBlack, spot.Rectangle.Right + 3, spot.Rectangle.Bottom + 3);
                                 }
                             }
                         }

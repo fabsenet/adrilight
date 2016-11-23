@@ -9,10 +9,6 @@ namespace adrilight {
 
     static class Program {
 
-        public static int ScreenWidth => Screen.PrimaryScreen.Bounds.Width;
-
-        public static int ScreenHeight => Screen.PrimaryScreen.Bounds.Height;
-
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
