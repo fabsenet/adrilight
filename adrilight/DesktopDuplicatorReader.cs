@@ -60,6 +60,8 @@ namespace adrilight
                     image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb, bitmapData);
                     lock (SpotSet.Lock)
                     {
+                        var useLinearLighting = Settings.UseLinearLighting;
+
                         var imageRectangle = new Rectangle(0, 0, image.Width, image.Height);
                         Parallel.ForEach(SpotSet.Spots
                             , spot =>
@@ -82,7 +84,7 @@ namespace adrilight
 
                                 var countInverse = 1f/count;
                                 byte finalR, finalG, finalB;
-                                ApplyColorCorrections(sumR*countInverse, sumG*countInverse, sumB*countInverse, out finalR, out finalG, out finalB);
+                                ApplyColorCorrections(sumR*countInverse, sumG*countInverse, sumB*countInverse, out finalR, out finalG, out finalB, useLinearLighting);
 
                                 spot.SetColor(finalR, finalG, finalB);
 
@@ -101,7 +103,7 @@ namespace adrilight
             }
         }
 
-        private void ApplyColorCorrections(float r, float g, float b, out byte finalR, out byte finalG, out byte finalB)
+        private void ApplyColorCorrections(float r, float g, float b, out byte finalR, out byte finalG, out byte finalB, bool useLinearLighting)
         {
             if (r <= Settings.SaturationTreshold && g <= Settings.SaturationTreshold && b <= Settings.SaturationTreshold)
             {
@@ -110,7 +112,7 @@ namespace adrilight
                 return;
             }
 
-            if (!Settings.UseLinearLighting)
+            if (!useLinearLighting)
             {
                 //apply non linear LED fading ( http://www.mikrocontroller.net/articles/LED-Fading )
                 r = FadeNonLinear(r);
