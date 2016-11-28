@@ -110,10 +110,13 @@ namespace adrilight
                 return;
             }
 
-            //apply non linear LED fading ( http://www.mikrocontroller.net/articles/LED-Fading )
-            r = FadeNonLinear(r);
-            g = FadeNonLinear(g);
-            b = FadeNonLinear(b);
+            if (!Settings.UseLinearLighting)
+            {
+                //apply non linear LED fading ( http://www.mikrocontroller.net/articles/LED-Fading )
+                r = FadeNonLinear(r);
+                g = FadeNonLinear(g);
+                b = FadeNonLinear(b);
+            }
 
             //white balance
             //todo: introduce settings for white balance adjustments

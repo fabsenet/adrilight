@@ -47,7 +47,8 @@ namespace adrilight {
             RefreshFields();
 
             if (Settings.StartMinimized) {
-                Visible = false;
+                ShowInTaskbar = Visible = false;
+                WindowState = FormWindowState.Minimized;
             }
             RefreshAll();
 
@@ -153,7 +154,11 @@ namespace adrilight {
             numericUpDownMinimumRefreshRateMs.Maximum = 1000;
         }
 
-        private void RefreshFields() {
+        private void RefreshFields()
+        {
+            rbLinearLighting.Checked = Settings.UseLinearLighting;
+            rbNonLinearLighting.Checked = !Settings.UseLinearLighting;
+
             numericUpDownSpotsX.Value = Settings.SpotsX;
 
             numericUpDownSpotsY.Value = Settings.SpotsY;
@@ -416,6 +421,11 @@ namespace adrilight {
         {
             Settings.OffsetY = 0;
             RefreshAll();
+        }
+
+        private void rbLinearLighting_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.UseLinearLighting = rbLinearLighting.Checked;
         }
     }
 }

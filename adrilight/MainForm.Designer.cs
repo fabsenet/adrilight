@@ -70,6 +70,9 @@
             this.groupBoxRun = new System.Windows.Forms.GroupBox();
             this.checkBoxAutostart = new System.Windows.Forms.CheckBox();
             this.checkBoxStartMinimized = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rbLinearLighting = new System.Windows.Forms.RadioButton();
+            this.rbNonLinearLighting = new System.Windows.Forms.RadioButton();
             this.groupBoxSpots.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsX)).BeginInit();
@@ -86,17 +89,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLedOffset)).BeginInit();
             this.groupBoxTransfer.SuspendLayout();
             this.groupBoxRun.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxSpots
             // 
-            this.groupBoxSpots.Controls.Add(this.resetOffsetXButton);
             this.groupBoxSpots.Controls.Add(this.resetOffsetYButton);
+            this.groupBoxSpots.Controls.Add(this.trackBarOffsetY);
+            this.groupBoxSpots.Controls.Add(this.resetOffsetXButton);
             this.groupBoxSpots.Controls.Add(this.numericUpDownSpotsY);
             this.groupBoxSpots.Controls.Add(this.numericUpDownSpotsX);
             this.groupBoxSpots.Controls.Add(this.labelOffsetY);
             this.groupBoxSpots.Controls.Add(this.labelOffsetX);
-            this.groupBoxSpots.Controls.Add(this.trackBarOffsetY);
             this.groupBoxSpots.Controls.Add(this.trackBarOffsetX);
             this.groupBoxSpots.Controls.Add(this.trackBarBorderDistanceY);
             this.groupBoxSpots.Controls.Add(this.labelBorderDistanceY);
@@ -112,7 +116,7 @@
             this.groupBoxSpots.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxSpots.Name = "groupBoxSpots";
             this.groupBoxSpots.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxSpots.Size = new System.Drawing.Size(362, 449);
+            this.groupBoxSpots.Size = new System.Drawing.Size(362, 456);
             this.groupBoxSpots.TabIndex = 6;
             this.groupBoxSpots.TabStop = false;
             this.groupBoxSpots.Text = "Spots";
@@ -550,7 +554,7 @@
             this.groupBoxRun.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxRun.Name = "groupBoxRun";
             this.groupBoxRun.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxRun.Size = new System.Drawing.Size(360, 105);
+            this.groupBoxRun.Size = new System.Drawing.Size(360, 111);
             this.groupBoxRun.TabIndex = 25;
             this.groupBoxRun.TabStop = false;
             this.groupBoxRun.Text = "Control";
@@ -579,19 +583,57 @@
             this.checkBoxStartMinimized.UseVisualStyleBackColor = true;
             this.checkBoxStartMinimized.CheckedChanged += new System.EventHandler(this.checkBoxStartMinimized_CheckedChanged);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.rbNonLinearLighting);
+            this.groupBox1.Controls.Add(this.rbLinearLighting);
+            this.groupBox1.Location = new System.Drawing.Point(388, 482);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(362, 74);
+            this.groupBox1.TabIndex = 26;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Lighting Mode";
+            // 
+            // rbLinearLighting
+            // 
+            this.rbLinearLighting.AutoSize = true;
+            this.rbLinearLighting.Location = new System.Drawing.Point(14, 26);
+            this.rbLinearLighting.Name = "rbLinearLighting";
+            this.rbLinearLighting.Size = new System.Drawing.Size(138, 24);
+            this.rbLinearLighting.TabIndex = 0;
+            this.rbLinearLighting.TabStop = true;
+            this.rbLinearLighting.Text = "Linear Lighting";
+            this.rbLinearLighting.UseVisualStyleBackColor = true;
+            this.rbLinearLighting.CheckedChanged += new System.EventHandler(this.rbLinearLighting_CheckedChanged);
+            // 
+            // rbNonLinearLighting
+            // 
+            this.rbNonLinearLighting.AutoSize = true;
+            this.rbNonLinearLighting.Location = new System.Drawing.Point(194, 25);
+            this.rbNonLinearLighting.Name = "rbNonLinearLighting";
+            this.rbNonLinearLighting.Size = new System.Drawing.Size(154, 24);
+            this.rbNonLinearLighting.TabIndex = 1;
+            this.rbNonLinearLighting.TabStop = true;
+            this.rbNonLinearLighting.Text = "Non-linear fading";
+            this.rbNonLinearLighting.UseVisualStyleBackColor = true;
+            this.rbNonLinearLighting.CheckedChanged += new System.EventHandler(this.rbLinearLighting_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(762, 468);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(762, 568);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxRun);
             this.Controls.Add(this.groupBoxTransfer);
             this.Controls.Add(this.groupBoxLEDs);
             this.Controls.Add(this.groupBoxSpots);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(784, 524);
+            this.MaximumSize = new System.Drawing.Size(784, 624);
             this.MinimumSize = new System.Drawing.Size(784, 524);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -618,6 +660,8 @@
             this.groupBoxTransfer.PerformLayout();
             this.groupBoxRun.ResumeLayout(false);
             this.groupBoxRun.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -661,6 +705,9 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMinimumRefreshRateMs;
         private System.Windows.Forms.Button resetOffsetXButton;
         private System.Windows.Forms.Button resetOffsetYButton;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton rbNonLinearLighting;
+        private System.Windows.Forms.RadioButton rbLinearLighting;
     }
 }
 

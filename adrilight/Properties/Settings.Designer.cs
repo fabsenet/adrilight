@@ -250,5 +250,17 @@ namespace adrilight.Properties {
                 this["MINIMUM_REFRESH_RATE_MS"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool USE_LINEAR_LIGHTING {
+            get {
+                return ((bool)(this["USE_LINEAR_LIGHTING"]));
+            }
+            set {
+                this["USE_LINEAR_LIGHTING"] = value;
+            }
+        }
     }
 }
