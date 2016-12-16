@@ -7,10 +7,14 @@ using System.IO.Ports;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using NLog;
 
 namespace adrilight {
 
-    public partial class MainForm : Form {
+    public partial class MainForm : Form
+    {
+
+        private readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
         private NotifyIcon _mNotifyIcon;
         private ContextMenu _mContextMenu;
@@ -18,12 +22,14 @@ namespace adrilight {
         Overlay _mOverlay;
 
         public MainForm() {
+            _log.Debug("Creating Mainform");
             InitializeComponent();
             InitTrayIcon();
 
             Application.ApplicationExit += OnApplicationExit;
             SystemEvents.PowerModeChanged += OnPowerModeChanged;
             Settings.OverlayActive = checkBoxOverlayActive.Checked;
+            _log.Debug("Created Mainform");
         }
 
         private void InitTrayIcon() {
@@ -73,18 +79,24 @@ namespace adrilight {
         }
 
         private void OnApplicationExit(object sender, EventArgs e) {
+            _log.Debug("Application exit!");
             _mNotifyIcon.Dispose();
         }
 
         private bool _isSuspending;
-        private void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e) {
+
+        private void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            _log.Debug("Changing Powermode to {0}", e.Mode);
+
             if (e.Mode == PowerModes.Resume)
             {
                 _isSuspending = false;
                 RefreshTransferState();
                 RefreshOverlayState();
                 RefreshCapturingState();
-            } else if(e.Mode == PowerModes.Suspend)
+            }
+            else if (e.Mode == PowerModes.Suspend)
             {
                 _isSuspending = true;
                 StopBackgroundWorkers();

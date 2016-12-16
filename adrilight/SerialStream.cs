@@ -1,18 +1,18 @@
 ﻿
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using NLog;
 
 namespace adrilight
 {
 
     internal class SerialStream : IDisposable
     {
+        private ILogger _log = LogManager.GetCurrentClassLogger();
 
         private readonly byte[] _messagePreamble = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09};
 
@@ -23,6 +23,7 @@ namespace adrilight
 
         public void Start()
         {
+            _log.Debug("Start called.");
             if (_workerThread != null) return;
 
             _cancellationTokenSource = new CancellationTokenSource();
@@ -36,6 +37,7 @@ namespace adrilight
 
         public void Stop()
         {
+            _log.Debug("Stop called.");
             if (_workerThread == null) return;
 
             _cancellationTokenSource.Cancel();
@@ -113,10 +115,13 @@ namespace adrilight
                 }
                 catch (OperationCanceledException)
                 {
+                    _log.Debug("OperationCanceledException catched. returning.");
+
                     return;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    _log.Debug(ex, "Exception catched.");
                     //to be safe, we reset the serial port
                     if (serialPort != null && serialPort.IsOpen)
                     {
