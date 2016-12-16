@@ -5,49 +5,62 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace adrilight {
+namespace adrilight
+{
 
-    class SerialStream : IDisposable {
+    internal class SerialStream : IDisposable
+    {
 
-       private readonly byte[] _messagePreamble = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
-        private const int ColorsPerLed = 3;
+        private readonly byte[] _messagePreamble = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09};
 
-        private BackgroundWorker _mBackgroundWorker = new BackgroundWorker();
-        private Stopwatch _mStopwatch = new Stopwatch();
+        private Thread _workerThread;
+        private CancellationTokenSource _cancellationTokenSource;
+        private readonly Stopwatch _stopwatch = new Stopwatch();
 
-        private SerialPort _mSerialPort;
 
-        public SerialStream() {
-            _mBackgroundWorker.DoWork += mBackgroundWorker_DoWork;
-            _mBackgroundWorker.WorkerSupportsCancellation = true;
+        public void Start()
+        {
+            if (_workerThread != null) return;
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            _workerThread = new Thread(mBackgroundWorker_DoWork)
+            {
+                Name = "Serial sending",
+                IsBackground = true
+            };
+            _workerThread.Start(_cancellationTokenSource.Token);
         }
 
-        public void Start() {
-            if (!_mBackgroundWorker.IsBusy) {
-                _mBackgroundWorker.RunWorkerAsync();
-            }
+        public void Stop()
+        {
+            if (_workerThread == null) return;
+
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource = null;
+            _workerThread.Join();
+            _workerThread = null;
         }
 
-        public void Stop() {
-            if (_mBackgroundWorker.IsBusy) {
-                _mBackgroundWorker.CancelAsync();
-            }
-        }
-
-        private byte[] GetOutputStream() {
+        private byte[] GetOutputStream()
+        {
             byte[] outputStream;
 
             int counter = _messagePreamble.Length;
-            lock (SpotSet.Lock) {
-                outputStream = new byte[_messagePreamble.Length + (Settings.LedsPerSpot * SpotSet.Spots.Length * ColorsPerLed)];
+            lock (SpotSet.Lock)
+            {
+                const int colorsPerLed = 3;
+                outputStream = new byte[_messagePreamble.Length + (Settings.LedsPerSpot*SpotSet.Spots.Length*colorsPerLed)];
                 Buffer.BlockCopy(_messagePreamble, 0, outputStream, 0, _messagePreamble.Length);
 
-                foreach (Spot spot in SpotSet.Spots) {
-                    
-                    for (int i = 0; i < Settings.LedsPerSpot; i++) {
-                        
+                foreach (Spot spot in SpotSet.Spots)
+                {
+
+                    for (int i = 0; i < Settings.LedsPerSpot; i++)
+                    {
+
                         outputStream[counter++] = spot.Blue; // blue
                         outputStream[counter++] = spot.Green; // green
                         outputStream[counter++] = spot.Red; // red
@@ -58,56 +71,82 @@ namespace adrilight {
             return outputStream;
         }
 
-        private void mBackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void mBackgroundWorker_DoWork(object tokenObject)
         {
+            var cancellationToken = (CancellationToken) tokenObject;
+            SerialPort serialPort = null;
+
             if (String.IsNullOrEmpty(Settings.ComPort)) return;
 
-            try
+            //retry after exceptions...
+            while (!cancellationToken.IsCancellationRequested)
             {
-                const int baudRate = 1000000; // 115200;
-                _mSerialPort = new SerialPort(Settings.ComPort, baudRate);
-                _mSerialPort.Open();
+                try
+                {
+                    const int baudRate = 1000000; // 115200;
+                    serialPort = new SerialPort(Settings.ComPort, baudRate);
+                    serialPort.Open();
 
-                while (!_mBackgroundWorker.CancellationPending) {
-                    _mStopwatch.Start();
+                    //send frame data
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        _stopwatch.Start();
 
-                    byte[] outputStream = GetOutputStream();
-                    _mSerialPort.Write(outputStream, 0, outputStream.Length);
+                        byte[] outputStream = GetOutputStream();
+                        serialPort.Write(outputStream, 0, outputStream.Length);
 
-                    //ws2812b LEDs need 30 µs = 0.030 ms for each led to set its color so there is a lower minimum to the allowed refresh rate
-                    //receiving over serial takes it time as well and the arduino does both tasks in sequence
-                    //+1 ms extra safe zone
-                    var fastLedTime = (outputStream.Length - _messagePreamble.Length)/3.0*0.030d;
-                    var serialTransferTime = outputStream.Length*10.0*1000.0/baudRate;
-                    var minTimespan = (int)(fastLedTime + serialTransferTime)+1;
+                        //ws2812b LEDs need 30 µs = 0.030 ms for each led to set its color so there is a lower minimum to the allowed refresh rate
+                        //receiving over serial takes it time as well and the arduino does both tasks in sequence
+                        //+1 ms extra safe zone
+                        var fastLedTime = (outputStream.Length - _messagePreamble.Length)/3.0*0.030d;
+                        var serialTransferTime = outputStream.Length*10.0*1000.0/baudRate;
+                        var minTimespan = (int) (fastLedTime + serialTransferTime) + 1;
 
-                    int timespan = Math.Max(minTimespan, Settings.MinimumRefreshRateMs - (int)_mStopwatch.ElapsedMilliseconds);
-                    if (timespan > 0) {
-                        Thread.Sleep(timespan);
+                        int delayInMs = Math.Max(minTimespan, Settings.MinimumRefreshRateMs - (int) _stopwatch.ElapsedMilliseconds);
+                        if (delayInMs > 0)
+                        {
+                            Task.Delay(delayInMs, cancellationToken).Wait(cancellationToken);
+                        }
+
+                        _stopwatch.Reset();
                     }
-
-                    _mStopwatch.Stop();
-                    _mStopwatch.Reset();
                 }
-            } catch (Exception ex) {
-                MessageBox.Show(ex.ToString(), "error in serial send routine");
-            } finally {
-                if (null != _mSerialPort && _mSerialPort.IsOpen) {
-                    _mSerialPort.Close();
-                    _mSerialPort.Dispose();
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+                catch (Exception)
+                {
+                    //to be safe, we reset the serial port
+                    if (serialPort != null && serialPort.IsOpen)
+                    {
+                        serialPort.Close();
+                    }
+                    serialPort?.Dispose();
+                    serialPort = null;
+                }
+                finally
+                {
+                    if (serialPort != null && serialPort.IsOpen)
+                    {
+                        serialPort.Close();
+                        serialPort.Dispose();
+                    }
                 }
             }
 
-            e.Cancel = true;
         }
 
-        public void Dispose() {
+        public void Dispose()
+        {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing) {
-            if (disposing) {
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
                 Stop();
             }
         }
