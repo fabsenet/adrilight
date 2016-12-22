@@ -6,12 +6,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using adrilight.DesktopDuplication;
+using NLog;
 using Polly;
 
 namespace adrilight
 {
     public class DesktopDuplicatorReader
     {
+        private readonly ILogger _log = LogManager.GetCurrentClassLogger();
+
         public bool IsRunning { get; private set; } = false;
 
         private readonly Policy _retryPolicy = Policy.Handle<Exception>().
@@ -50,11 +53,13 @@ namespace adrilight
                 {
 
                     var frame = _retryPolicy.Execute<DesktopFrame>(GetNextFrame);
+                    TraceFrameDetails(frame);
                     if (frame == null)
                     {
                         //there was a timeout before there was the next frame, simply retry!
                         continue;
                     }
+
 
                     var image = frame.DesktopImage;
                     image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb, bitmapData);
@@ -101,6 +106,50 @@ namespace adrilight
                 Debug.WriteLine("Stopped Desktop Duplication Reader.");
                 IsRunning = false;
             }
+        }
+
+        private DateTime? _lastNotNullFrameDateTime;
+        private DateTime? _lastNotNullFrameLoggedDateTime;
+        private int? _lastObservedHeight;
+        private int? _lastObservedWidth;
+
+        private void TraceFrameDetails(DesktopFrame frame)
+        {
+            //there are many frames per second and we need to extract useful information and only log those!
+            if (frame == null)
+            {
+                //if the frame is null, this can mean two things. the timeout from the desktop duplication api was reached
+                //before the monitor content changed or there was some other error.
+                if (!_lastNotNullFrameDateTime.HasValue) _lastNotNullFrameDateTime = DateTime.UtcNow;
+
+                if (!_lastNotNullFrameLoggedDateTime.HasValue 
+                    || DateTime.UtcNow - _lastNotNullFrameLoggedDateTime.Value > TimeSpan.FromSeconds(30))
+                {
+                    _lastNotNullFrameLoggedDateTime = DateTime.UtcNow;
+                    _log.Debug("The frames are null since {0}", _lastNotNullFrameDateTime);
+                }
+            }
+            else
+            {
+                if (_lastNotNullFrameDateTime.HasValue)
+                {
+                    _log.Debug("There is again a frame which is not null!");
+                    _lastNotNullFrameDateTime = null;
+                }
+
+                if (_lastObservedHeight == null || _lastObservedWidth == null
+                    || _lastObservedHeight != frame.DesktopImage.Height
+                    || _lastObservedWidth != frame.DesktopImage.Width)
+                {
+                    _log.Debug("The frame size changed from {0}x{1} to {2}x{3}"
+                        , _lastObservedWidth, _lastObservedHeight
+                        , frame.DesktopImage.Width, frame.DesktopImage.Height);
+
+                    _lastObservedWidth = frame.DesktopImage.Width;
+                    _lastObservedHeight = frame.DesktopImage.Height;
+                }
+            }
+
         }
 
         private void ApplyColorCorrections(float r, float g, float b, out byte finalR, out byte finalG, out byte finalB, bool useLinearLighting)
@@ -152,8 +201,10 @@ namespace adrilight
                 var frame = _desktopDuplicator.GetLatestFrame();
                 return frame;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _log.Error(ex, "GetNextFrame() failed.");
+
                 _desktopDuplicator?.Dispose();
                 _desktopDuplicator = null;
                 throw;
