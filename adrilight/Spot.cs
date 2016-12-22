@@ -58,16 +58,19 @@ namespace adrilight {
 
         public void IndicateMissingValue()
         {
-            if (!_lastMissingValueIndication.HasValue)
+            //trhis method might be called while another thread is calling setcolor() and we need the local copy to have a fixed value
+            var localCopyLastMissingValueIndication = _lastMissingValueIndication;
+
+            if (!localCopyLastMissingValueIndication.HasValue)
             {
                 //a new period of missing values starts, copy last values
                 _dimR = Red;
                 _dimG = Green;
                 _dimB = Blue;
-                _lastMissingValueIndication = DateTime.UtcNow;
+                localCopyLastMissingValueIndication = _lastMissingValueIndication = DateTime.UtcNow;
             }
 
-            var dimFactor =(float) (1 - (DateTime.UtcNow - _lastMissingValueIndication.Value).TotalMilliseconds / _dimToBlackIntervalInMs);
+            var dimFactor =(float) (1 - (DateTime.UtcNow - localCopyLastMissingValueIndication.Value).TotalMilliseconds / _dimToBlackIntervalInMs);
             dimFactor = Math.Max(0, Math.Min(1, dimFactor));
 
             Red = (byte) (dimFactor*_dimR);
