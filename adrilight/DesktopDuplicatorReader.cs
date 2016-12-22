@@ -110,6 +110,7 @@ namespace adrilight
 
         private DateTime? _lastNotNullFrameDateTime;
         private DateTime? _lastNotNullFrameLoggedDateTime;
+        private bool _framesAreNullMessagePrinted;
         private int? _lastObservedHeight;
         private int? _lastObservedWidth;
 
@@ -127,13 +128,18 @@ namespace adrilight
                 {
                     _lastNotNullFrameLoggedDateTime = DateTime.UtcNow;
                     _log.Debug("The frames are null since {0}", _lastNotNullFrameDateTime);
+                    _framesAreNullMessagePrinted = true;
                 }
             }
             else
             {
                 if (_lastNotNullFrameDateTime.HasValue)
                 {
-                    _log.Debug("There is again a frame which is not null!");
+                    if (_framesAreNullMessagePrinted)
+                    {
+                        _log.Debug("There is again a frame which is not null!");
+                        _framesAreNullMessagePrinted = false;
+                    }
                     _lastNotNullFrameDateTime = null;
                 }
 
