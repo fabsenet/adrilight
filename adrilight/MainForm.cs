@@ -89,19 +89,19 @@ namespace adrilight {
         {
             _log.Debug("Changing Powermode to {0}", e.Mode);
 
-            if (e.Mode == PowerModes.Resume)
-            {
-                _isSuspending = false;
-                RefreshTransferState();
-                RefreshOverlayState();
-                RefreshCapturingState();
-            }
-            else if (e.Mode == PowerModes.Suspend)
-            {
-                _isSuspending = true;
-                StopBackgroundWorkers();
-                RefreshCapturingState();
-            }
+            //if (e.Mode == PowerModes.Resume)
+            //{
+            //    _isSuspending = false;
+            //    RefreshTransferState();
+            //    RefreshOverlayState();
+            //    RefreshCapturingState();
+            //}
+            //else if (e.Mode == PowerModes.Suspend)
+            //{
+            //    _isSuspending = true;
+            //    StopBackgroundWorkers();
+            //    RefreshCapturingState();
+            //}
         }
 
         // for universal change of track bar value labels => see setTrackBarValue
@@ -341,7 +341,7 @@ namespace adrilight {
             // can be changed on the fly without refreshing
         }
 
-        private void numericUpDownMinimumRefreshRateMs_ValueChanged(object sender, EventArgs e) {
+        private void NumericUpDownMinimumRefreshRateMs_ValueChanged(object sender, EventArgs e) {
             Settings.MinimumRefreshRateMs = (int)numericUpDownMinimumRefreshRateMs.Value;
             // can be changed on the fly without refreshing
         }
@@ -438,6 +438,7 @@ namespace adrilight {
         private void rbLinearLighting_CheckedChanged(object sender, EventArgs e)
         {
             Settings.UseLinearLighting = rbLinearLighting.Checked;
+            _log.Debug("UseLinearLighting changed to {0}", Settings.UseLinearLighting);
         }
     }
 }
