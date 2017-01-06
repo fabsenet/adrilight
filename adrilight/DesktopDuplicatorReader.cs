@@ -160,12 +160,16 @@ namespace adrilight
 
         private void ApplyColorCorrections(float r, float g, float b, out byte finalR, out byte finalG, out byte finalB, bool useLinearLighting)
         {
-            if (r <= Settings.SaturationTreshold && g <= Settings.SaturationTreshold && b <= Settings.SaturationTreshold)
+            var blackTreshold = Settings.SaturationTreshold;
+            const float desaturationThreshold = 9f;
+
+            if (r <= blackTreshold && g <= blackTreshold && b <= blackTreshold)
             {
                 //black
                 finalR = finalG = finalB = 0;
                 return;
             }
+
 
             if (!useLinearLighting)
             {
@@ -180,6 +184,19 @@ namespace adrilight
             r = 1f*r;
             g = 0.8730f*g;
             b = 0.7453f*b;
+
+            if (r < desaturationThreshold && g < desaturationThreshold && b < desaturationThreshold)
+            {
+                //the values are too low to properly do colors or white balance.
+                //we do poor mans convert to greyscale
+                var avg = (r + g + b) / 3;
+                var mixFactor = avg < blackTreshold ? 0 : (blackTreshold - avg) / (desaturationThreshold - blackTreshold);
+                var oneMinusMixFactor = 1 - mixFactor;
+                var mixFactorTimesAvg = mixFactor * avg;
+                r = mixFactorTimesAvg + oneMinusMixFactor * r;
+                g = mixFactorTimesAvg + oneMinusMixFactor * g;
+                b = mixFactorTimesAvg + oneMinusMixFactor * b;
+            }
 
             //output
             finalR = (byte) r;
