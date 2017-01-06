@@ -1,13 +1,19 @@
-﻿
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Dynamic;
 using System.IO.Ports;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using NLog;
+using Semver;
 
 namespace adrilight {
 
@@ -30,6 +36,62 @@ namespace adrilight {
             SystemEvents.PowerModeChanged += OnPowerModeChanged;
             Settings.OverlayActive = checkBoxOverlayActive.Checked;
             _log.Debug("Created Mainform");
+
+            var versionCheckTask = new Thread(StartVersionCheck) {Name = "VersionChecker", IsBackground = true};
+            versionCheckTask.Start();
+        }
+
+        private void StartVersionCheck()
+        {
+            try
+            {
+                var currentVersion = SemVersion.Parse("0.1.2-alpha");
+
+                dynamic latestRelease = TryGetLatestReleaseData().Result;
+                if (latestRelease == null) return;
+
+                string tagName = latestRelease.tag_name;
+                var latestVersionNumber = SemVersion.Parse(tagName.TrimStart('v','V'));
+
+                if (latestVersionNumber > currentVersion)
+                {
+                    Invoke((MethodInvoker) delegate
+                    {
+                        var url = latestRelease.html_url as string;
+                       var shouldOpenUrl = MessageBox.Show($"New version of adrilight is available! The new version is {latestVersionNumber} (you are running {currentVersion}). Press OK to open the download page." 
+                            , "New Adrilight Version!", MessageBoxButtons.OKCancel) == DialogResult.OK;
+
+                        if (url!=null && shouldOpenUrl)
+                        {
+                            Process.Start(url);
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Warn(ex, "Something failed in StartVersionCheck()");
+                throw;
+            }
+        }
+
+        private async Task<dynamic> TryGetLatestReleaseData()
+        {
+            try
+            {
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Add("User-Agent", "fabsenet/adrilight"); 
+
+                var jsonString = await client.GetStringAsync("https://api.github.com/repos/fabsenet/adrilight/releases/latest");
+                var converter = new ExpandoObjectConverter();
+                dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(jsonString, converter);
+                return data;
+            }
+            catch (Exception ex)
+            {
+                _log.Info(ex, "Check for latest release failed.");
+                return null;
+            }
         }
 
         private void InitTrayIcon() {
