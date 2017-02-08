@@ -69,6 +69,13 @@ The following list of things is more a list to not forget things. If something i
 
 You have another idea for a feature? Please create an issue.
 
+# Known limitations
+
+* Currently it is not supported to change the screen resolution after the start of adrilight (will be fixed)
+* Some apps can block their content and adrilight "sees" only a black window
+  * The windows store netflix app (player components are visible to adrilight but the actual video is not, netflix in the browser works)
+  * UAC asking for administrative approval (nothing is visible to adrilight)
+  * ...there is probably more
 
 # Changelog
 
