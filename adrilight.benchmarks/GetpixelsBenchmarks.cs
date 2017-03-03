@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
@@ -15,7 +14,9 @@ namespace adrilight.benchmarks
     {
         public static void Main()
         {
-            var summary = BenchmarkRunner.Run<GetpixelsBenchmarks>();
+            BenchmarkRunner.Run<FadeNonLinearBenchmarks>();
+
+            //var summary = BenchmarkRunner.Run<GetpixelsBenchmarks>();
         }
 
         private readonly BitmapData _bitmapData;

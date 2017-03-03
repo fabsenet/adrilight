@@ -132,8 +132,10 @@ namespace adrilight {
         }
 
         private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e) {
-            Visible = true;
             WindowState = FormWindowState.Normal;
+            ShowInTaskbar = true;
+            Visible = true;
+            BringToFront();
         }
 
         private void NotifyIcon_ExitClick(object sender, EventArgs e) {
@@ -144,8 +146,6 @@ namespace adrilight {
             _log.Debug("Application exit!");
             _mNotifyIcon.Dispose();
         }
-
-        private bool _isSuspending;
 
         private void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
@@ -415,7 +415,7 @@ namespace adrilight {
         {
 
             var isRunning = _cancellationTokenSource!=null && _desktopDuplicatorReader != null && _desktopDuplicatorReader.IsRunning;
-            var shouldBeRunning = !_isSuspending && ( Settings.TransferActive || Settings.OverlayActive);
+            var shouldBeRunning = Settings.TransferActive || Settings.OverlayActive;
 
             if (isRunning && !shouldBeRunning)
             {

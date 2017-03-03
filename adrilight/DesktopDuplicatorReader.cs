@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using adrilight.DesktopDuplication;
 using NLog;
 using Polly;
+using System.Linq;
 
 namespace adrilight
 {
@@ -32,7 +33,7 @@ namespace adrilight
             {
                 //steps where there is also led dimming
                 SpotSet.IndicateMissingValues();
-                return TimeSpan.FromMilliseconds(5000d/256);
+                return TimeSpan.FromMilliseconds(5000d / 256);
             }
             return TimeSpan.FromMilliseconds(1000);
         }
@@ -72,8 +73,8 @@ namespace adrilight
                             , spot =>
                             {
                                 const int numberOfSteps = 15;
-                                int stepx = Math.Max(1, spot.Rectangle.Width/numberOfSteps);
-                                int stepy = Math.Max(1, spot.Rectangle.Height/numberOfSteps);
+                                int stepx = Math.Max(1, spot.Rectangle.Width / numberOfSteps);
+                                int stepy = Math.Max(1, spot.Rectangle.Height / numberOfSteps);
 
                                 int sumR;
                                 int sumG;
@@ -87,9 +88,10 @@ namespace adrilight
                                 }
                                 GetAverageColorOfRectangularRegion(spot.Rectangle, stepy, stepx, bitmapData, out sumR, out sumG, out sumB, out count);
 
-                                var countInverse = 1f/count;
+                                var countInverse = 1f / count;
                                 byte finalR, finalG, finalB;
-                                ApplyColorCorrections(sumR*countInverse, sumG*countInverse, sumB*countInverse, out finalR, out finalG, out finalB, useLinearLighting);
+                                ApplyColorCorrections(sumR * countInverse, sumG * countInverse, sumB * countInverse, out finalR, out finalG, out finalB, useLinearLighting
+                                    , Settings.SaturationTreshold, spot.Red, spot.Green, spot.Blue);
 
                                 spot.SetColor(finalR, finalG, finalB);
 
@@ -123,7 +125,7 @@ namespace adrilight
                 //before the monitor content changed or there was some other error.
                 if (!_lastNotNullFrameDateTime.HasValue) _lastNotNullFrameDateTime = DateTime.UtcNow;
 
-                if (!_lastNotNullFrameLoggedDateTime.HasValue 
+                if (!_lastNotNullFrameLoggedDateTime.HasValue
                     || DateTime.UtcNow - _lastNotNullFrameLoggedDateTime.Value > TimeSpan.FromSeconds(30))
                 {
                     _lastNotNullFrameLoggedDateTime = DateTime.UtcNow;
@@ -158,12 +160,15 @@ namespace adrilight
 
         }
 
-        private void ApplyColorCorrections(float r, float g, float b, out byte finalR, out byte finalG, out byte finalB, bool useLinearLighting)
+        private static void ApplyColorCorrections(float r, float g, float b, out byte finalR, out byte finalG, out byte finalB, bool useLinearLighting, byte saturationTreshold
+            , byte lastColorR, byte lastColorG, byte lastColorB)
         {
-            var blackTreshold = Settings.SaturationTreshold;
-            const float desaturationThreshold = 9f;
-
-            if (r <= blackTreshold && g <= blackTreshold && b <= blackTreshold)
+            if (lastColorR == 0 && lastColorG == 0 && lastColorB == 0)
+            {
+                //if the color was black the last time, we increase the saturationThreshold to make flickering more unlikely
+                saturationTreshold += 2;
+            }
+            if (r <= saturationTreshold && g <= saturationTreshold && b <= saturationTreshold)
             {
                 //black
                 finalR = finalG = finalB = 0;
@@ -180,41 +185,36 @@ namespace adrilight
             if (!useLinearLighting)
             {
                 //apply non linear LED fading ( http://www.mikrocontroller.net/articles/LED-Fading )
-                r = FadeNonLinear(r);
-                g = FadeNonLinear(g);
-                b = FadeNonLinear(b);
+                finalR = FadeNonLinear(r);
+                finalG = FadeNonLinear(g);
+                finalB = FadeNonLinear(b);
             }
-
-
-            if (r < desaturationThreshold && g < desaturationThreshold && b < desaturationThreshold)
+            else
             {
-                //the values are too low to properly do colors or white balance.
-                //we do poor mans convert to greyscale
-                var avg = (r + g + b) / 3;
-                var mixFactor = avg < blackTreshold ? 0 : (blackTreshold - avg) / (desaturationThreshold - blackTreshold);
-                var oneMinusMixFactor = 1 - mixFactor;
-                var mixFactorTimesAvg = mixFactor * avg;
-                r = mixFactorTimesAvg + oneMinusMixFactor * r;
-                g = mixFactorTimesAvg + oneMinusMixFactor * g;
-                b = mixFactorTimesAvg + oneMinusMixFactor * b;
+                //output
+                finalR = (byte)r;
+                finalG = (byte)g;
+                finalB = (byte)b;
             }
-
-            //output
-            finalR = (byte) r;
-            finalG = (byte) g;
-            finalB = (byte) b;
         }
 
-        private float FadeNonLinear(float color)
+        private static readonly byte[] _nonLinearFadingCache = Enumerable.Range(0, 2560)
+            .Select(n => FadeNonLinearUncached(n / 10f))
+            .ToArray();
+
+        private static byte FadeNonLinear(float color)
+        {
+            return _nonLinearFadingCache[(int)(color * 10)];
+        }
+
+        private static byte FadeNonLinearUncached(float color)
         {
             const float factor = 80f;
-            //todo: cache values, return directly byte!
-            return 256f*((float) Math.Pow(factor, color/256f) - 1f)/(factor - 1);
+            return (byte)(256f * ((float)Math.Pow(factor, color / 256f) - 1f) / (factor - 1));
         }
 
-
         private DesktopFrame GetNextFrame()
-        {
+        {// rgb(76,73,5)
             if (_desktopDuplicator == null)
             {
                 _desktopDuplicator = new DesktopDuplicator(0, 0);
@@ -243,11 +243,11 @@ namespace adrilight
             sumB = 0;
             count = 0;
 
-            var stepCount = spotRectangle.Width/stepx;
-            var stepxTimes4 = stepx*4;
+            var stepCount = spotRectangle.Width / stepx;
+            var stepxTimes4 = stepx * 4;
             for (var y = spotRectangle.Top; y < spotRectangle.Bottom; y += stepy)
             {
-                byte* pointer = (byte*) bitmapData.Scan0 + bitmapData.Stride*y + 4*spotRectangle.Left;
+                byte* pointer = (byte*)bitmapData.Scan0 + bitmapData.Stride * y + 4 * spotRectangle.Left;
                 for (int i = 0; i < stepCount; i++)
                 {
                     sumR += pointer[2];
