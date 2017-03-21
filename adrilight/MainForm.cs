@@ -19,6 +19,7 @@ namespace adrilight {
 
     public partial class MainForm : Form
     {
+        private const string CURRENT_VERSION = "0.1.3-alpha";
 
         private readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
@@ -45,7 +46,7 @@ namespace adrilight {
         {
             try
             {
-                var currentVersion = SemVersion.Parse("0.1.2-alpha");
+                var currentVersion = SemVersion.Parse(CURRENT_VERSION);
 
                 dynamic latestRelease = TryGetLatestReleaseData().Result;
                 if (latestRelease == null) return;
