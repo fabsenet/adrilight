@@ -204,7 +204,8 @@ namespace adrilight
 
         private static byte FadeNonLinear(float color)
         {
-            return _nonLinearFadingCache[(int)(color * 10)];
+            var cacheIndex = (int)(color * 10);
+            return _nonLinearFadingCache[Math.Min(2560 - 1, Math.Max(0, cacheIndex))];
         }
 
         private static byte FadeNonLinearUncached(float color)
