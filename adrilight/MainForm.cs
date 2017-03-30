@@ -19,7 +19,7 @@ namespace adrilight {
 
     public partial class MainForm : Form
     {
-        private const string CURRENT_VERSION = "0.1.3-alpha";
+        private const string CURRENT_VERSION = "0.1.4";
 
         private readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
