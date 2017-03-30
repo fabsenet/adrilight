@@ -1,5 +1,7 @@
 ﻿using NLog;
 using System;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -16,7 +18,7 @@ namespace adrilight {
         [STAThread]
         static void Main()
         {
-            _log.Debug("Main() started.");
+            _log.Debug($"adrilight {VersionNumber}: Main() started.");
 
             Settings.Refresh();
 
@@ -32,7 +34,7 @@ namespace adrilight {
 
         private static void ApplicationOnThreadException(object sender, Exception ex)
         {
-            _log.Fatal(ex, $"ApplicationOnThreadException from sender={sender}");
+            _log.Fatal(ex, $"ApplicationOnThreadException from sender={sender}, adrilight version={VersionNumber}");
 
             var sb = new StringBuilder();
             sb.AppendLine($"Sender: {sender}");
@@ -52,6 +54,19 @@ namespace adrilight {
 
             MessageBox.Show(sb.ToString(), "unhandled exception :-(");
             Application.Exit();
+        }
+
+        public static string VersionNumber { get; } = GetVersionNumber();
+
+        private static string GetVersionNumber()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            string currentVersion;
+            using (var versionStream = assembly.GetManifestResourceStream("adrilight.version.txt"))
+            {
+                currentVersion = new StreamReader(versionStream).ReadToEnd().Trim();
+            }
+            return currentVersion;
         }
     }
 }

@@ -14,13 +14,13 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using NLog;
 using Semver;
+using System.Reflection;
+using System.IO;
 
 namespace adrilight {
 
     public partial class MainForm : Form
     {
-        private const string CURRENT_VERSION = "0.1.4";
-
         private readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
         private NotifyIcon _mNotifyIcon;
@@ -31,6 +31,8 @@ namespace adrilight {
         public MainForm() {
             _log.Debug("Creating Mainform");
             InitializeComponent();
+            Text += " " + Program.VersionNumber;
+
             InitTrayIcon();
 
             Application.ApplicationExit += OnApplicationExit;
@@ -46,23 +48,21 @@ namespace adrilight {
         {
             try
             {
-                var currentVersion = SemVersion.Parse(CURRENT_VERSION);
-
                 dynamic latestRelease = TryGetLatestReleaseData().Result;
                 if (latestRelease == null) return;
 
                 string tagName = latestRelease.tag_name;
-                var latestVersionNumber = SemVersion.Parse(tagName.TrimStart('v','V'));
+                var latestVersionNumber = SemVersion.Parse(tagName.TrimStart('v', 'V'));
 
-                if (latestVersionNumber > currentVersion)
+                if (latestVersionNumber > Program.VersionNumber)
                 {
-                    Invoke((MethodInvoker) delegate
+                    Invoke((MethodInvoker)delegate
                     {
                         var url = latestRelease.html_url as string;
-                       var shouldOpenUrl = MessageBox.Show($"New version of adrilight is available! The new version is {latestVersionNumber} (you are running {currentVersion}). Press OK to open the download page." 
-                            , "New Adrilight Version!", MessageBoxButtons.OKCancel) == DialogResult.OK;
+                        var shouldOpenUrl = MessageBox.Show($"New version of adrilight is available! The new version is {latestVersionNumber} (you are running {Program.VersionNumber}). Press OK to open the download page."
+                             , "New Adrilight Version!", MessageBoxButtons.OKCancel) == DialogResult.OK;
 
-                        if (url!=null && shouldOpenUrl)
+                        if (url != null && shouldOpenUrl)
                         {
                             Process.Start(url);
                         }

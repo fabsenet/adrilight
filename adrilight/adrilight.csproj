@@ -135,6 +135,9 @@
     <EmbeddedResource Include="Overlay.resx">
       <DependentUpon>Overlay.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\version.txt">
+      <Link>version.txt</Link>
+    </EmbeddedResource>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
