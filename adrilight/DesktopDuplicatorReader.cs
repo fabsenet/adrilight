@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using adrilight.DesktopDuplication;
 using NLog;
 using Polly;
@@ -215,7 +214,7 @@ namespace adrilight
         }
 
         private DesktopFrame GetNextFrame()
-        {// rgb(76,73,5)
+        {
             if (_desktopDuplicator == null)
             {
                 _desktopDuplicator = new DesktopDuplicator(0, 0);
