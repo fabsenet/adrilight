@@ -1,5 +1,4 @@
-﻿
-
+﻿using NLog;
 using System;
 using System.Text;
 using System.Threading;
@@ -9,22 +8,32 @@ namespace adrilight {
 
     static class Program {
 
+        private static readonly ILogger _log = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
         [STAThread]
-        static void Main() {
+        static void Main()
+        {
+            _log.Debug("Main() started.");
+
             Settings.Refresh();
 
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) => ApplicationOnThreadException(sender, args.ExceptionObject as Exception);
-                Application.EnableVisualStyles();
+            AppDomain.CurrentDomain.UnhandledException += 
+                (sender, args) => ApplicationOnThreadException(sender, args.ExceptionObject as Exception);
+
+            Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.ThreadException += (sender,args) => ApplicationOnThreadException(sender, args.Exception);
+            Application.ThreadException += (sender, args) => ApplicationOnThreadException(sender, args.Exception);
+
             Application.Run(new MainForm());
         }
 
         private static void ApplicationOnThreadException(object sender, Exception ex)
         {
+            _log.Fatal(ex, $"ApplicationOnThreadException from sender={sender}");
+
             var sb = new StringBuilder();
             sb.AppendLine($"Sender: {sender}");
             if (sender != null)
