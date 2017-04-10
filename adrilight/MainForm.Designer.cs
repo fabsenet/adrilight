@@ -33,13 +33,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBoxSpots = new System.Windows.Forms.GroupBox();
-            this.resetOffsetXButton = new System.Windows.Forms.Button();
             this.resetOffsetYButton = new System.Windows.Forms.Button();
+            this.trackBarOffsetY = new System.Windows.Forms.TrackBar();
+            this.resetOffsetXButton = new System.Windows.Forms.Button();
             this.numericUpDownSpotsY = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownSpotsX = new System.Windows.Forms.NumericUpDown();
             this.labelOffsetY = new System.Windows.Forms.Label();
             this.labelOffsetX = new System.Windows.Forms.Label();
-            this.trackBarOffsetY = new System.Windows.Forms.TrackBar();
             this.trackBarOffsetX = new System.Windows.Forms.TrackBar();
             this.trackBarBorderDistanceY = new System.Windows.Forms.TrackBar();
             this.labelBorderDistanceY = new System.Windows.Forms.Label();
@@ -71,12 +71,12 @@
             this.checkBoxAutostart = new System.Windows.Forms.CheckBox();
             this.checkBoxStartMinimized = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.rbLinearLighting = new System.Windows.Forms.RadioButton();
             this.rbNonLinearLighting = new System.Windows.Forms.RadioButton();
+            this.rbLinearLighting = new System.Windows.Forms.RadioButton();
             this.groupBoxSpots.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarOffsetY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarOffsetY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOffsetX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBorderDistanceY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBorderDistanceX)).BeginInit();
@@ -121,16 +121,6 @@
             this.groupBoxSpots.TabStop = false;
             this.groupBoxSpots.Text = "Spots";
             // 
-            // resetOffsetXButton
-            // 
-            this.resetOffsetXButton.Location = new System.Drawing.Point(194, 325);
-            this.resetOffsetXButton.Name = "resetOffsetXButton";
-            this.resetOffsetXButton.Size = new System.Drawing.Size(27, 38);
-            this.resetOffsetXButton.TabIndex = 38;
-            this.resetOffsetXButton.Text = "0";
-            this.resetOffsetXButton.UseVisualStyleBackColor = true;
-            this.resetOffsetXButton.Click += new System.EventHandler(this.resetOffsetXButton_Click);
-            // 
             // resetOffsetYButton
             // 
             this.resetOffsetYButton.Location = new System.Drawing.Point(194, 380);
@@ -141,10 +131,36 @@
             this.resetOffsetYButton.UseVisualStyleBackColor = true;
             this.resetOffsetYButton.Click += new System.EventHandler(this.resetOffsetYButton_Click);
             // 
+            // trackBarOffsetY
+            // 
+            this.trackBarOffsetY.LargeChange = 10;
+            this.trackBarOffsetY.Location = new System.Drawing.Point(213, 389);
+            this.trackBarOffsetY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.trackBarOffsetY.Maximum = 0;
+            this.trackBarOffsetY.Name = "trackBarOffsetY";
+            this.trackBarOffsetY.Size = new System.Drawing.Size(140, 69);
+            this.trackBarOffsetY.TabIndex = 8;
+            this.trackBarOffsetY.Scroll += new System.EventHandler(this.trackBarOffsetY_Scroll);
+            // 
+            // resetOffsetXButton
+            // 
+            this.resetOffsetXButton.Location = new System.Drawing.Point(194, 325);
+            this.resetOffsetXButton.Name = "resetOffsetXButton";
+            this.resetOffsetXButton.Size = new System.Drawing.Size(27, 38);
+            this.resetOffsetXButton.TabIndex = 38;
+            this.resetOffsetXButton.Text = "0";
+            this.resetOffsetXButton.UseVisualStyleBackColor = true;
+            this.resetOffsetXButton.Click += new System.EventHandler(this.resetOffsetXButton_Click);
+            // 
             // numericUpDownSpotsY
             // 
             this.numericUpDownSpotsY.Location = new System.Drawing.Point(213, 72);
             this.numericUpDownSpotsY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownSpotsY.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
             this.numericUpDownSpotsY.Minimum = new decimal(new int[] {
             1,
             0,
@@ -164,6 +180,11 @@
             // 
             this.numericUpDownSpotsX.Location = new System.Drawing.Point(213, 32);
             this.numericUpDownSpotsX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownSpotsX.Maximum = new decimal(new int[] {
+            300,
+            0,
+            0,
+            0});
             this.numericUpDownSpotsX.Minimum = new decimal(new int[] {
             1,
             0,
@@ -198,17 +219,6 @@
             this.labelOffsetX.Size = new System.Drawing.Size(68, 20);
             this.labelOffsetX.TabIndex = 36;
             this.labelOffsetX.Text = "Offset X";
-            // 
-            // trackBarOffsetY
-            // 
-            this.trackBarOffsetY.LargeChange = 10;
-            this.trackBarOffsetY.Location = new System.Drawing.Point(213, 389);
-            this.trackBarOffsetY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.trackBarOffsetY.Maximum = 0;
-            this.trackBarOffsetY.Name = "trackBarOffsetY";
-            this.trackBarOffsetY.Size = new System.Drawing.Size(140, 69);
-            this.trackBarOffsetY.TabIndex = 8;
-            this.trackBarOffsetY.Scroll += new System.EventHandler(this.trackBarOffsetY_Scroll);
             // 
             // trackBarOffsetX
             // 
@@ -594,18 +604,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Lighting Mode";
             // 
-            // rbLinearLighting
-            // 
-            this.rbLinearLighting.AutoSize = true;
-            this.rbLinearLighting.Location = new System.Drawing.Point(14, 26);
-            this.rbLinearLighting.Name = "rbLinearLighting";
-            this.rbLinearLighting.Size = new System.Drawing.Size(138, 24);
-            this.rbLinearLighting.TabIndex = 0;
-            this.rbLinearLighting.TabStop = true;
-            this.rbLinearLighting.Text = "Linear Lighting";
-            this.rbLinearLighting.UseVisualStyleBackColor = true;
-            this.rbLinearLighting.CheckedChanged += new System.EventHandler(this.rbLinearLighting_CheckedChanged);
-            // 
             // rbNonLinearLighting
             // 
             this.rbNonLinearLighting.AutoSize = true;
@@ -617,6 +615,18 @@
             this.rbNonLinearLighting.Text = "Non-linear fading";
             this.rbNonLinearLighting.UseVisualStyleBackColor = true;
             this.rbNonLinearLighting.CheckedChanged += new System.EventHandler(this.rbLinearLighting_CheckedChanged);
+            // 
+            // rbLinearLighting
+            // 
+            this.rbLinearLighting.AutoSize = true;
+            this.rbLinearLighting.Location = new System.Drawing.Point(14, 26);
+            this.rbLinearLighting.Name = "rbLinearLighting";
+            this.rbLinearLighting.Size = new System.Drawing.Size(138, 24);
+            this.rbLinearLighting.TabIndex = 0;
+            this.rbLinearLighting.TabStop = true;
+            this.rbLinearLighting.Text = "Linear Lighting";
+            this.rbLinearLighting.UseVisualStyleBackColor = true;
+            this.rbLinearLighting.CheckedChanged += new System.EventHandler(this.rbLinearLighting_CheckedChanged);
             // 
             // MainForm
             // 
@@ -642,9 +652,9 @@
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.groupBoxSpots.ResumeLayout(false);
             this.groupBoxSpots.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarOffsetY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarOffsetY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOffsetX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBorderDistanceY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarBorderDistanceX)).EndInit();
