@@ -26,7 +26,7 @@ namespace adrilight {
         private static bool _mStartMinimized;
         private static int _mMinimumRefreshRateMs;
 
-        public static void Refresh() {
+        public static void Load() {
             _mSpotsX = Properties.Settings.Default.SPOTS_X;
             _mSpotsY = Properties.Settings.Default.SPOTS_Y;
             _mLedsPerSpot = Properties.Settings.Default.LEDS_PER_SPOT;

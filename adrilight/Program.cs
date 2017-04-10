@@ -20,7 +20,7 @@ namespace adrilight {
         {
             _log.Debug($"adrilight {VersionNumber}: Main() started.");
 
-            Settings.Refresh();
+            Settings.Load();
 
             AppDomain.CurrentDomain.UnhandledException += 
                 (sender, args) => ApplicationOnThreadException(sender, args.ExceptionObject as Exception);

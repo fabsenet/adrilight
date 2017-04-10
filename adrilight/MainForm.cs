@@ -129,7 +129,7 @@ namespace adrilight {
         {
             ShowInTaskbar = WindowState != FormWindowState.Minimized;
             Visible = WindowState != FormWindowState.Minimized;
-            Trace.WriteLine("WindowState is "+WindowState);
+            _log.Debug("WindowState is "+WindowState);
         }
 
         private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e) {
