@@ -1,4 +1,6 @@
 ﻿using NLog;
+using NLog.Config;
+using NLog.Targets;
 using System;
 using System.IO;
 using System.Reflection;
@@ -18,6 +20,15 @@ namespace adrilight {
         [STAThread]
         static void Main()
         {
+#if DEBUG
+            var config = new LoggingConfiguration();
+            var debuggerTarget = new DebuggerTarget();
+            config.AddTarget("debugger", debuggerTarget);
+            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, debuggerTarget));
+
+            LogManager.Configuration = config;
+#endif
+
             _log.Debug($"adrilight {VersionNumber}: Main() started.");
 
             Settings.Load();

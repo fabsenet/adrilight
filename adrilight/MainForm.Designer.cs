@@ -457,7 +457,6 @@
             0,
             0,
             0});
-            this.numericUpDownMinimumRefreshRateMs.ValueChanged += new System.EventHandler(this.NumericUpDownMinimumRefreshRateMs_ValueChanged);
             // 
             // labelSaturationTreshold
             // 

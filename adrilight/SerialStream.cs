@@ -85,15 +85,13 @@ namespace adrilight
             {
                 try
                 {
-                    const int baudRate = 1000000; // 115200;
+                    const int baudRate = 1000000;
                     serialPort = new SerialPort(Settings.ComPort, baudRate);
                     serialPort.Open();
 
                     //send frame data
                     while (!cancellationToken.IsCancellationRequested)
                     {
-                        _stopwatch.Start();
-
                         byte[] outputStream = GetOutputStream();
                         serialPort.Write(outputStream, 0, outputStream.Length);
 
@@ -104,13 +102,7 @@ namespace adrilight
                         var serialTransferTime = outputStream.Length*10.0*1000.0/baudRate;
                         var minTimespan = (int) (fastLedTime + serialTransferTime) + 1;
 
-                        int delayInMs = Math.Max(minTimespan, Settings.MinimumRefreshRateMs - (int) _stopwatch.ElapsedMilliseconds);
-                        if (delayInMs > 0)
-                        {
-                            Task.Delay(delayInMs, cancellationToken).Wait(cancellationToken);
-                        }
-
-                        _stopwatch.Reset();
+                        Task.Delay(minTimespan, cancellationToken).Wait(cancellationToken);
                     }
                 }
                 catch (OperationCanceledException)

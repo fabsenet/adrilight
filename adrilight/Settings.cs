@@ -1,51 +1,67 @@
 ﻿
 
+using NLog;
 using System;
 
 namespace adrilight {
 
     static class Settings {
 
-        private static int _mSpotsX;
-        private static int _mSpotsY;
-        private static int _mLedsPerSpot;
-        private static int _mOffsetX;
-        private static int _mOffsetY;
-        private static bool _mTransferActive;
-        private static bool _mOverlayActive;
-        private static string _mComPort;
-        private static byte _mSaturationTreshold;
-        private static int _mSpotWidth;
-        private static int _mSpotHeight;
-        private static bool _mMirrorX;
-        private static bool _mMirrorY;
-        private static int _mOffsetLed;
-        private static int _mBorderDistanceX;
-        private static int _mBorderDistanceY;
-        private static bool _mAutostart;
-        private static bool _mStartMinimized;
-        private static int _mMinimumRefreshRateMs;
+        private static ILogger _log = LogManager.GetCurrentClassLogger();
+
+        private static int _spotsX;
+        private static int _spotsY;
+        private static int _ledsPerSpot;
+        private static int _offsetX;
+        private static int _offsetY;
+        private static bool _transferActive;
+        private static bool _overlayActive;
+        private static string _comPort;
+        private static byte _saturationTreshold;
+        private static int _spotWidth;
+        private static int _spotHeight;
+        private static bool _mirrorX;
+        private static bool _mirrorY;
+        private static int _offsetLed;
+        private static int _borderDistanceX;
+        private static int _borderDistanceY;
+        private static bool _autostart;
+        private static bool _startMinimized;
 
         public static void Load() {
-            _mSpotsX = Properties.Settings.Default.SPOTS_X;
-            _mSpotsY = Properties.Settings.Default.SPOTS_Y;
-            _mLedsPerSpot = Properties.Settings.Default.LEDS_PER_SPOT;
-            _mOffsetX = Properties.Settings.Default.OFFSET_X;
-            _mOffsetY = Properties.Settings.Default.OFFSET_Y;
-            _mTransferActive = Properties.Settings.Default.TRANSFER_ACTIVE;
-            _mOverlayActive = Properties.Settings.Default.OVERLAY_ACTIVE;
-            _mComPort = Properties.Settings.Default.COM_PORT;
-            _mSaturationTreshold = Convert.ToByte(Properties.Settings.Default.SATURATION_TRESHOLD);
-            _mSpotWidth = Properties.Settings.Default.SPOT_WIDTH;
-            _mSpotHeight = Properties.Settings.Default.SPOT_HEIGHT;
-            _mMirrorX = Properties.Settings.Default.MIRROR_X;
-            _mMirrorY = Properties.Settings.Default.MIRROR_Y;
-            _mOffsetLed = Properties.Settings.Default.OFFSET_LED;
-            _mBorderDistanceX = Properties.Settings.Default.BORDER_DISTANCE_X;
-            _mBorderDistanceY = Properties.Settings.Default.BORDER_DISTANCE_Y;
-            _mAutostart = Properties.Settings.Default.AUTOSTART;
-            _mStartMinimized = Properties.Settings.Default.START_MINIMIZED;
-            _mMinimumRefreshRateMs = Properties.Settings.Default.MINIMUM_REFRESH_RATE_MS;
+            var settings = Properties.Settings.Default;
+
+            settings.SettingChanging += Default_SettingChanging;
+            settings.PropertyChanged += Default_PropertyChanged;
+
+            _spotsX = settings.SPOTS_X;
+            _spotsY = settings.SPOTS_Y;
+            _ledsPerSpot = settings.LEDS_PER_SPOT;
+            _offsetX = settings.OFFSET_X;
+            _offsetY = settings.OFFSET_Y;
+            _transferActive = settings.TRANSFER_ACTIVE;
+            _overlayActive = settings.OVERLAY_ACTIVE;
+            _comPort = settings.COM_PORT;
+            _saturationTreshold = settings.SATURATION_TRESHOLD;
+            _spotWidth = settings.SPOT_WIDTH;
+            _spotHeight = settings.SPOT_HEIGHT;
+            _mirrorX = settings.MIRROR_X;
+            _mirrorY = settings.MIRROR_Y;
+            _offsetLed = settings.OFFSET_LED;
+            _borderDistanceX = settings.BORDER_DISTANCE_X;
+            _borderDistanceY = settings.BORDER_DISTANCE_Y;
+            _autostart = settings.AUTOSTART;
+            _startMinimized = settings.START_MINIMIZED;
+        }
+
+        private static void Default_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            _log.Info($"PropertyChanged: {e.PropertyName}");
+        }
+
+        private static void Default_SettingChanging(object sender, System.Configuration.SettingChangingEventArgs e)
+        {
+            _log.Info($"SettingChanging: {e.SettingName} will get the value {e.NewValue}");
         }
 
         public static bool UseLinearLighting {
@@ -56,172 +72,163 @@ namespace adrilight {
             }
         }
         public static int SpotsX {
-            get { return _mSpotsX; }
+            get { return _spotsX; }
             set {
-                _mSpotsX = value;
+                _spotsX = value;
                 Properties.Settings.Default.SPOTS_X = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static int SpotsY {
-            get { return _mSpotsY; }
+            get { return _spotsY; }
             set {
-                _mSpotsY = value;
+                _spotsY = value;
                 Properties.Settings.Default.SPOTS_Y = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static int LedsPerSpot {
-            get { return _mLedsPerSpot; }
+            get { return _ledsPerSpot; }
             set {
-                _mLedsPerSpot = value;
+                _ledsPerSpot = value;
                 Properties.Settings.Default.LEDS_PER_SPOT = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static int OffsetX {
-            get { return _mOffsetX; }
+            get { return _offsetX; }
             set {
-                _mOffsetX = value;
+                _offsetX = value;
                 Properties.Settings.Default.OFFSET_X = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static int OffsetY {
-            get { return _mOffsetY; }
+            get { return _offsetY; }
             set {
-                _mOffsetY = value;
+                _offsetY = value;
                 Properties.Settings.Default.OFFSET_Y = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static bool TransferActive {
-            get { return _mTransferActive; }
+            get { return _transferActive; }
             set {
-                _mTransferActive = value;
+                _transferActive = value;
                 Properties.Settings.Default.TRANSFER_ACTIVE = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static bool OverlayActive {
-            get { return _mOverlayActive; }
+            get { return _overlayActive; }
             set {
-                _mOverlayActive = value;
+                _overlayActive = value;
                 Properties.Settings.Default.OVERLAY_ACTIVE = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static string ComPort {
-            get { return _mComPort; }
+            get { return _comPort; }
             set {
-                _mComPort = value;
+                _comPort = value;
                 Properties.Settings.Default.COM_PORT = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static byte SaturationTreshold {
-            get { return _mSaturationTreshold; }
+            get { return _saturationTreshold; }
             set {
-                _mSaturationTreshold = value;
+                _saturationTreshold = value;
                 Properties.Settings.Default.SATURATION_TRESHOLD = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static int SpotWidth {
-            get { return _mSpotWidth; }
+            get { return _spotWidth; }
             set {
-                _mSpotWidth = value;
+                _spotWidth = value;
                 Properties.Settings.Default.SPOT_WIDTH = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static int SpotHeight {
-            get { return _mSpotHeight; }
+            get { return _spotHeight; }
             set {
-                _mSpotHeight = value;
+                _spotHeight = value;
                 Properties.Settings.Default.SPOT_HEIGHT = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static bool MirrorX {
-            get { return _mMirrorX; }
+            get { return _mirrorX; }
             set {
-                _mMirrorX = value;
+                _mirrorX = value;
                 Properties.Settings.Default.MIRROR_X = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static bool MirrorY {
-            get { return _mMirrorY; }
+            get { return _mirrorY; }
             set {
-                _mMirrorY = value;
+                _mirrorY = value;
                 Properties.Settings.Default.MIRROR_Y = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static int OffsetLed {
-            get { return _mOffsetLed; }
+            get { return _offsetLed; }
             set {
-                _mOffsetLed = value;
+                _offsetLed = value;
                 Properties.Settings.Default.OFFSET_LED = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static int BorderDistanceX {
-            get { return _mBorderDistanceX; }
+            get { return _borderDistanceX; }
             set {
-                _mBorderDistanceX = value;
+                _borderDistanceX = value;
                 Properties.Settings.Default.BORDER_DISTANCE_X = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static int BorderDistanceY {
-            get { return _mBorderDistanceY; }
+            get { return _borderDistanceY; }
             set {
-                _mBorderDistanceY = value;
+                _borderDistanceY = value;
                 Properties.Settings.Default.BORDER_DISTANCE_Y = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static bool Autostart {
-            get { return _mAutostart; }
+            get { return _autostart; }
             set {
-                _mAutostart = value;
+                _autostart = value;
                 Properties.Settings.Default.AUTOSTART = value;
                 Properties.Settings.Default.Save();
             }
         }
 
         public static bool StartMinimized {
-            get { return _mStartMinimized; }
+            get { return _startMinimized; }
             set {
-                _mStartMinimized = value;
+                _startMinimized = value;
                 Properties.Settings.Default.START_MINIMIZED = value;
-                Properties.Settings.Default.Save();
-            }
-        }
-
-        public static int MinimumRefreshRateMs {
-            get { return _mMinimumRefreshRateMs; }
-            set {
-                _mMinimumRefreshRateMs = value;
-                Properties.Settings.Default.MINIMUM_REFRESH_RATE_MS = value;
                 Properties.Settings.Default.Save();
             }
         }

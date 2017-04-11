@@ -122,9 +122,9 @@ namespace adrilight.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int SATURATION_TRESHOLD {
+        public byte SATURATION_TRESHOLD {
             get {
-                return ((int)(this["SATURATION_TRESHOLD"]));
+                return ((byte)(this["SATURATION_TRESHOLD"]));
             }
             set {
                 this["SATURATION_TRESHOLD"] = value;

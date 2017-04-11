@@ -26,7 +26,7 @@
     <Setting Name="COM_PORT" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SATURATION_TRESHOLD" Type="System.Int32" Scope="User">
+    <Setting Name="SATURATION_TRESHOLD" Type="System.Byte" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="SPOT_WIDTH" Type="System.Int32" Scope="User">

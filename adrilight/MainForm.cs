@@ -277,8 +277,6 @@ namespace adrilight {
 
             checkBoxStartMinimized.Checked = Settings.StartMinimized;
 
-            numericUpDownMinimumRefreshRateMs.Value = Settings.MinimumRefreshRateMs;
-
             groupBoxLEDs.Text = "LEDs (" + (SpotSet.CountLeds(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot) + ")";
         }
 
@@ -403,12 +401,7 @@ namespace adrilight {
             Settings.StartMinimized = checkBoxStartMinimized.Checked;
             // can be changed on the fly without refreshing
         }
-
-        private void NumericUpDownMinimumRefreshRateMs_ValueChanged(object sender, EventArgs e) {
-            Settings.MinimumRefreshRateMs = (int)numericUpDownMinimumRefreshRateMs.Value;
-            // can be changed on the fly without refreshing
-        }
-
+        
         private DesktopDuplicatorReader _desktopDuplicatorReader;
         private CancellationTokenSource _cancellationTokenSource;
 
