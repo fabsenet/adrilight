@@ -104,7 +104,6 @@
     <Compile Include="DesktopDuplication\DesktopDuplicator.cs" />
     <Compile Include="DesktopDuplication\DesktopFrame.cs" />
     <Compile Include="DesktopDuplication\MovedRegion.cs" />
-    <Compile Include="DesktopDuplication\PointerInfo.cs" />
     <Compile Include="DesktopDuplicatorReader.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -121,6 +120,7 @@
     <Compile Include="DxPoint.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawRectangleExtensions.cs" />
     <Compile Include="SerialStream.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Spot.cs" />
