@@ -49,10 +49,7 @@ namespace adrilight {
         }
 
         public static bool UseLinearLighting {
-            get
-            {
-                return Properties.Settings.Default.USE_LINEAR_LIGHTING;
-            }
+            get => Properties.Settings.Default.USE_LINEAR_LIGHTING;
             set {
                 Properties.Settings.Default.USE_LINEAR_LIGHTING = value;
                 Properties.Settings.Default.Save();
