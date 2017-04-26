@@ -262,5 +262,16 @@ namespace adrilight.Properties {
                 this["USE_LINEAR_LIGHTING"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Nullable<System.DateTime> LAST_UPDATE_CHECKDATE_UTC {
+            get {
+                return ((global::System.Nullable<System.DateTime>)(this["LAST_UPDATE_CHECKDATE_UTC"]));
+            }
+            set {
+                this["LAST_UPDATE_CHECKDATE_UTC"] = value;
+            }
+        }
     }
 }

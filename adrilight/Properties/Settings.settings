@@ -62,5 +62,8 @@
     <Setting Name="USE_LINEAR_LIGHTING" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="LAST_UPDATE_CHECKDATE_UTC" Type="System.Nullable&lt;System.DateTime&gt;" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

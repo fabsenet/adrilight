@@ -648,7 +648,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "adrilight";
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.groupBoxSpots.ResumeLayout(false);
             this.groupBoxSpots.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOffsetY)).EndInit();

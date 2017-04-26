@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using Microsoft.Win32;
+using NLog;
 using NLog.Config;
 using NLog.Targets;
 using System;
@@ -22,7 +23,7 @@ namespace adrilight {
         {
 #if DEBUG
             var config = new LoggingConfiguration();
-            var debuggerTarget = new DebuggerTarget();
+            var debuggerTarget = new DebuggerTarget() { Layout = "${processtime} ${message:exceptionSeparator=\n\t:withException=true}" };
             config.AddTarget("debugger", debuggerTarget);
             config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, debuggerTarget));
 
@@ -31,16 +32,61 @@ namespace adrilight {
 
             _log.Debug($"adrilight {VersionNumber}: Main() started.");
 
-            Settings.Load();
-
-            AppDomain.CurrentDomain.UnhandledException += 
+            AppDomain.CurrentDomain.UnhandledException +=
                 (sender, args) => ApplicationOnThreadException(sender, args.ExceptionObject as Exception);
+
+            Settings.Load();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += (sender, args) => ApplicationOnThreadException(sender, args.Exception);
 
-            Application.Run(new MainForm());
+            Application.ApplicationExit += (s, e) => _log.Debug("Application exit!");
+            SystemEvents.PowerModeChanged += (s, e) => _log.Debug("Changing Powermode to {0}", e.Mode);
+
+            SetupNotifyIcon();
+
+            if (!Settings.StartMinimized)
+            {
+                OpenSettingsWindow();
+            }
+            Application.Run();
+        }
+        
+        private static NotifyIcon SetupNotifyIcon()
+        {
+            var icon = new System.Drawing.Icon(Assembly.GetExecutingAssembly().GetManifestResourceStream("adrilight.adrilight_icon.ico"));
+            var contextMenu = new ContextMenu();
+            contextMenu.MenuItems.Add(new MenuItem("Settings...", (s, e) => OpenSettingsWindow()));
+            contextMenu.MenuItems.Add(new MenuItem("Exit", (s, e) => Application.Exit()));
+
+            var notifyIcon = new NotifyIcon()
+            {
+                Text = $"adrilight {GetVersionNumber()}",
+                Icon = icon,
+                Visible = true,
+                ContextMenu =contextMenu
+            };
+            notifyIcon.DoubleClick += (s, e) => { OpenSettingsWindow(); };
+
+            Application.ApplicationExit += (s, e) => notifyIcon.Dispose();
+
+            return notifyIcon;
+        }
+
+        static MainForm _mainForm;
+        private static void OpenSettingsWindow()
+        {
+            if(_mainForm == null)
+            {
+                _mainForm = new MainForm();
+                _mainForm.FormClosed += (s, e) => _mainForm = null;
+                _mainForm.Show();
+            }
+            else
+            {
+                _mainForm.BringToFront();
+            }
         }
 
         private static void ApplicationOnThreadException(object sender, Exception ex)

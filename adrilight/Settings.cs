@@ -1,11 +1,11 @@
-﻿
-
-using NLog;
+﻿using NLog;
 using System;
 
-namespace adrilight {
+namespace adrilight
+{
 
-    static class Settings {
+    static class Settings
+    {
 
         private static ILogger _log = LogManager.GetCurrentClassLogger();
 
@@ -27,8 +27,10 @@ namespace adrilight {
         private static int _borderDistanceY;
         private static bool _autostart;
         private static bool _startMinimized;
+        private static DateTime? _lastUpdateCheck;
 
-        public static void Load() {
+        public static void Load()
+        {
             var settings = Properties.Settings.Default;
 
             settings.SettingChanging += Default_SettingChanging;
@@ -52,6 +54,7 @@ namespace adrilight {
             _borderDistanceY = settings.BORDER_DISTANCE_Y;
             _autostart = settings.AUTOSTART;
             _startMinimized = settings.START_MINIMIZED;
+            _lastUpdateCheck = settings.LAST_UPDATE_CHECKDATE_UTC;
         }
 
         private static void Default_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -64,171 +67,220 @@ namespace adrilight {
             _log.Info($"SettingChanging: {e.SettingName} will get the value {e.NewValue}");
         }
 
-        public static bool UseLinearLighting {
+        public static bool UseLinearLighting
+        {
             get => Properties.Settings.Default.USE_LINEAR_LIGHTING;
-            set {
+            set
+            {
                 Properties.Settings.Default.USE_LINEAR_LIGHTING = value;
                 Properties.Settings.Default.Save();
             }
         }
-        public static int SpotsX {
+        public static int SpotsX
+        {
             get { return _spotsX; }
-            set {
+            set
+            {
                 _spotsX = value;
                 Properties.Settings.Default.SPOTS_X = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static int SpotsY {
+        public static int SpotsY
+        {
             get { return _spotsY; }
-            set {
+            set
+            {
                 _spotsY = value;
                 Properties.Settings.Default.SPOTS_Y = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static int LedsPerSpot {
+        public static int LedsPerSpot
+        {
             get { return _ledsPerSpot; }
-            set {
+            set
+            {
                 _ledsPerSpot = value;
                 Properties.Settings.Default.LEDS_PER_SPOT = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static int OffsetX {
+        public static int OffsetX
+        {
             get { return _offsetX; }
-            set {
+            set
+            {
                 _offsetX = value;
                 Properties.Settings.Default.OFFSET_X = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static int OffsetY {
+        public static int OffsetY
+        {
             get { return _offsetY; }
-            set {
+            set
+            {
                 _offsetY = value;
                 Properties.Settings.Default.OFFSET_Y = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static bool TransferActive {
+        public static bool TransferActive
+        {
             get { return _transferActive; }
-            set {
+            set
+            {
                 _transferActive = value;
                 Properties.Settings.Default.TRANSFER_ACTIVE = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static bool OverlayActive {
+        public static bool OverlayActive
+        {
             get { return _overlayActive; }
-            set {
+            set
+            {
                 _overlayActive = value;
                 Properties.Settings.Default.OVERLAY_ACTIVE = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static string ComPort {
+        public static string ComPort
+        {
             get { return _comPort; }
-            set {
+            set
+            {
                 _comPort = value;
                 Properties.Settings.Default.COM_PORT = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static byte SaturationTreshold {
+        public static byte SaturationTreshold
+        {
             get { return _saturationTreshold; }
-            set {
+            set
+            {
                 _saturationTreshold = value;
                 Properties.Settings.Default.SATURATION_TRESHOLD = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static int SpotWidth {
+        public static int SpotWidth
+        {
             get { return _spotWidth; }
-            set {
+            set
+            {
                 _spotWidth = value;
                 Properties.Settings.Default.SPOT_WIDTH = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static int SpotHeight {
+        public static int SpotHeight
+        {
             get { return _spotHeight; }
-            set {
+            set
+            {
                 _spotHeight = value;
                 Properties.Settings.Default.SPOT_HEIGHT = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static bool MirrorX {
+        public static bool MirrorX
+        {
             get { return _mirrorX; }
-            set {
+            set
+            {
                 _mirrorX = value;
                 Properties.Settings.Default.MIRROR_X = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static bool MirrorY {
+        public static bool MirrorY
+        {
             get { return _mirrorY; }
-            set {
+            set
+            {
                 _mirrorY = value;
                 Properties.Settings.Default.MIRROR_Y = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static int OffsetLed {
+        public static int OffsetLed
+        {
             get { return _offsetLed; }
-            set {
+            set
+            {
                 _offsetLed = value;
                 Properties.Settings.Default.OFFSET_LED = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static int BorderDistanceX {
+        public static int BorderDistanceX
+        {
             get { return _borderDistanceX; }
-            set {
+            set
+            {
                 _borderDistanceX = value;
                 Properties.Settings.Default.BORDER_DISTANCE_X = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static int BorderDistanceY {
+        public static int BorderDistanceY
+        {
             get { return _borderDistanceY; }
-            set {
+            set
+            {
                 _borderDistanceY = value;
                 Properties.Settings.Default.BORDER_DISTANCE_Y = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static bool Autostart {
+        public static bool Autostart
+        {
             get { return _autostart; }
-            set {
+            set
+            {
                 _autostart = value;
                 Properties.Settings.Default.AUTOSTART = value;
                 Properties.Settings.Default.Save();
             }
         }
 
-        public static bool StartMinimized {
+        public static bool StartMinimized
+        {
             get { return _startMinimized; }
-            set {
+            set
+            {
                 _startMinimized = value;
                 Properties.Settings.Default.START_MINIMIZED = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public static DateTime? LastUpdateCheck
+        {
+            get { return _lastUpdateCheck; }
+            set
+            {
+                _lastUpdateCheck = value;
+                Properties.Settings.Default.LAST_UPDATE_CHECKDATE_UTC = value;
                 Properties.Settings.Default.Save();
             }
         }

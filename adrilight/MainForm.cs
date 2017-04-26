@@ -23,8 +23,6 @@ namespace adrilight {
     {
         private readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
-        private NotifyIcon _mNotifyIcon;
-        private ContextMenu _mContextMenu;
         SerialStream _mSerialStream;
         Overlay _mOverlay;
 
@@ -33,33 +31,33 @@ namespace adrilight {
             InitializeComponent();
             Text += " " + Program.VersionNumber;
 
-            InitTrayIcon();
-
-            Application.ApplicationExit += OnApplicationExit;
-            SystemEvents.PowerModeChanged += OnPowerModeChanged;
             Settings.OverlayActive = checkBoxOverlayActive.Checked;
-            _log.Debug("Created Mainform");
 
-            var versionCheckTask = new Thread(StartVersionCheck) {Name = "VersionChecker", IsBackground = true};
-            versionCheckTask.Start();
+            Task.Run(() => StartVersionCheck());
+            _log.Debug("Created Mainform");
         }
 
-        private void StartVersionCheck()
+        private async Task StartVersionCheck()
         {
+            //avoid too many checks
+            if (Settings.LastUpdateCheck.HasValue && Settings.LastUpdateCheck > DateTime.UtcNow.AddHours(-8)) return;
+            
             try
             {
-                dynamic latestRelease = TryGetLatestReleaseData().Result;
+                var latestRelease = await TryGetLatestReleaseData();
                 if (latestRelease == null) return;
 
                 string tagName = latestRelease.tag_name;
                 var latestVersionNumber = SemVersion.Parse(tagName.TrimStart('v', 'V'));
+
+                Settings.LastUpdateCheck = DateTime.UtcNow;
 
                 if (latestVersionNumber > Program.VersionNumber)
                 {
                     Invoke((MethodInvoker)delegate
                     {
                         var url = latestRelease.html_url as string;
-                        var shouldOpenUrl = MessageBox.Show($"New version of adrilight is available! The new version is {latestVersionNumber} (you are running {Program.VersionNumber}). Press OK to open the download page."
+                        var shouldOpenUrl = MessageBox.Show($"New version of adrilight is available! The new version is {latestVersionNumber} (you are running {Program.VersionNumber}). Press OK to open the download page!"
                              , "New Adrilight Version!", MessageBoxButtons.OKCancel) == DialogResult.OK;
 
                         if (url != null && shouldOpenUrl)
@@ -75,18 +73,24 @@ namespace adrilight {
                 throw;
             }
         }
+        private class GithubReleaseData
+        {
+            public string tag_name { get; set; }
+            public string html_url { get; set; }
+        }
 
-        private async Task<dynamic> TryGetLatestReleaseData()
+        private async Task<GithubReleaseData> TryGetLatestReleaseData()
         {
             try
             {
-                var client = new HttpClient();
-                client.DefaultRequestHeaders.Add("User-Agent", "fabsenet/adrilight"); 
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("User-Agent", "fabsenet/adrilight");
 
-                var jsonString = await client.GetStringAsync("https://api.github.com/repos/fabsenet/adrilight/releases/latest");
-                var converter = new ExpandoObjectConverter();
-                dynamic data = JsonConvert.DeserializeObject<ExpandoObject>(jsonString, converter);
-                return data;
+                    var jsonString = await client.GetStringAsync("https://api.github.com/repos/fabsenet/adrilight/releases/latest");
+                    var data = JsonConvert.DeserializeObject<GithubReleaseData>(jsonString);
+                    return data;
+                }
             }
             catch (Exception ex)
             {
@@ -94,78 +98,17 @@ namespace adrilight {
                 return null;
             }
         }
-
-        private void InitTrayIcon() {
-            _mContextMenu = new ContextMenu();
-            _mContextMenu.MenuItems.Add("Exit", NotifyIcon_ExitClick);
-
-            _mNotifyIcon = new NotifyIcon
-            {
-                Text = "adrilight",
-                Icon = this.Icon,
-                Visible = true,
-                ContextMenu = _mContextMenu
-            };
-            _mNotifyIcon.MouseDoubleClick += NotifyIcon_MouseDoubleClick;
-        }
-
+        
         private void MainForm_Load(object sender, EventArgs e) {
             InitTags();
             InitFieldLimits();
 
             RefreshFields();
-
-            if (Settings.StartMinimized) {
-                ShowInTaskbar = Visible = false;
-                WindowState = FormWindowState.Minimized;
-            }
             RefreshAll();
 
             RefreshCapturingState();
             RefreshOverlayState();
-        }
-
-        private void MainForm_Resize(object sender, EventArgs e)
-        {
-            ShowInTaskbar = WindowState != FormWindowState.Minimized;
-            Visible = WindowState != FormWindowState.Minimized;
-            _log.Debug("WindowState is "+WindowState);
-        }
-
-        private void NotifyIcon_MouseDoubleClick(object sender, MouseEventArgs e) {
-            WindowState = FormWindowState.Normal;
-            ShowInTaskbar = true;
-            Visible = true;
-            BringToFront();
-        }
-
-        private void NotifyIcon_ExitClick(object sender, EventArgs e) {
-            Application.Exit();
-        }
-
-        private void OnApplicationExit(object sender, EventArgs e) {
-            _log.Debug("Application exit!");
-            _mNotifyIcon.Dispose();
-        }
-
-        private void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
-        {
-            _log.Debug("Changing Powermode to {0}", e.Mode);
-
-            //if (e.Mode == PowerModes.Resume)
-            //{
-            //    _isSuspending = false;
-            //    RefreshTransferState();
-            //    RefreshOverlayState();
-            //    RefreshCapturingState();
-            //}
-            //else if (e.Mode == PowerModes.Suspend)
-            //{
-            //    _isSuspending = true;
-            //    StopBackgroundWorkers();
-            //    RefreshCapturingState();
-            //}
-        }
+        }                
 
         // for universal change of track bar value labels => see setTrackBarValue
         private void InitTags() {
