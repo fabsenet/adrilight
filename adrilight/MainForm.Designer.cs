@@ -57,8 +57,6 @@
             this.comboBoxComPort = new System.Windows.Forms.ComboBox();
             this.numericUpDownSaturationTreshold = new System.Windows.Forms.NumericUpDown();
             this.groupBoxLEDs = new System.Windows.Forms.GroupBox();
-            this.labelMinimumRefreshRateMs = new System.Windows.Forms.Label();
-            this.numericUpDownMinimumRefreshRateMs = new System.Windows.Forms.NumericUpDown();
             this.labelSaturationTreshold = new System.Windows.Forms.Label();
             this.labelLedOffset = new System.Windows.Forms.Label();
             this.numericUpDownLedOffset = new System.Windows.Forms.NumericUpDown();
@@ -85,7 +83,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLedsPerSpot)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSaturationTreshold)).BeginInit();
             this.groupBoxLEDs.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinimumRefreshRateMs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLedOffset)).BeginInit();
             this.groupBoxTransfer.SuspendLayout();
             this.groupBoxRun.SuspendLayout();
@@ -406,8 +403,6 @@
             // 
             // groupBoxLEDs
             // 
-            this.groupBoxLEDs.Controls.Add(this.labelMinimumRefreshRateMs);
-            this.groupBoxLEDs.Controls.Add(this.numericUpDownMinimumRefreshRateMs);
             this.groupBoxLEDs.Controls.Add(this.labelSaturationTreshold);
             this.groupBoxLEDs.Controls.Add(this.labelLedOffset);
             this.groupBoxLEDs.Controls.Add(this.numericUpDownLedOffset);
@@ -424,39 +419,6 @@
             this.groupBoxLEDs.TabIndex = 23;
             this.groupBoxLEDs.TabStop = false;
             this.groupBoxLEDs.Text = "LEDs";
-            // 
-            // labelMinimumRefreshRateMs
-            // 
-            this.labelMinimumRefreshRateMs.AutoSize = true;
-            this.labelMinimumRefreshRateMs.Location = new System.Drawing.Point(9, 155);
-            this.labelMinimumRefreshRateMs.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelMinimumRefreshRateMs.Name = "labelMinimumRefreshRateMs";
-            this.labelMinimumRefreshRateMs.Size = new System.Drawing.Size(173, 20);
-            this.labelMinimumRefreshRateMs.TabIndex = 29;
-            this.labelMinimumRefreshRateMs.Text = "Min. Refresh Rate (ms)";
-            // 
-            // numericUpDownMinimumRefreshRateMs
-            // 
-            this.numericUpDownMinimumRefreshRateMs.Location = new System.Drawing.Point(208, 152);
-            this.numericUpDownMinimumRefreshRateMs.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.numericUpDownMinimumRefreshRateMs.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDownMinimumRefreshRateMs.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownMinimumRefreshRateMs.Name = "numericUpDownMinimumRefreshRateMs";
-            this.numericUpDownMinimumRefreshRateMs.Size = new System.Drawing.Size(140, 26);
-            this.numericUpDownMinimumRefreshRateMs.TabIndex = 13;
-            this.numericUpDownMinimumRefreshRateMs.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // labelSaturationTreshold
             // 
@@ -662,7 +624,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSaturationTreshold)).EndInit();
             this.groupBoxLEDs.ResumeLayout(false);
             this.groupBoxLEDs.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinimumRefreshRateMs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLedOffset)).EndInit();
             this.groupBoxTransfer.ResumeLayout(false);
             this.groupBoxTransfer.PerformLayout();
@@ -709,8 +670,6 @@
         private System.Windows.Forms.Label labelBorderDistanceY;
         private System.Windows.Forms.CheckBox checkBoxAutostart;
         private System.Windows.Forms.CheckBox checkBoxStartMinimized;
-        private System.Windows.Forms.Label labelMinimumRefreshRateMs;
-        private System.Windows.Forms.NumericUpDown numericUpDownMinimumRefreshRateMs;
         private System.Windows.Forms.Button resetOffsetXButton;
         private System.Windows.Forms.Button resetOffsetYButton;
         private System.Windows.Forms.GroupBox groupBox1;

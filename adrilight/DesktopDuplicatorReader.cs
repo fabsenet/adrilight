@@ -44,7 +44,7 @@ namespace adrilight
             if (IsRunning) throw new Exception(nameof(DesktopDuplicatorReader) + " is already running!");
 
             IsRunning = true;
-            Debug.WriteLine("Started Desktop Duplication Reader.");
+            _log.Debug("Started Desktop Duplication Reader.");
             try
             {
                 BitmapData bitmapData = new BitmapData();
@@ -104,7 +104,7 @@ namespace adrilight
                 _desktopDuplicator?.Dispose();
                 _desktopDuplicator = null;
 
-                Debug.WriteLine("Stopped Desktop Duplication Reader.");
+                _log.Debug("Stopped Desktop Duplication Reader.");
                 IsRunning = false;
             }
         }

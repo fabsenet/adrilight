@@ -27,7 +27,7 @@ namespace adrilight
             if (_workerThread != null) return;
 
             _cancellationTokenSource = new CancellationTokenSource();
-            _workerThread = new Thread(BackgroundWorker_DoWork)
+            _workerThread = new Thread(DoWork)
             {
                 Name = "Serial sending",
                 IsBackground = true
@@ -40,11 +40,13 @@ namespace adrilight
             _log.Debug("Stop called.");
             if (_workerThread == null) return;
 
-            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource?.Cancel();
             _cancellationTokenSource = null;
-            _workerThread.Join();
+            _workerThread?.Join();
             _workerThread = null;
         }
+
+        public bool IsRunning => _workerThread != null && _workerThread.IsAlive;
 
         private byte[] GetOutputStream()
         {
@@ -71,12 +73,15 @@ namespace adrilight
             return outputStream;
         }
 
-        private void BackgroundWorker_DoWork(object tokenObject)
+        private void DoWork(object tokenObject)
         {
             var cancellationToken = (CancellationToken) tokenObject;
             SerialPort serialPort = null;
 
-            if (String.IsNullOrEmpty(Settings.ComPort)) return;
+            if (String.IsNullOrEmpty(Settings.ComPort))
+            {
+                return;
+            }
 
             //retry after exceptions...
             while (!cancellationToken.IsCancellationRequested)
@@ -84,12 +89,21 @@ namespace adrilight
                 try
                 {
                     const int baudRate = 1000000;
-                    serialPort = new SerialPort(Settings.ComPort, baudRate);
-                    serialPort.Open();
+                    string openedComPort = null;
 
-                    //send frame data
                     while (!cancellationToken.IsCancellationRequested)
                     {
+                        //open or change the serial port
+                        if (openedComPort != Settings.ComPort)
+                        {
+                            serialPort?.Close();
+
+                            serialPort = new SerialPort(Settings.ComPort, baudRate);
+                            serialPort.Open();
+                            openedComPort = Settings.ComPort;
+                        }
+
+                        //send frame data
                         byte[] outputStream = GetOutputStream();
                         serialPort.Write(outputStream, 0, outputStream.Length);
 

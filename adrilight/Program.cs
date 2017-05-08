@@ -46,6 +46,23 @@ namespace adrilight {
 
             SetupNotifyIcon();
 
+            //subscribe for changes in the settings
+            Properties.Settings.Default.PropertyChanged += (s, e) => SpotSet.Refresh();
+            //exeucte once to setup the leds
+            SpotSet.Refresh();
+
+            //subscribe for changes in the settings
+            Properties.Settings.Default.PropertyChanged += (s, e) => RefreshCapturingState();
+            //exeucte once to start the capturing initially
+            RefreshCapturingState();
+
+
+            //subscribe for changes in the settings
+            Properties.Settings.Default.PropertyChanged += (s, e) => RefreshTransferState();
+            //exeucte once to start the serial stream initially
+            RefreshTransferState();
+
+
             if (!Settings.StartMinimized)
             {
                 OpenSettingsWindow();
@@ -133,6 +150,65 @@ namespace adrilight {
                 currentVersion = new StreamReader(versionStream).ReadToEnd().Trim();
             }
             return currentVersion;
+        }
+
+
+
+        private static DesktopDuplicatorReader _desktopDuplicatorReader;
+        private static CancellationTokenSource _cancellationTokenSource;
+
+        private static void RefreshCapturingState()
+        {
+
+            var isRunning = _cancellationTokenSource != null && _desktopDuplicatorReader != null && _desktopDuplicatorReader.IsRunning;
+            var shouldBeRunning = Settings.TransferActive || Settings.OverlayActive;
+
+            if (isRunning && !shouldBeRunning)
+            {
+                //stop it!
+                _log.Debug("stopping the capturing");
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource = null;
+                _desktopDuplicatorReader = null;
+            }
+            else if (!isRunning && shouldBeRunning)
+            {
+                //start it
+                _log.Debug("starting the capturing");
+                _cancellationTokenSource = new CancellationTokenSource();
+                _desktopDuplicatorReader = new DesktopDuplicatorReader();
+                var thread = new Thread(() => _desktopDuplicatorReader.Run(_cancellationTokenSource.Token))
+                {
+                    IsBackground = true,
+                    Priority = ThreadPriority.BelowNormal,
+                    Name = "DesktopDuplicatorReader"
+                };
+                thread.Start();
+            }
+        }
+
+        private static SerialStream _mSerialStream;
+
+
+        private static void RefreshTransferState()
+        {
+            if (null == _mSerialStream)
+            {
+                _mSerialStream = new SerialStream();
+            }
+
+            if (Settings.TransferActive && !_mSerialStream.IsRunning)
+            {
+                //start it
+                _log.Debug("starting the serial stream");
+                _mSerialStream.Start();
+            }
+            else if (!Settings.TransferActive && _mSerialStream.IsRunning)
+            {
+                //stop it
+                _log.Debug("stopping the serial stream");
+                _mSerialStream.Stop();
+            }
         }
     }
 }

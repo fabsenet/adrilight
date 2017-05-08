@@ -47,7 +47,7 @@ namespace adrilight {
                 var latestRelease = await TryGetLatestReleaseData();
                 if (latestRelease == null) return;
 
-                string tagName = latestRelease.tag_name;
+                string tagName = latestRelease.LatestVersionName;
                 var latestVersionNumber = SemVersion.Parse(tagName.TrimStart('v', 'V'));
 
                 Settings.LastUpdateCheck = DateTime.UtcNow;
@@ -56,7 +56,7 @@ namespace adrilight {
                 {
                     Invoke((MethodInvoker)delegate
                     {
-                        var url = latestRelease.html_url as string;
+                        var url = latestRelease.LatestVersionUrl as string;
                         var shouldOpenUrl = MessageBox.Show($"New version of adrilight is available! The new version is {latestVersionNumber} (you are running {Program.VersionNumber}). Press OK to open the download page!"
                              , "New Adrilight Version!", MessageBoxButtons.OKCancel) == DialogResult.OK;
 
@@ -73,10 +73,15 @@ namespace adrilight {
                 throw;
             }
         }
+
+        [DebuggerDisplay("GithubReleaseData: {LatestVersionName} {LatestVersionUrl}")]
         private class GithubReleaseData
         {
-            public string tag_name { get; set; }
-            public string html_url { get; set; }
+            [JsonProperty("tag_name")]
+            public string LatestVersionName { get; set; }
+
+            [JsonProperty("html_url")]
+            public string LatestVersionUrl { get; set; }
         }
 
         private async Task<GithubReleaseData> TryGetLatestReleaseData()
@@ -106,7 +111,6 @@ namespace adrilight {
             RefreshFields();
             RefreshAll();
 
-            RefreshCapturingState();
             RefreshOverlayState();
         }                
 
@@ -167,9 +171,6 @@ namespace adrilight {
 
             numericUpDownLedOffset.Minimum = 0;
             numericUpDownLedOffset.Maximum = 500;
-
-            numericUpDownMinimumRefreshRateMs.Minimum = 0;
-            numericUpDownMinimumRefreshRateMs.Maximum = 1000;
         }
 
         private void RefreshFields()
@@ -303,16 +304,12 @@ namespace adrilight {
         private void checkBoxTransferActive_CheckedChanged(object sender, EventArgs e) {
             Settings.TransferActive = checkBoxTransferActive.Checked;
             RefreshAll();
-
-            RefreshCapturingState();
-            RefreshTransferState();
         }
 
         private void checkBoxOverlayActive_CheckedChanged(object sender, EventArgs e) {
             Settings.OverlayActive = checkBoxOverlayActive.Checked;
             RefreshAll();
-
-            RefreshCapturingState();
+            
             RefreshOverlayState();
         }
 
@@ -345,50 +342,7 @@ namespace adrilight {
             // can be changed on the fly without refreshing
         }
         
-        private DesktopDuplicatorReader _desktopDuplicatorReader;
-        private CancellationTokenSource _cancellationTokenSource;
 
-        private void RefreshCapturingState()
-        {
-
-            var isRunning = _cancellationTokenSource!=null && _desktopDuplicatorReader != null && _desktopDuplicatorReader.IsRunning;
-            var shouldBeRunning = Settings.TransferActive || Settings.OverlayActive;
-
-            if (isRunning && !shouldBeRunning)
-            {
-                //stop it!
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource = null;
-                _desktopDuplicatorReader = null;
-            }
-
-            if (!isRunning && shouldBeRunning)
-            {
-                //start it
-                _cancellationTokenSource = new CancellationTokenSource();
-                _desktopDuplicatorReader = new DesktopDuplicatorReader();
-                var thread = new Thread(() => _desktopDuplicatorReader.Run(_cancellationTokenSource.Token))
-                {
-                    IsBackground = true,Priority = ThreadPriority.BelowNormal
-                };
-                thread.Start();
-            }
-        }
-
-        private void RefreshTransferState() {
-            if (null == _mSerialStream) {
-                _mSerialStream = new SerialStream();
-            }
-
-            if (Settings.TransferActive) {
-                comboBoxComPort.Enabled = false;
-                _mSerialStream.Start();
-            } else {
-                _mSerialStream.Stop();
-                _mSerialStream = null;
-                comboBoxComPort.Enabled = true;
-            }
-        }
 
         private void RefreshOverlayState() {
             if (null == _mOverlay) {
