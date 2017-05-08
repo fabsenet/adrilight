@@ -80,13 +80,22 @@ namespace adrilight {
             if(_mainForm == null)
             {
                 _mainForm = new MainForm();
-                _mainForm.FormClosed += (s, e) => _mainForm = null;
+                _mainForm.FormClosed += MainForm_FormClosed;
                 _mainForm.Show();
             }
             else
             {
                 _mainForm.BringToFront();
             }
+        }
+
+        private static void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (_mainForm == null) return;
+
+            //deregister to avoid memory leak
+            _mainForm.FormClosed -= MainForm_FormClosed;
+            _mainForm = null;
         }
 
         private static void ApplicationOnThreadException(object sender, Exception ex)

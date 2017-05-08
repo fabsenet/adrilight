@@ -27,7 +27,7 @@ namespace adrilight
             if (_workerThread != null) return;
 
             _cancellationTokenSource = new CancellationTokenSource();
-            _workerThread = new Thread(mBackgroundWorker_DoWork)
+            _workerThread = new Thread(BackgroundWorker_DoWork)
             {
                 Name = "Serial sending",
                 IsBackground = true
@@ -59,10 +59,8 @@ namespace adrilight
 
                 foreach (Spot spot in SpotSet.Spots)
                 {
-
                     for (int i = 0; i < Settings.LedsPerSpot; i++)
                     {
-
                         outputStream[counter++] = spot.Blue; // blue
                         outputStream[counter++] = spot.Green; // green
                         outputStream[counter++] = spot.Red; // red
@@ -73,7 +71,7 @@ namespace adrilight
             return outputStream;
         }
 
-        private void mBackgroundWorker_DoWork(object tokenObject)
+        private void BackgroundWorker_DoWork(object tokenObject)
         {
             var cancellationToken = (CancellationToken) tokenObject;
             SerialPort serialPort = null;
