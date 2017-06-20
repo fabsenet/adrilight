@@ -36,7 +36,7 @@ namespace adrilight {
                 (sender, args) => ApplicationOnThreadException(sender, args.ExceptionObject as Exception);
 
             Settings.Load();
-
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.ThreadException += (sender, args) => ApplicationOnThreadException(sender, args.Exception);

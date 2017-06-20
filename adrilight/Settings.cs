@@ -64,7 +64,7 @@ namespace adrilight
 
         private static void Default_SettingChanging(object sender, System.Configuration.SettingChangingEventArgs e)
         {
-            _log.Info($"SettingChanging: {e.SettingName} will get the value {e.NewValue}");
+            _log.Info($"SettingChanging: {e.SettingName} will get the new value {e.NewValue}");
         }
 
         public static bool UseLinearLighting
