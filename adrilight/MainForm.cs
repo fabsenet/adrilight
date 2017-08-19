@@ -25,6 +25,8 @@ namespace adrilight {
 
         SerialStream _mSerialStream;
         Overlay _mOverlay;
+        public static int FPS_Desktop = 0;
+        public static int FPS_Serial = 0;
 
         public MainForm() {
             _log.Debug("Creating Mainform");
@@ -399,6 +401,14 @@ namespace adrilight {
         {
             Settings.UseLinearLighting = rbLinearLighting.Checked;
             _log.Debug("UseLinearLighting changed to {0}", Settings.UseLinearLighting);
+        }
+
+        private void timerFPS_Tick(object sender, EventArgs e)
+        { // timer ticks every 1 sec
+            groupBoxSpots.Text = "Spots (" + FPS_Desktop + " FPS)";
+            groupBoxTransfer.Text = "Serial Transfer (" + FPS_Serial + " FPS)";
+            FPS_Desktop = 0;
+            FPS_Serial = 0;
         }
     }
 }

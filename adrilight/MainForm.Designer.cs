@@ -31,6 +31,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBoxSpots = new System.Windows.Forms.GroupBox();
             this.resetOffsetYButton = new System.Windows.Forms.Button();
@@ -72,6 +73,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.rbNonLinearLighting = new System.Windows.Forms.RadioButton();
             this.rbLinearLighting = new System.Windows.Forms.RadioButton();
+            this.timerFPS = new System.Windows.Forms.Timer(this.components);
             this.groupBoxSpots.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOffsetY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsY)).BeginInit();
@@ -602,6 +604,12 @@
             this.rbLinearLighting.UseVisualStyleBackColor = true;
             this.rbLinearLighting.CheckedChanged += new System.EventHandler(this.rbLinearLighting_CheckedChanged);
             // 
+            // timerFPS
+            // 
+            this.timerFPS.Enabled = true;
+            this.timerFPS.Interval = 1000;
+            this.timerFPS.Tick += new System.EventHandler(this.timerFPS_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -688,6 +696,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton rbNonLinearLighting;
         private System.Windows.Forms.RadioButton rbLinearLighting;
+        private System.Windows.Forms.Timer timerFPS;
         private System.Windows.Forms.CheckBox checkBoxReverse;
     }
 }

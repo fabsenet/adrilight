@@ -97,6 +97,7 @@ namespace adrilight
                             });
                     }
                     image.UnlockBits(bitmapData);
+                    MainForm.FPS_Desktop++;
                 }
             }
             finally

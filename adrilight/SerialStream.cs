@@ -132,6 +132,7 @@ namespace adrilight
                         var minTimespan = (int) (fastLedTime + serialTransferTime) + 1;
 
                         Task.Delay(minTimespan, cancellationToken).Wait(cancellationToken);
+                        MainForm.FPS_Serial++;
                     }
                 }
                 catch (OperationCanceledException)
