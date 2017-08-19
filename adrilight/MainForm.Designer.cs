@@ -76,6 +76,17 @@
             this.timerFPS = new System.Windows.Forms.Timer(this.components);
             this.groupBoxDebug = new System.Windows.Forms.GroupBox();
             this.checkBoxLogging = new System.Windows.Forms.CheckBox();
+            this.groupBoxWhiteBalance = new System.Windows.Forms.GroupBox();
+            this.trackBarWhiteBalanceR = new System.Windows.Forms.TrackBar();
+            this.trackBarWhiteBalanceG = new System.Windows.Forms.TrackBar();
+            this.trackBarWhiteBalanceB = new System.Windows.Forms.TrackBar();
+            this.labelWhiteBalanceR = new System.Windows.Forms.Label();
+            this.labelWhiteBalanceG = new System.Windows.Forms.Label();
+            this.labelWhiteBalanceB = new System.Windows.Forms.Label();
+            this.labelBrightness = new System.Windows.Forms.Label();
+            this.trackBarBrightness = new System.Windows.Forms.TrackBar();
+            this.buttonWhiteZero = new System.Windows.Forms.Button();
+            this.buttonWhiteSave = new System.Windows.Forms.Button();
             this.groupBoxSpots.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOffsetY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsY)).BeginInit();
@@ -93,6 +104,11 @@
             this.groupBoxRun.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBoxDebug.SuspendLayout();
+            this.groupBoxWhiteBalance.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarWhiteBalanceR)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarWhiteBalanceG)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarWhiteBalanceB)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBoxSpots
@@ -117,7 +133,7 @@
             this.groupBoxSpots.Controls.Add(this.labelSpotsX);
             this.groupBoxSpots.Location = new System.Drawing.Point(12, 12);
             this.groupBoxSpots.Name = "groupBoxSpots";
-            this.groupBoxSpots.Size = new System.Drawing.Size(241, 296);
+            this.groupBoxSpots.Size = new System.Drawing.Size(241, 323);
             this.groupBoxSpots.TabIndex = 6;
             this.groupBoxSpots.TabStop = false;
             this.groupBoxSpots.Text = "Spots";
@@ -358,7 +374,7 @@
             // labelComPort
             // 
             this.labelComPort.AutoSize = true;
-            this.labelComPort.Location = new System.Drawing.Point(6, 26);
+            this.labelComPort.Location = new System.Drawing.Point(6, 20);
             this.labelComPort.Name = "labelComPort";
             this.labelComPort.Size = new System.Drawing.Size(53, 13);
             this.labelComPort.TabIndex = 17;
@@ -367,7 +383,7 @@
             // comboBoxComPort
             // 
             this.comboBoxComPort.FormattingEnabled = true;
-            this.comboBoxComPort.Location = new System.Drawing.Point(142, 21);
+            this.comboBoxComPort.Location = new System.Drawing.Point(142, 13);
             this.comboBoxComPort.Name = "comboBoxComPort";
             this.comboBoxComPort.Size = new System.Drawing.Size(93, 21);
             this.comboBoxComPort.TabIndex = 9;
@@ -397,9 +413,9 @@
             this.groupBoxLEDs.Controls.Add(this.labelLedsPerSpot);
             this.groupBoxLEDs.Controls.Add(this.numericUpDownLedsPerSpot);
             this.groupBoxLEDs.Controls.Add(this.numericUpDownSaturationTreshold);
-            this.groupBoxLEDs.Location = new System.Drawing.Point(259, 75);
+            this.groupBoxLEDs.Location = new System.Drawing.Point(259, 57);
             this.groupBoxLEDs.Name = "groupBoxLEDs";
-            this.groupBoxLEDs.Size = new System.Drawing.Size(241, 155);
+            this.groupBoxLEDs.Size = new System.Drawing.Size(241, 145);
             this.groupBoxLEDs.TabIndex = 23;
             this.groupBoxLEDs.TabStop = false;
             this.groupBoxLEDs.Text = "LEDs";
@@ -475,7 +491,7 @@
             this.groupBoxTransfer.Controls.Add(this.labelComPort);
             this.groupBoxTransfer.Location = new System.Drawing.Point(259, 12);
             this.groupBoxTransfer.Name = "groupBoxTransfer";
-            this.groupBoxTransfer.Size = new System.Drawing.Size(241, 57);
+            this.groupBoxTransfer.Size = new System.Drawing.Size(241, 41);
             this.groupBoxTransfer.TabIndex = 24;
             this.groupBoxTransfer.TabStop = false;
             this.groupBoxTransfer.Text = "Serial Transfer";
@@ -508,9 +524,9 @@
             this.groupBoxRun.Controls.Add(this.checkBoxStartMinimized);
             this.groupBoxRun.Controls.Add(this.checkBoxTransferActive);
             this.groupBoxRun.Controls.Add(this.checkBoxOverlayActive);
-            this.groupBoxRun.Location = new System.Drawing.Point(259, 236);
+            this.groupBoxRun.Location = new System.Drawing.Point(12, 341);
             this.groupBoxRun.Name = "groupBoxRun";
-            this.groupBoxRun.Size = new System.Drawing.Size(240, 72);
+            this.groupBoxRun.Size = new System.Drawing.Size(241, 72);
             this.groupBoxRun.TabIndex = 25;
             this.groupBoxRun.TabStop = false;
             this.groupBoxRun.Text = "Control";
@@ -541,11 +557,11 @@
             // 
             this.groupBox1.Controls.Add(this.rbNonLinearLighting);
             this.groupBox1.Controls.Add(this.rbLinearLighting);
-            this.groupBox1.Location = new System.Drawing.Point(259, 313);
+            this.groupBox1.Location = new System.Drawing.Point(12, 418);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(241, 48);
+            this.groupBox1.Size = new System.Drawing.Size(241, 63);
             this.groupBox1.TabIndex = 26;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Lighting Mode";
@@ -553,7 +569,7 @@
             // rbNonLinearLighting
             // 
             this.rbNonLinearLighting.AutoSize = true;
-            this.rbNonLinearLighting.Location = new System.Drawing.Point(129, 16);
+            this.rbNonLinearLighting.Location = new System.Drawing.Point(129, 27);
             this.rbNonLinearLighting.Margin = new System.Windows.Forms.Padding(2);
             this.rbNonLinearLighting.Name = "rbNonLinearLighting";
             this.rbNonLinearLighting.Size = new System.Drawing.Size(105, 17);
@@ -566,7 +582,7 @@
             // rbLinearLighting
             // 
             this.rbLinearLighting.AutoSize = true;
-            this.rbLinearLighting.Location = new System.Drawing.Point(9, 17);
+            this.rbLinearLighting.Location = new System.Drawing.Point(12, 27);
             this.rbLinearLighting.Margin = new System.Windows.Forms.Padding(2);
             this.rbLinearLighting.Name = "rbLinearLighting";
             this.rbLinearLighting.Size = new System.Drawing.Size(94, 17);
@@ -585,11 +601,11 @@
             // groupBoxDebug
             // 
             this.groupBoxDebug.Controls.Add(this.checkBoxLogging);
-            this.groupBoxDebug.Location = new System.Drawing.Point(12, 313);
+            this.groupBoxDebug.Location = new System.Drawing.Point(259, 418);
             this.groupBoxDebug.Margin = new System.Windows.Forms.Padding(2);
             this.groupBoxDebug.Name = "groupBoxDebug";
             this.groupBoxDebug.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBoxDebug.Size = new System.Drawing.Size(241, 48);
+            this.groupBoxDebug.Size = new System.Drawing.Size(241, 63);
             this.groupBoxDebug.TabIndex = 27;
             this.groupBoxDebug.TabStop = false;
             this.groupBoxDebug.Text = "Debug";
@@ -597,7 +613,7 @@
             // checkBoxLogging
             // 
             this.checkBoxLogging.AutoSize = true;
-            this.checkBoxLogging.Location = new System.Drawing.Point(9, 18);
+            this.checkBoxLogging.Location = new System.Drawing.Point(9, 29);
             this.checkBoxLogging.Name = "checkBoxLogging";
             this.checkBoxLogging.Size = new System.Drawing.Size(100, 17);
             this.checkBoxLogging.TabIndex = 0;
@@ -605,12 +621,134 @@
             this.checkBoxLogging.UseVisualStyleBackColor = true;
             this.checkBoxLogging.CheckedChanged += new System.EventHandler(this.checkBoxLogging_CheckedChanged);
             // 
+            // groupBoxWhiteBalance
+            // 
+            this.groupBoxWhiteBalance.Controls.Add(this.buttonWhiteSave);
+            this.groupBoxWhiteBalance.Controls.Add(this.buttonWhiteZero);
+            this.groupBoxWhiteBalance.Controls.Add(this.trackBarBrightness);
+            this.groupBoxWhiteBalance.Controls.Add(this.labelBrightness);
+            this.groupBoxWhiteBalance.Controls.Add(this.labelWhiteBalanceB);
+            this.groupBoxWhiteBalance.Controls.Add(this.labelWhiteBalanceG);
+            this.groupBoxWhiteBalance.Controls.Add(this.labelWhiteBalanceR);
+            this.groupBoxWhiteBalance.Controls.Add(this.trackBarWhiteBalanceB);
+            this.groupBoxWhiteBalance.Controls.Add(this.trackBarWhiteBalanceG);
+            this.groupBoxWhiteBalance.Controls.Add(this.trackBarWhiteBalanceR);
+            this.groupBoxWhiteBalance.Location = new System.Drawing.Point(259, 207);
+            this.groupBoxWhiteBalance.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBoxWhiteBalance.Name = "groupBoxWhiteBalance";
+            this.groupBoxWhiteBalance.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxWhiteBalance.Size = new System.Drawing.Size(241, 206);
+            this.groupBoxWhiteBalance.TabIndex = 28;
+            this.groupBoxWhiteBalance.TabStop = false;
+            this.groupBoxWhiteBalance.Text = "White balance";
+            // 
+            // trackBarWhiteBalanceR
+            // 
+            this.trackBarWhiteBalanceR.LargeChange = 10;
+            this.trackBarWhiteBalanceR.Location = new System.Drawing.Point(140, 18);
+            this.trackBarWhiteBalanceR.Maximum = 100;
+            this.trackBarWhiteBalanceR.Minimum = -100;
+            this.trackBarWhiteBalanceR.Name = "trackBarWhiteBalanceR";
+            this.trackBarWhiteBalanceR.Size = new System.Drawing.Size(93, 45);
+            this.trackBarWhiteBalanceR.TabIndex = 29;
+            this.trackBarWhiteBalanceR.Scroll += new System.EventHandler(this.trackBarWhiteBalanceR_Scroll);
+            // 
+            // trackBarWhiteBalanceG
+            // 
+            this.trackBarWhiteBalanceG.LargeChange = 10;
+            this.trackBarWhiteBalanceG.Location = new System.Drawing.Point(140, 52);
+            this.trackBarWhiteBalanceG.Maximum = 100;
+            this.trackBarWhiteBalanceG.Minimum = -100;
+            this.trackBarWhiteBalanceG.Name = "trackBarWhiteBalanceG";
+            this.trackBarWhiteBalanceG.Size = new System.Drawing.Size(93, 45);
+            this.trackBarWhiteBalanceG.TabIndex = 30;
+            this.trackBarWhiteBalanceG.Scroll += new System.EventHandler(this.trackBarWhiteBalanceG_Scroll);
+            // 
+            // trackBarWhiteBalanceB
+            // 
+            this.trackBarWhiteBalanceB.LargeChange = 10;
+            this.trackBarWhiteBalanceB.Location = new System.Drawing.Point(140, 88);
+            this.trackBarWhiteBalanceB.Maximum = 100;
+            this.trackBarWhiteBalanceB.Minimum = -100;
+            this.trackBarWhiteBalanceB.Name = "trackBarWhiteBalanceB";
+            this.trackBarWhiteBalanceB.Size = new System.Drawing.Size(93, 45);
+            this.trackBarWhiteBalanceB.TabIndex = 31;
+            this.trackBarWhiteBalanceB.Scroll += new System.EventHandler(this.trackBarWhiteBalanceB_Scroll);
+            // 
+            // labelWhiteBalanceR
+            // 
+            this.labelWhiteBalanceR.AutoSize = true;
+            this.labelWhiteBalanceR.Location = new System.Drawing.Point(7, 21);
+            this.labelWhiteBalanceR.Name = "labelWhiteBalanceR";
+            this.labelWhiteBalanceR.Size = new System.Drawing.Size(27, 13);
+            this.labelWhiteBalanceR.TabIndex = 39;
+            this.labelWhiteBalanceR.Text = "Red";
+            // 
+            // labelWhiteBalanceG
+            // 
+            this.labelWhiteBalanceG.AutoSize = true;
+            this.labelWhiteBalanceG.Location = new System.Drawing.Point(7, 55);
+            this.labelWhiteBalanceG.Name = "labelWhiteBalanceG";
+            this.labelWhiteBalanceG.Size = new System.Drawing.Size(36, 13);
+            this.labelWhiteBalanceG.TabIndex = 40;
+            this.labelWhiteBalanceG.Text = "Green";
+            // 
+            // labelWhiteBalanceB
+            // 
+            this.labelWhiteBalanceB.AutoSize = true;
+            this.labelWhiteBalanceB.Location = new System.Drawing.Point(7, 91);
+            this.labelWhiteBalanceB.Name = "labelWhiteBalanceB";
+            this.labelWhiteBalanceB.Size = new System.Drawing.Size(28, 13);
+            this.labelWhiteBalanceB.TabIndex = 41;
+            this.labelWhiteBalanceB.Text = "Blue";
+            // 
+            // labelBrightness
+            // 
+            this.labelBrightness.AutoSize = true;
+            this.labelBrightness.Location = new System.Drawing.Point(7, 134);
+            this.labelBrightness.Name = "labelBrightness";
+            this.labelBrightness.Size = new System.Drawing.Size(56, 13);
+            this.labelBrightness.TabIndex = 39;
+            this.labelBrightness.Text = "Brightness";
+            // 
+            // trackBarBrightness
+            // 
+            this.trackBarBrightness.LargeChange = 10;
+            this.trackBarBrightness.Location = new System.Drawing.Point(140, 131);
+            this.trackBarBrightness.Maximum = 100;
+            this.trackBarBrightness.Minimum = -100;
+            this.trackBarBrightness.Name = "trackBarBrightness";
+            this.trackBarBrightness.Size = new System.Drawing.Size(93, 45);
+            this.trackBarBrightness.TabIndex = 29;
+            this.trackBarBrightness.Scroll += new System.EventHandler(this.trackBarBrightness_Scroll);
+            // 
+            // buttonWhiteZero
+            // 
+            this.buttonWhiteZero.Location = new System.Drawing.Point(165, 178);
+            this.buttonWhiteZero.Name = "buttonWhiteZero";
+            this.buttonWhiteZero.Size = new System.Drawing.Size(39, 22);
+            this.buttonWhiteZero.TabIndex = 42;
+            this.buttonWhiteZero.Text = "Zero";
+            this.buttonWhiteZero.UseVisualStyleBackColor = true;
+            this.buttonWhiteZero.Click += new System.EventHandler(this.buttonWhiteZero_Click);
+            // 
+            // buttonWhiteSave
+            // 
+            this.buttonWhiteSave.Location = new System.Drawing.Point(10, 178);
+            this.buttonWhiteSave.Name = "buttonWhiteSave";
+            this.buttonWhiteSave.Size = new System.Drawing.Size(119, 22);
+            this.buttonWhiteSave.TabIndex = 43;
+            this.buttonWhiteSave.Text = "Save as default";
+            this.buttonWhiteSave.UseVisualStyleBackColor = true;
+            this.buttonWhiteSave.Click += new System.EventHandler(this.buttonWhiteSave_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(512, 369);
+            this.ClientSize = new System.Drawing.Size(512, 491);
+            this.Controls.Add(this.groupBoxWhiteBalance);
             this.Controls.Add(this.groupBoxDebug);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxRun);
@@ -620,8 +758,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(528, 419);
-            this.MinimumSize = new System.Drawing.Size(528, 354);
+            this.MaximumSize = new System.Drawing.Size(528, 530);
+            this.MinimumSize = new System.Drawing.Size(528, 530);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "adrilight";
@@ -649,6 +787,12 @@
             this.groupBox1.PerformLayout();
             this.groupBoxDebug.ResumeLayout(false);
             this.groupBoxDebug.PerformLayout();
+            this.groupBoxWhiteBalance.ResumeLayout(false);
+            this.groupBoxWhiteBalance.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarWhiteBalanceR)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarWhiteBalanceG)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarWhiteBalanceB)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarBrightness)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -697,6 +841,17 @@
         private System.Windows.Forms.CheckBox checkBoxReverse;
         private System.Windows.Forms.GroupBox groupBoxDebug;
         private System.Windows.Forms.CheckBox checkBoxLogging;
+        private System.Windows.Forms.GroupBox groupBoxWhiteBalance;
+        private System.Windows.Forms.Label labelWhiteBalanceB;
+        private System.Windows.Forms.Label labelWhiteBalanceG;
+        private System.Windows.Forms.Label labelWhiteBalanceR;
+        private System.Windows.Forms.TrackBar trackBarWhiteBalanceB;
+        private System.Windows.Forms.TrackBar trackBarWhiteBalanceG;
+        private System.Windows.Forms.TrackBar trackBarWhiteBalanceR;
+        private System.Windows.Forms.TrackBar trackBarBrightness;
+        private System.Windows.Forms.Label labelBrightness;
+        private System.Windows.Forms.Button buttonWhiteZero;
+        private System.Windows.Forms.Button buttonWhiteSave;
     }
 }
 

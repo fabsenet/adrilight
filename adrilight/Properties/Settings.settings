@@ -71,5 +71,17 @@
     <Setting Name="LOGGING" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="WHITEBALANCE_R" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WHITEBALANCE_G" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-3</Value>
+    </Setting>
+    <Setting Name="WHITEBALANCE_B" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-14</Value>
+    </Setting>
+    <Setting Name="BRIGHTNESS" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

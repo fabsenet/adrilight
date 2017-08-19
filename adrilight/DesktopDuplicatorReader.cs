@@ -175,12 +175,18 @@ namespace adrilight
                 return;
             }
 
-            //"white" on wall was 66,68,77 without white balance
-            //white balance
-            //todo: introduce settings for white balance adjustments
-            r = 66f / 66f * r;
-            g = 66f / 68f * g;
-            b = 66f / 77f * b;
+            //white balance and brightness
+            r *= MainForm.WhiteBalanceFactorR;
+            g *= MainForm.WhiteBalanceFactorG;
+            b *= MainForm.WhiteBalanceFactorB;
+
+            //limiter
+            if (r < 0) r = 0;
+            if (g < 0) g = 0;
+            if (b < 0) b = 0;
+            if (r > 255) r = 255;
+            if (g > 255) g = 255;
+            if (b > 255) b = 255;
 
             if (!useLinearLighting)
             {

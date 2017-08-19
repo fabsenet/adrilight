@@ -297,5 +297,53 @@ namespace adrilight.Properties {
                 this["LOGGING"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int WHITEBALANCE_R {
+            get {
+                return ((int)(this["WHITEBALANCE_R"]));
+            }
+            set {
+                this["WHITEBALANCE_R"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-3")]
+        public int WHITEBALANCE_G {
+            get {
+                return ((int)(this["WHITEBALANCE_G"]));
+            }
+            set {
+                this["WHITEBALANCE_G"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-14")]
+        public int WHITEBALANCE_B {
+            get {
+                return ((int)(this["WHITEBALANCE_B"]));
+            }
+            set {
+                this["WHITEBALANCE_B"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int BRIGHTNESS {
+            get {
+                return ((int)(this["BRIGHTNESS"]));
+            }
+            set {
+                this["BRIGHTNESS"] = value;
+            }
+        }
     }
 }

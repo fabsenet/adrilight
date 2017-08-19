@@ -30,6 +30,10 @@ namespace adrilight
         private static bool _startMinimized;
         private static DateTime? _lastUpdateCheck;
         private static bool _logging;
+        private static int _whiteBalanceR;
+        private static int _whiteBalanceG;
+        private static int _whiteBalanceB;
+        private static int _brightness;
 
         public static void Load()
         {
@@ -59,6 +63,10 @@ namespace adrilight
             _startMinimized = settings.START_MINIMIZED;
             _lastUpdateCheck = settings.LAST_UPDATE_CHECKDATE_UTC;
             _logging = settings.LOGGING;
+            _whiteBalanceR = settings.WHITEBALANCE_R;
+            _whiteBalanceG = settings.WHITEBALANCE_G;
+            _whiteBalanceB = settings.WHITEBALANCE_B;
+            _brightness = settings.BRIGHTNESS;
         }
 
         private static void Default_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -307,6 +315,50 @@ namespace adrilight
             {
                 _logging = value;
                 Properties.Settings.Default.LOGGING = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public static int WhiteBalanceR
+        {
+            get { return _whiteBalanceR; }
+            set
+            {
+                _whiteBalanceR = value;
+                Properties.Settings.Default.WHITEBALANCE_R = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public static int WhiteBalanceG
+        {
+            get { return _whiteBalanceG; }
+            set
+            {
+                _whiteBalanceG = value;
+                Properties.Settings.Default.WHITEBALANCE_G = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public static int WhiteBalanceB
+        {
+            get { return _whiteBalanceB; }
+            set
+            {
+                _whiteBalanceB = value;
+                Properties.Settings.Default.WHITEBALANCE_B = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public static int Brightness
+        {
+            get { return _brightness; }
+            set
+            {
+                _brightness = value;
+                Properties.Settings.Default.BRIGHTNESS = value;
                 Properties.Settings.Default.Save();
             }
         }
