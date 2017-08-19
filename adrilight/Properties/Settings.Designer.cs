@@ -178,6 +178,18 @@ namespace adrilight.Properties {
                 this["MIRROR_Y"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool REVERSE {
+            get {
+                return ((bool)(this["REVERSE"]));
+            }
+            set {
+                this["REVERSE"] = value;
+            }
+        }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

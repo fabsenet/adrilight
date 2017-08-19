@@ -22,6 +22,7 @@ namespace adrilight
         private static int _spotHeight;
         private static bool _mirrorX;
         private static bool _mirrorY;
+        private static bool _reverse;
         private static int _offsetLed;
         private static int _borderDistanceX;
         private static int _borderDistanceY;
@@ -49,6 +50,7 @@ namespace adrilight
             _spotHeight = settings.SPOT_HEIGHT;
             _mirrorX = settings.MIRROR_X;
             _mirrorY = settings.MIRROR_Y;
+            _reverse = settings.REVERSE;
             _offsetLed = settings.OFFSET_LED;
             _borderDistanceX = settings.BORDER_DISTANCE_X;
             _borderDistanceY = settings.BORDER_DISTANCE_Y;
@@ -216,6 +218,17 @@ namespace adrilight
             {
                 _mirrorY = value;
                 Properties.Settings.Default.MIRROR_Y = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public static bool Reverse
+        {
+            get { return _reverse; }
+            set
+            {
+                _reverse = value;
+                Properties.Settings.Default.REVERSE = value;
                 Properties.Settings.Default.Save();
             }
         }

@@ -211,6 +211,8 @@ namespace adrilight {
 
             checkBoxMirrorY.Checked = Settings.MirrorY;
 
+            checkBoxReverse.Checked = Settings.Reverse;
+
             numericUpDownLedOffset.Value = Settings.OffsetLed;
 
             SetTrackBarValue(trackBarBorderDistanceX, Settings.BorderDistanceX);
@@ -298,6 +300,11 @@ namespace adrilight {
 
         private void checkBoxMirrorY_CheckedChanged(object sender, EventArgs e) {
             Settings.MirrorY = checkBoxMirrorY.Checked;
+            RefreshAll();
+        }
+
+        private void checkBoxReverse_CheckedChanged(object sender, EventArgs e) {
+            Settings.Reverse = checkBoxReverse.Checked;
             RefreshAll();
         }
 

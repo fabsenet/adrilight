@@ -59,13 +59,30 @@ namespace adrilight
                 outputStream = new byte[_messagePreamble.Length + (Settings.LedsPerSpot*SpotSet.Spots.Length*colorsPerLed)];
                 Buffer.BlockCopy(_messagePreamble, 0, outputStream, 0, _messagePreamble.Length);
 
-                foreach (Spot spot in SpotSet.Spots)
+                // Reverse order of LEDs, if you mounted them the other way around the screen
+                if (Settings.Reverse)
                 {
-                    for (int i = 0; i < Settings.LedsPerSpot; i++)
+                    for (int j = SpotSet.Spots.Length - 1; j >= 0; j--)
                     {
-                        outputStream[counter++] = spot.Blue; // blue
-                        outputStream[counter++] = spot.Green; // green
-                        outputStream[counter++] = spot.Red; // red
+                        for (int i = 0; i < Settings.LedsPerSpot; i++)
+                        {
+                            outputStream[counter++] = SpotSet.Spots[j].Blue; // blue
+                            outputStream[counter++] = SpotSet.Spots[j].Green; // green
+                            outputStream[counter++] = SpotSet.Spots[j].Red; // red
+                        }
+                    }
+                }
+
+                else
+                {
+                    foreach (Spot spot in SpotSet.Spots)
+                    {
+                        for (int i = 0; i < Settings.LedsPerSpot; i++)
+                        {
+                            outputStream[counter++] = spot.Blue; // blue
+                            outputStream[counter++] = spot.Green; // green
+                            outputStream[counter++] = spot.Red; // red
+                        }
                     }
                 }
             }

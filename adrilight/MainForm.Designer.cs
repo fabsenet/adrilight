@@ -57,6 +57,7 @@
             this.comboBoxComPort = new System.Windows.Forms.ComboBox();
             this.numericUpDownSaturationTreshold = new System.Windows.Forms.NumericUpDown();
             this.groupBoxLEDs = new System.Windows.Forms.GroupBox();
+            this.checkBoxReverse = new System.Windows.Forms.CheckBox();
             this.labelSaturationTreshold = new System.Windows.Forms.Label();
             this.labelLedOffset = new System.Windows.Forms.Label();
             this.numericUpDownLedOffset = new System.Windows.Forms.NumericUpDown();
@@ -403,6 +404,7 @@
             // 
             // groupBoxLEDs
             // 
+            this.groupBoxLEDs.Controls.Add(this.checkBoxReverse);
             this.groupBoxLEDs.Controls.Add(this.labelSaturationTreshold);
             this.groupBoxLEDs.Controls.Add(this.labelLedOffset);
             this.groupBoxLEDs.Controls.Add(this.numericUpDownLedOffset);
@@ -419,6 +421,17 @@
             this.groupBoxLEDs.TabIndex = 23;
             this.groupBoxLEDs.TabStop = false;
             this.groupBoxLEDs.Text = "LEDs";
+            // 
+            // checkBoxReverse
+            // 
+            this.checkBoxReverse.AutoSize = true;
+            this.checkBoxReverse.Location = new System.Drawing.Point(14, 132);
+            this.checkBoxReverse.Name = "checkBoxReverse";
+            this.checkBoxReverse.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxReverse.TabIndex = 28;
+            this.checkBoxReverse.Text = "Reverse order of LEDs";
+            this.checkBoxReverse.UseVisualStyleBackColor = true;
+            this.checkBoxReverse.CheckedChanged += new System.EventHandler(this.checkBoxReverse_CheckedChanged);
             // 
             // labelSaturationTreshold
             // 
@@ -457,7 +470,7 @@
             // checkBoxMirrorY
             // 
             this.checkBoxMirrorY.AutoSize = true;
-            this.checkBoxMirrorY.Location = new System.Drawing.Point(208, 203);
+            this.checkBoxMirrorY.Location = new System.Drawing.Point(208, 110);
             this.checkBoxMirrorY.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxMirrorY.Name = "checkBoxMirrorY";
             this.checkBoxMirrorY.Size = new System.Drawing.Size(124, 24);
@@ -469,7 +482,7 @@
             // checkBoxMirrorX
             // 
             this.checkBoxMirrorX.AutoSize = true;
-            this.checkBoxMirrorX.Location = new System.Drawing.Point(14, 203);
+            this.checkBoxMirrorX.Location = new System.Drawing.Point(14, 110);
             this.checkBoxMirrorX.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkBoxMirrorX.Name = "checkBoxMirrorX";
             this.checkBoxMirrorX.Size = new System.Drawing.Size(124, 24);
@@ -675,6 +688,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton rbNonLinearLighting;
         private System.Windows.Forms.RadioButton rbLinearLighting;
+        private System.Windows.Forms.CheckBox checkBoxReverse;
     }
 }
 
