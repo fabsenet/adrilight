@@ -225,6 +225,8 @@ namespace adrilight {
 
             checkBoxStartMinimized.Checked = Settings.StartMinimized;
 
+            checkBoxLogging.Checked = Settings.Logging;
+
             groupBoxLEDs.Text = "LEDs (" + (SpotSet.CountLeds(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot) + ")";
         }
 
@@ -320,6 +322,22 @@ namespace adrilight {
             RefreshAll();
             
             RefreshOverlayState();
+        }
+
+        private void checkBoxLogging_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Logging = checkBoxLogging.Checked;
+            if (checkBoxLogging.Checked)
+            {
+                LogManager.ReconfigExistingLoggers();
+                _log.Info("Logging enabled.");
+            }
+            else
+            {
+                _log.Info("Logging disabled.");
+                LogManager.Flush();
+                LogManager.Shutdown();
+            }
         }
 
         private void numericUpDownLedOffset_ValueChanged(object sender, EventArgs e) {

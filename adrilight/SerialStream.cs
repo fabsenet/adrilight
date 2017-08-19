@@ -138,7 +138,6 @@ namespace adrilight
                 catch (OperationCanceledException)
                 {
                     _log.Debug("OperationCanceledException catched. returning.");
-
                     return;
                 }
                 catch (Exception ex)

@@ -74,6 +74,8 @@
             this.rbNonLinearLighting = new System.Windows.Forms.RadioButton();
             this.rbLinearLighting = new System.Windows.Forms.RadioButton();
             this.timerFPS = new System.Windows.Forms.Timer(this.components);
+            this.groupBoxDebug = new System.Windows.Forms.GroupBox();
+            this.checkBoxLogging = new System.Windows.Forms.CheckBox();
             this.groupBoxSpots.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOffsetY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSpotsY)).BeginInit();
@@ -90,6 +92,7 @@
             this.groupBoxTransfer.SuspendLayout();
             this.groupBoxRun.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBoxDebug.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxSpots
@@ -122,7 +125,7 @@
             // resetOffsetYButton
             // 
             this.resetOffsetYButton.Location = new System.Drawing.Point(129, 247);
-            this.resetOffsetYButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.resetOffsetYButton.Margin = new System.Windows.Forms.Padding(2);
             this.resetOffsetYButton.Name = "resetOffsetYButton";
             this.resetOffsetYButton.Size = new System.Drawing.Size(18, 25);
             this.resetOffsetYButton.TabIndex = 38;
@@ -143,7 +146,7 @@
             // resetOffsetXButton
             // 
             this.resetOffsetXButton.Location = new System.Drawing.Point(129, 211);
-            this.resetOffsetXButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.resetOffsetXButton.Margin = new System.Windows.Forms.Padding(2);
             this.resetOffsetXButton.Name = "resetOffsetXButton";
             this.resetOffsetXButton.Size = new System.Drawing.Size(18, 25);
             this.resetOffsetXButton.TabIndex = 38;
@@ -405,7 +408,7 @@
             // 
             this.checkBoxReverse.AutoSize = true;
             this.checkBoxReverse.Location = new System.Drawing.Point(9, 120);
-            this.checkBoxReverse.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxReverse.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxReverse.Name = "checkBoxReverse";
             this.checkBoxReverse.Size = new System.Drawing.Size(134, 17);
             this.checkBoxReverse.TabIndex = 28;
@@ -539,9 +542,9 @@
             this.groupBox1.Controls.Add(this.rbNonLinearLighting);
             this.groupBox1.Controls.Add(this.rbLinearLighting);
             this.groupBox1.Location = new System.Drawing.Point(259, 313);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(241, 48);
             this.groupBox1.TabIndex = 26;
             this.groupBox1.TabStop = false;
@@ -551,7 +554,7 @@
             // 
             this.rbNonLinearLighting.AutoSize = true;
             this.rbNonLinearLighting.Location = new System.Drawing.Point(129, 16);
-            this.rbNonLinearLighting.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbNonLinearLighting.Margin = new System.Windows.Forms.Padding(2);
             this.rbNonLinearLighting.Name = "rbNonLinearLighting";
             this.rbNonLinearLighting.Size = new System.Drawing.Size(105, 17);
             this.rbNonLinearLighting.TabIndex = 1;
@@ -564,7 +567,7 @@
             // 
             this.rbLinearLighting.AutoSize = true;
             this.rbLinearLighting.Location = new System.Drawing.Point(9, 17);
-            this.rbLinearLighting.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rbLinearLighting.Margin = new System.Windows.Forms.Padding(2);
             this.rbLinearLighting.Name = "rbLinearLighting";
             this.rbLinearLighting.Size = new System.Drawing.Size(94, 17);
             this.rbLinearLighting.TabIndex = 0;
@@ -579,12 +582,36 @@
             this.timerFPS.Interval = 1000;
             this.timerFPS.Tick += new System.EventHandler(this.timerFPS_Tick);
             // 
+            // groupBoxDebug
+            // 
+            this.groupBoxDebug.Controls.Add(this.checkBoxLogging);
+            this.groupBoxDebug.Location = new System.Drawing.Point(12, 313);
+            this.groupBoxDebug.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBoxDebug.Name = "groupBoxDebug";
+            this.groupBoxDebug.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxDebug.Size = new System.Drawing.Size(241, 48);
+            this.groupBoxDebug.TabIndex = 27;
+            this.groupBoxDebug.TabStop = false;
+            this.groupBoxDebug.Text = "Debug";
+            // 
+            // checkBoxLogging
+            // 
+            this.checkBoxLogging.AutoSize = true;
+            this.checkBoxLogging.Location = new System.Drawing.Point(9, 18);
+            this.checkBoxLogging.Name = "checkBoxLogging";
+            this.checkBoxLogging.Size = new System.Drawing.Size(100, 17);
+            this.checkBoxLogging.TabIndex = 0;
+            this.checkBoxLogging.Text = "Enable Logging";
+            this.checkBoxLogging.UseVisualStyleBackColor = true;
+            this.checkBoxLogging.CheckedChanged += new System.EventHandler(this.checkBoxLogging_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(512, 369);
+            this.Controls.Add(this.groupBoxDebug);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBoxRun);
             this.Controls.Add(this.groupBoxTransfer);
@@ -620,6 +647,8 @@
             this.groupBoxRun.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBoxDebug.ResumeLayout(false);
+            this.groupBoxDebug.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -666,6 +695,8 @@
         private System.Windows.Forms.RadioButton rbLinearLighting;
         private System.Windows.Forms.Timer timerFPS;
         private System.Windows.Forms.CheckBox checkBoxReverse;
+        private System.Windows.Forms.GroupBox groupBoxDebug;
+        private System.Windows.Forms.CheckBox checkBoxLogging;
     }
 }
 

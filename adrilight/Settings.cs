@@ -29,6 +29,7 @@ namespace adrilight
         private static bool _autostart;
         private static bool _startMinimized;
         private static DateTime? _lastUpdateCheck;
+        private static bool _logging;
 
         public static void Load()
         {
@@ -57,6 +58,7 @@ namespace adrilight
             _autostart = settings.AUTOSTART;
             _startMinimized = settings.START_MINIMIZED;
             _lastUpdateCheck = settings.LAST_UPDATE_CHECKDATE_UTC;
+            _logging = settings.LOGGING;
         }
 
         private static void Default_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -295,6 +297,16 @@ namespace adrilight
             {
                 _lastUpdateCheck = value;
                 Properties.Settings.Default.LAST_UPDATE_CHECKDATE_UTC = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+        public static bool Logging
+        {
+            get { return _logging; }
+            set
+            {
+                _logging = value;
+                Properties.Settings.Default.LOGGING = value;
                 Properties.Settings.Default.Save();
             }
         }
