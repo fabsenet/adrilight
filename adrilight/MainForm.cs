@@ -25,6 +25,11 @@ namespace adrilight {
 
         SerialStream _mSerialStream;
         Overlay _mOverlay;
+        public static int FPS_Desktop = 0;
+        public static int FPS_Serial = 0;
+        public static float WhiteBalanceFactorR = 1;
+        public static float WhiteBalanceFactorG = 1;
+        public static float WhiteBalanceFactorB = 1;
 
         public MainForm() {
             _log.Debug("Creating Mainform");
@@ -211,6 +216,8 @@ namespace adrilight {
 
             checkBoxMirrorY.Checked = Settings.MirrorY;
 
+            checkBoxReverse.Checked = Settings.Reverse;
+
             numericUpDownLedOffset.Value = Settings.OffsetLed;
 
             SetTrackBarValue(trackBarBorderDistanceX, Settings.BorderDistanceX);
@@ -221,6 +228,16 @@ namespace adrilight {
 
             checkBoxStartMinimized.Checked = Settings.StartMinimized;
 
+            checkBoxLogging.Checked = Settings.Logging;
+
+            SetTrackBarValue(trackBarWhiteBalanceR, Settings.WhiteBalanceR);
+
+            SetTrackBarValue(trackBarWhiteBalanceG, Settings.WhiteBalanceG);
+
+            SetTrackBarValue(trackBarWhiteBalanceB, Settings.WhiteBalanceB);
+
+            SetTrackBarValue(trackBarBrightness, Settings.Brightness);
+
             groupBoxLEDs.Text = "LEDs (" + (SpotSet.CountLeds(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot) + ")";
         }
 
@@ -229,14 +246,18 @@ namespace adrilight {
             if (value > trackBar.Maximum) value = (int)trackBar.Maximum;
 
             trackBar.Value = value;
-            Label label = (Label)trackBar.Tag;
-            label.Text = (string)label.Tag + ":" + System.Environment.NewLine + "   " + value;
+
+// whats that for? seems to be okay without it. (throws exception with new WhiteBalance TrackBars...)
+//            Label label = (Label)trackBar.Tag;
+//            label.Text = (string)label.Tag + ":" + System.Environment.NewLine + "   " + value;
         }
 
         private void RefreshAll() {
             SpotSet.Refresh();
             RefreshFields();
             RefreshOverlay();
+            RefreshTrackBarLabels();
+            RefreshWhiteBalanceFactors();
         }
 
         private void numericUpDownSpotsX_ValueChanged(object sender, EventArgs e) {
@@ -301,6 +322,11 @@ namespace adrilight {
             RefreshAll();
         }
 
+        private void checkBoxReverse_CheckedChanged(object sender, EventArgs e) {
+            Settings.Reverse = checkBoxReverse.Checked;
+            RefreshAll();
+        }
+
         private void checkBoxTransferActive_CheckedChanged(object sender, EventArgs e) {
             Settings.TransferActive = checkBoxTransferActive.Checked;
             RefreshAll();
@@ -311,6 +337,22 @@ namespace adrilight {
             RefreshAll();
             
             RefreshOverlayState();
+        }
+
+        private void checkBoxLogging_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Logging = checkBoxLogging.Checked;
+            if (checkBoxLogging.Checked)
+            {
+                LogManager.ReconfigExistingLoggers();
+                _log.Info("Logging enabled.");
+            }
+            else
+            {
+                _log.Info("Logging disabled.");
+                LogManager.Flush();
+                LogManager.Shutdown();
+            }
         }
 
         private void numericUpDownLedOffset_ValueChanged(object sender, EventArgs e) {
@@ -365,6 +407,24 @@ namespace adrilight {
             }
         }
 
+        private void RefreshTrackBarLabels()
+        {
+            labelWhiteBalanceR.Text = "Red (" + ((trackBarWhiteBalanceR.Value > 0) ? "+" : "") + trackBarWhiteBalanceR.Value + " %)";
+            labelWhiteBalanceG.Text = "Green (" + ((trackBarWhiteBalanceG.Value > 0) ? "+" : "") + trackBarWhiteBalanceG.Value + " %)";
+            labelWhiteBalanceB.Text = "Blue (" + ((trackBarWhiteBalanceB.Value > 0) ? "+" : "") + trackBarWhiteBalanceB.Value + " %)";
+            labelBrightness.Text = "Brightness (" + ((trackBarBrightness.Value > 0) ? "+" : "") + trackBarBrightness.Value + " %)";
+        }
+
+        private void RefreshWhiteBalanceFactors()
+        {
+            // -100..+100 => 0..+200 => 0..1 (Float factors)
+            WhiteBalanceFactorR = (trackBarWhiteBalanceR.Value + 100) / 100f * (trackBarBrightness.Value + 100) / 100f;
+            WhiteBalanceFactorG = (trackBarWhiteBalanceG.Value + 100) / 100f * (trackBarBrightness.Value + 100) / 100f;
+            WhiteBalanceFactorB = (trackBarWhiteBalanceB.Value + 100) / 100f * (trackBarBrightness.Value + 100) / 100f;
+
+            RefreshTrackBarLabels();
+        }
+
         private void StopBackgroundWorkers() {
             if (null != _mOverlay) {
                 _mOverlay.Stop();
@@ -392,6 +452,53 @@ namespace adrilight {
         {
             Settings.UseLinearLighting = rbLinearLighting.Checked;
             _log.Debug("UseLinearLighting changed to {0}", Settings.UseLinearLighting);
+        }
+
+        private void timerFPS_Tick(object sender, EventArgs e)
+        { // timer ticks every 1 sec
+            groupBoxSpots.Text = "Spots (" + FPS_Desktop + " FPS)";
+            groupBoxTransfer.Text = "Serial Transfer (" + FPS_Serial + " FPS)";
+            FPS_Desktop = 0;
+            FPS_Serial = 0;
+        }
+
+        private void trackBarWhiteBalanceR_Scroll(object sender, EventArgs e)
+        {
+            RefreshWhiteBalanceFactors();
+        }
+
+        private void trackBarWhiteBalanceG_Scroll(object sender, EventArgs e)
+        {
+            RefreshWhiteBalanceFactors();
+        }
+
+        private void trackBarWhiteBalanceB_Scroll(object sender, EventArgs e)
+        {
+            RefreshWhiteBalanceFactors();
+        }
+
+        private void trackBarBrightness_Scroll(object sender, EventArgs e)
+        {
+            RefreshWhiteBalanceFactors();
+        }
+
+        private void buttonWhiteZero_Click(object sender, EventArgs e)
+        {
+            trackBarWhiteBalanceR.Value = 0;
+            trackBarWhiteBalanceG.Value = 0;
+            trackBarWhiteBalanceB.Value = 0;
+            trackBarBrightness.Value = 0;
+            RefreshWhiteBalanceFactors();
+        }
+
+        private void buttonWhiteSave_Click(object sender, EventArgs e)
+        {
+            // !!
+            // When doing this live (in trackBar_Scroll events), we get nasty flickering at the LEDs (like at the Spots-TrackBars).
+            Settings.WhiteBalanceR = trackBarWhiteBalanceR.Value;
+            Settings.WhiteBalanceG = trackBarWhiteBalanceG.Value;
+            Settings.WhiteBalanceB = trackBarWhiteBalanceB.Value;
+            Settings.Brightness = trackBarBrightness.Value;
         }
     }
 }

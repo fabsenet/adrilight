@@ -30,12 +30,13 @@ namespace adrilight {
             LogManager.Configuration = config;
 #endif
 
+            Settings.Load();
+            if (!Settings.Logging) LogManager.Shutdown();
+
             _log.Debug($"adrilight {VersionNumber}: Main() started.");
 
             AppDomain.CurrentDomain.UnhandledException +=
                 (sender, args) => ApplicationOnThreadException(sender, args.ExceptionObject as Exception);
-
-            Settings.Load();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

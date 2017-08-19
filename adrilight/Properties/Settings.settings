@@ -41,6 +41,9 @@
     <Setting Name="MIRROR_Y" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="REVERSE" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
     <Setting Name="OFFSET_LED" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
@@ -64,6 +67,21 @@
     </Setting>
     <Setting Name="LAST_UPDATE_CHECKDATE_UTC" Type="System.Nullable&lt;System.DateTime&gt;" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LOGGING" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="WHITEBALANCE_R" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="WHITEBALANCE_G" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-3</Value>
+    </Setting>
+    <Setting Name="WHITEBALANCE_B" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">-14</Value>
+    </Setting>
+    <Setting Name="BRIGHTNESS" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>
 </SettingsFile>
