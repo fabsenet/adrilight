@@ -133,6 +133,9 @@ namespace adrilight
                     }
                     serialPort?.Dispose();
                     serialPort = null;
+
+                    //allow the system some time to recover
+                    Thread.Sleep(500);
                 }
                 finally
                 {
