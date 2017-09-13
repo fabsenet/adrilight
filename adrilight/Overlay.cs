@@ -34,7 +34,14 @@ namespace adrilight {
 
         private BackgroundWorker _mBackgroundWorker = new BackgroundWorker();
 
-        public Overlay() {
+        public IUserSettings UserSettings { get; }
+        public ISpotSet SpotSet { get; }
+
+        public Overlay(IUserSettings userSettings, ISpotSet spotSet)
+        {
+            UserSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
+            SpotSet = spotSet ?? throw new ArgumentNullException(nameof(spotSet));
+
             InitializeComponent();
 
             ShowInTaskbar = false;
@@ -96,8 +103,8 @@ namespace adrilight {
                     try {
                         _mGraphics = CreateGraphics();
 
-                        if (Settings.SpotsX > 1 && Settings.SpotsY > 1) {
-                            if ((Settings.MirrorX && Settings.MirrorY) || (!Settings.MirrorX && !Settings.MirrorY)) {
+                        if (UserSettings.SpotsX > 1 && UserSettings.SpotsY > 1) {
+                            if ((UserSettings.MirrorX && UserSettings.MirrorY) || (!UserSettings.MirrorX && !UserSettings.MirrorY)) {
                                 _mGraphics.DrawLine(penArrow, _mTopEnd, _mTopHead);
                                 _mGraphics.DrawLine(penArrow, _mBottomEnd, _mBottomHead);
                                 _mGraphics.DrawLine(penArrow, _mRightEnd, _mRightHead);

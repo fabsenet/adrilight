@@ -1,35 +1,35 @@
-﻿using NLog;
+﻿using MvvmCross.Core.ViewModels;
+using NLog;
 using System;
 
 namespace adrilight
 {
 
-    static class Settings
+    sealed class UserSettings : MvxViewModel, IUserSettings
     {
+        private ILogger _log = LogManager.GetCurrentClassLogger();
 
-        private static ILogger _log = LogManager.GetCurrentClassLogger();
+        private int _spotsX;
+        private int _spotsY;
+        private int _ledsPerSpot;
+        private int _offsetX;
+        private int _offsetY;
+        private bool _transferActive;
+        private bool _overlayActive;
+        private string _comPort;
+        private byte _saturationTreshold;
+        private int _spotWidth;
+        private int _spotHeight;
+        private bool _mirrorX;
+        private bool _mirrorY;
+        private int _offsetLed;
+        private int _borderDistanceX;
+        private int _borderDistanceY;
+        private bool _autostart;
+        private bool _startMinimized;
+        private DateTime? _lastUpdateCheck;
 
-        private static int _spotsX;
-        private static int _spotsY;
-        private static int _ledsPerSpot;
-        private static int _offsetX;
-        private static int _offsetY;
-        private static bool _transferActive;
-        private static bool _overlayActive;
-        private static string _comPort;
-        private static byte _saturationTreshold;
-        private static int _spotWidth;
-        private static int _spotHeight;
-        private static bool _mirrorX;
-        private static bool _mirrorY;
-        private static int _offsetLed;
-        private static int _borderDistanceX;
-        private static int _borderDistanceY;
-        private static bool _autostart;
-        private static bool _startMinimized;
-        private static DateTime? _lastUpdateCheck;
-
-        public static void Load()
+        public UserSettings()
         {
             var settings = Properties.Settings.Default;
 
@@ -55,28 +55,32 @@ namespace adrilight
             _autostart = settings.AUTOSTART;
             _startMinimized = settings.START_MINIMIZED;
             _lastUpdateCheck = settings.LAST_UPDATE_CHECKDATE_UTC;
+
+            _log.Info($"UserSettings created.");
         }
 
-        private static void Default_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Default_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             _log.Info($"PropertyChanged: {e.PropertyName}");
         }
 
-        private static void Default_SettingChanging(object sender, System.Configuration.SettingChangingEventArgs e)
+        private void Default_SettingChanging(object sender, System.Configuration.SettingChangingEventArgs e)
         {
             _log.Info($"SettingChanging: {e.SettingName} will get the new value {e.NewValue}");
         }
 
-        public static bool UseLinearLighting
+        public bool UseLinearLighting
         {
             get => Properties.Settings.Default.USE_LINEAR_LIGHTING;
             set
             {
                 Properties.Settings.Default.USE_LINEAR_LIGHTING = value;
                 Properties.Settings.Default.Save();
+
+                RaisePropertyChanged(() => UseLinearLighting);
             }
         }
-        public static int SpotsX
+        public int SpotsX
         {
             get { return _spotsX; }
             set
@@ -84,10 +88,12 @@ namespace adrilight
                 _spotsX = value;
                 Properties.Settings.Default.SPOTS_X = value;
                 Properties.Settings.Default.Save();
+
+                RaisePropertyChanged(() => SpotsX);
             }
         }
 
-        public static int SpotsY
+        public int SpotsY
         {
             get { return _spotsY; }
             set
@@ -95,10 +101,11 @@ namespace adrilight
                 _spotsY = value;
                 Properties.Settings.Default.SPOTS_Y = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => SpotsY);
             }
         }
 
-        public static int LedsPerSpot
+        public int LedsPerSpot
         {
             get { return _ledsPerSpot; }
             set
@@ -106,10 +113,11 @@ namespace adrilight
                 _ledsPerSpot = value;
                 Properties.Settings.Default.LEDS_PER_SPOT = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => LedsPerSpot);
             }
         }
 
-        public static int OffsetX
+        public int OffsetX
         {
             get { return _offsetX; }
             set
@@ -117,10 +125,11 @@ namespace adrilight
                 _offsetX = value;
                 Properties.Settings.Default.OFFSET_X = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => OffsetX);
             }
         }
 
-        public static int OffsetY
+        public int OffsetY
         {
             get { return _offsetY; }
             set
@@ -128,10 +137,11 @@ namespace adrilight
                 _offsetY = value;
                 Properties.Settings.Default.OFFSET_Y = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => OffsetY);
             }
         }
 
-        public static bool TransferActive
+        public bool TransferActive
         {
             get { return _transferActive; }
             set
@@ -139,10 +149,11 @@ namespace adrilight
                 _transferActive = value;
                 Properties.Settings.Default.TRANSFER_ACTIVE = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => TransferActive);
             }
         }
 
-        public static bool OverlayActive
+        public bool OverlayActive
         {
             get { return _overlayActive; }
             set
@@ -150,10 +161,11 @@ namespace adrilight
                 _overlayActive = value;
                 Properties.Settings.Default.OVERLAY_ACTIVE = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => OverlayActive);
             }
         }
 
-        public static string ComPort
+        public string ComPort
         {
             get { return _comPort; }
             set
@@ -161,10 +173,11 @@ namespace adrilight
                 _comPort = value;
                 Properties.Settings.Default.COM_PORT = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => ComPort);
             }
         }
 
-        public static byte SaturationTreshold
+        public byte SaturationTreshold
         {
             get { return _saturationTreshold; }
             set
@@ -172,10 +185,11 @@ namespace adrilight
                 _saturationTreshold = value;
                 Properties.Settings.Default.SATURATION_TRESHOLD = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => SaturationTreshold);
             }
         }
 
-        public static int SpotWidth
+        public int SpotWidth
         {
             get { return _spotWidth; }
             set
@@ -183,10 +197,11 @@ namespace adrilight
                 _spotWidth = value;
                 Properties.Settings.Default.SPOT_WIDTH = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => SpotWidth);
             }
         }
 
-        public static int SpotHeight
+        public int SpotHeight
         {
             get { return _spotHeight; }
             set
@@ -194,10 +209,11 @@ namespace adrilight
                 _spotHeight = value;
                 Properties.Settings.Default.SPOT_HEIGHT = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => SpotHeight);
             }
         }
 
-        public static bool MirrorX
+        public bool MirrorX
         {
             get { return _mirrorX; }
             set
@@ -205,10 +221,11 @@ namespace adrilight
                 _mirrorX = value;
                 Properties.Settings.Default.MIRROR_X = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => MirrorX);
             }
         }
 
-        public static bool MirrorY
+        public bool MirrorY
         {
             get { return _mirrorY; }
             set
@@ -216,10 +233,11 @@ namespace adrilight
                 _mirrorY = value;
                 Properties.Settings.Default.MIRROR_Y = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => MirrorY);
             }
         }
 
-        public static int OffsetLed
+        public int OffsetLed
         {
             get { return _offsetLed; }
             set
@@ -227,10 +245,11 @@ namespace adrilight
                 _offsetLed = value;
                 Properties.Settings.Default.OFFSET_LED = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => OffsetLed);
             }
         }
 
-        public static int BorderDistanceX
+        public int BorderDistanceX
         {
             get { return _borderDistanceX; }
             set
@@ -238,10 +257,11 @@ namespace adrilight
                 _borderDistanceX = value;
                 Properties.Settings.Default.BORDER_DISTANCE_X = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => BorderDistanceX);
             }
         }
 
-        public static int BorderDistanceY
+        public int BorderDistanceY
         {
             get { return _borderDistanceY; }
             set
@@ -249,10 +269,11 @@ namespace adrilight
                 _borderDistanceY = value;
                 Properties.Settings.Default.BORDER_DISTANCE_Y = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => BorderDistanceY);
             }
         }
 
-        public static bool Autostart
+        public bool Autostart
         {
             get { return _autostart; }
             set
@@ -260,10 +281,11 @@ namespace adrilight
                 _autostart = value;
                 Properties.Settings.Default.AUTOSTART = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => Autostart);
             }
         }
 
-        public static bool StartMinimized
+        public bool StartMinimized
         {
             get { return _startMinimized; }
             set
@@ -271,10 +293,11 @@ namespace adrilight
                 _startMinimized = value;
                 Properties.Settings.Default.START_MINIMIZED = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => StartMinimized);
             }
         }
 
-        public static DateTime? LastUpdateCheck
+        public DateTime? LastUpdateCheck
         {
             get { return _lastUpdateCheck; }
             set
@@ -282,6 +305,7 @@ namespace adrilight
                 _lastUpdateCheck = value;
                 Properties.Settings.Default.LAST_UPDATE_CHECKDATE_UTC = value;
                 Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => LastUpdateCheck);
             }
         }
     }

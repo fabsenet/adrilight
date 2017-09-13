@@ -1,13 +1,12 @@
-﻿
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 
 namespace adrilight {
 
     [DebuggerDisplay("Spot: Rectangle={Rectangle}, Color={Red},{Green},{Blue}")]
-    sealed class Spot : IDisposable {
+    sealed class Spot : IDisposable, ISpot
+    {
 
         public Spot(int x, int y, int aWidth, int aHeight)
         {

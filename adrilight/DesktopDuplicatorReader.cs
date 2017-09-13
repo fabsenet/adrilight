@@ -11,16 +11,72 @@ using System.Linq;
 
 namespace adrilight
 {
-    public class DesktopDuplicatorReader
+    public class DesktopDuplicatorReader : IDesktopDuplicatorReader
     {
         private readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
+        public DesktopDuplicatorReader(IUserSettings userSettings, ISpotSet spotSet)
+        {
+            UserSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
+            SpotSet = spotSet ?? throw new ArgumentNullException(nameof(spotSet));
+
+            _retryPolicy = Policy.Handle<Exception>()
+                .WaitAndRetryForever(ProvideDelayDuration);
+
+            UserSettings.PropertyChanged += UserSettings_PropertyChanged;
+            RefreshCapturingState();
+
+            _log.Info($"DesktopDuplicatorReader created.");
+        }
+
+        private void UserSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(UserSettings.TransferActive):
+                case nameof(UserSettings.OverlayActive):
+                    RefreshCapturingState();
+                    break;
+            }
+        }
+
         public bool IsRunning { get; private set; } = false;
+        private CancellationTokenSource _cancellationTokenSource;
 
-        private readonly Policy _retryPolicy = Policy.Handle<Exception>().
-            WaitAndRetryForever(ProvideDelayDuration);
 
-        private static TimeSpan ProvideDelayDuration(int index)
+        private void RefreshCapturingState()
+        {
+            var isRunning = _cancellationTokenSource != null && IsRunning;
+            var shouldBeRunning = UserSettings.TransferActive || UserSettings.OverlayActive;
+
+            if (isRunning && !shouldBeRunning)
+            {
+                //stop it!
+                _log.Debug("stopping the capturing");
+                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource = null;
+            }
+            else if (!isRunning && shouldBeRunning)
+            {
+                //start it
+                _log.Debug("starting the capturing");
+                _cancellationTokenSource = new CancellationTokenSource();
+                var thread = new Thread(() => Run(_cancellationTokenSource.Token))
+                {
+                    IsBackground = true,
+                    Priority = ThreadPriority.BelowNormal,
+                    Name = "DesktopDuplicatorReader"
+                };
+                thread.Start();
+            }
+        }
+
+        private IUserSettings UserSettings { get; }
+        private ISpotSet SpotSet { get; }
+
+        private readonly Policy _retryPolicy;
+
+        private TimeSpan ProvideDelayDuration(int index)
         {
             if (index < 10)
             {
@@ -65,7 +121,7 @@ namespace adrilight
                     image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb, bitmapData);
                     lock (SpotSet.Lock)
                     {
-                        var useLinearLighting = Settings.UseLinearLighting;
+                        var useLinearLighting = UserSettings.UseLinearLighting;
 
                         var imageRectangle = new Rectangle(0, 0, image.Width, image.Height);
                         Parallel.ForEach(SpotSet.Spots
@@ -90,7 +146,7 @@ namespace adrilight
                                 var countInverse = 1f / count;
                                 byte finalR, finalG, finalB;
                                 ApplyColorCorrections(sumR * countInverse, sumG * countInverse, sumB * countInverse, out finalR, out finalG, out finalB, useLinearLighting
-                                    , Settings.SaturationTreshold, spot.Red, spot.Green, spot.Blue);
+                                    , UserSettings.SaturationTreshold, spot.Red, spot.Green, spot.Blue);
 
                                 spot.SetColor(finalR, finalG, finalB);
 
@@ -159,7 +215,7 @@ namespace adrilight
 
         }
 
-        private static void ApplyColorCorrections(float r, float g, float b, out byte finalR, out byte finalG, out byte finalB, bool useLinearLighting, byte saturationTreshold
+        private void ApplyColorCorrections(float r, float g, float b, out byte finalR, out byte finalG, out byte finalB, bool useLinearLighting, byte saturationTreshold
             , byte lastColorR, byte lastColorG, byte lastColorB)
         {
             if (lastColorR == 0 && lastColorG == 0 && lastColorB == 0)
@@ -196,12 +252,12 @@ namespace adrilight
                 finalB = (byte)b;
             }
         }
-
-        private static readonly byte[] _nonLinearFadingCache = Enumerable.Range(0, 2560)
+        
+        private readonly byte[] _nonLinearFadingCache = Enumerable.Range(0, 2560)
             .Select(n => FadeNonLinearUncached(n / 10f))
             .ToArray();
 
-        private static byte FadeNonLinear(float color)
+        private byte FadeNonLinear(float color)
         {
             var cacheIndex = (int)(color * 10);
             return _nonLinearFadingCache[Math.Min(2560 - 1, Math.Max(0, cacheIndex))];
@@ -235,7 +291,7 @@ namespace adrilight
             }
         }
 
-        public static unsafe void GetAverageColorOfRectangularRegion(Rectangle spotRectangle, int stepy, int stepx, BitmapData bitmapData, out int sumR, out int sumG,
+        public unsafe void GetAverageColorOfRectangularRegion(Rectangle spotRectangle, int stepy, int stepx, BitmapData bitmapData, out int sumR, out int sumG,
             out int sumB, out int count)
         {
             sumR = 0;
