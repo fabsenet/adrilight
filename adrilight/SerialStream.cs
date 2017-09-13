@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading;
@@ -9,12 +7,47 @@ using NLog;
 
 namespace adrilight
 {
-
-    internal class SerialStream : IDisposable
+    internal sealed class SerialStream : IDisposable, ISerialStream
     {
         private ILogger _log = LogManager.GetCurrentClassLogger();
 
+        public SerialStream(IUserSettings userSettings, ISpotSet spotSet)
+        {
+            UserSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
+            SpotSet = spotSet ?? throw new ArgumentNullException(nameof(spotSet));
+
+            UserSettings.PropertyChanged += UserSettings_PropertyChanged;
+            _log.Info($"SerialStream created.");
+        }
+
+        private void UserSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(UserSettings.TransferActive):
+                    RefreshTransferState();
+                    break;
+            }
+        }
+
+        private void RefreshTransferState()
+        {
+            if (UserSettings.TransferActive && !IsRunning)
+            {
+                //start it
+                _log.Debug("starting the serial stream");
+                Start();
+            }
+            else if (!UserSettings.TransferActive && IsRunning)
+            {
+                //stop it
+                _log.Debug("stopping the serial stream");
+                Stop();
+            }
+        }
+
         private readonly byte[] _messagePreamble = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09};
+
 
         private Thread _workerThread;
         private CancellationTokenSource _cancellationTokenSource;
@@ -48,6 +81,9 @@ namespace adrilight
 
         public bool IsRunning => _workerThread != null && _workerThread.IsAlive;
 
+        private IUserSettings UserSettings { get; }
+        private ISpotSet SpotSet { get; }
+
         private byte[] GetOutputStream()
         {
             byte[] outputStream;
@@ -56,12 +92,12 @@ namespace adrilight
             lock (SpotSet.Lock)
             {
                 const int colorsPerLed = 3;
-                outputStream = new byte[_messagePreamble.Length + (Settings.LedsPerSpot*SpotSet.Spots.Length*colorsPerLed)];
+                outputStream = new byte[_messagePreamble.Length + (UserSettings.LedsPerSpot*SpotSet.Spots.Length*colorsPerLed)];
                 Buffer.BlockCopy(_messagePreamble, 0, outputStream, 0, _messagePreamble.Length);
 
                 foreach (Spot spot in SpotSet.Spots)
                 {
-                    for (int i = 0; i < Settings.LedsPerSpot; i++)
+                    for (int i = 0; i < UserSettings.LedsPerSpot; i++)
                     {
                         outputStream[counter++] = spot.Blue; // blue
                         outputStream[counter++] = spot.Green; // green
@@ -78,7 +114,7 @@ namespace adrilight
             var cancellationToken = (CancellationToken) tokenObject;
             SerialPort serialPort = null;
 
-            if (String.IsNullOrEmpty(Settings.ComPort))
+            if (String.IsNullOrEmpty(UserSettings.ComPort))
             {
                 return;
             }
@@ -94,13 +130,13 @@ namespace adrilight
                     while (!cancellationToken.IsCancellationRequested)
                     {
                         //open or change the serial port
-                        if (openedComPort != Settings.ComPort)
+                        if (openedComPort != UserSettings.ComPort)
                         {
                             serialPort?.Close();
 
-                            serialPort = new SerialPort(Settings.ComPort, baudRate);
+                            serialPort = new SerialPort(UserSettings.ComPort, baudRate);
                             serialPort.Open();
-                            openedComPort = Settings.ComPort;
+                            openedComPort = UserSettings.ComPort;
                         }
 
                         //send frame data
@@ -155,7 +191,7 @@ namespace adrilight
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             if (disposing)
             {

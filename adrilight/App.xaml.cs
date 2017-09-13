@@ -1,5 +1,9 @@
 ﻿using adrilight.ui;
 using Microsoft.Win32;
+using MvvmCross.Core.ViewModels;
+using MvvmCross.Platform;
+using MvvmCross.Wpf.Platform;
+using MvvmCross.Wpf.Views.Presenters;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -14,67 +18,76 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-
+using System.Windows.Threading;
 using AdriSettings = adrilight.Properties.Settings;
 
 namespace adrilight
 {
+
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public sealed partial class App : Application
     {
         private static readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
         protected override void OnStartup(StartupEventArgs startupEvent)
         {
+            SetupDebugLogging();
+            SetupLoggingForProcessWideEvents();
+
             base.OnStartup(startupEvent);
 
-#if DEBUG
+            _log.Debug($"adrilight {VersionNumber}: Main() started.");
+            SetupDependencyInjection();
+
+
+
+
+
+            UserSettings = Mvx.Resolve<IUserSettings>();
+                        
+            SetupNotifyIcon();
+
+            if (!UserSettings.StartMinimized)
+            {
+                OpenSettingsWindow();
+            }
+        }
+
+        private void SetupDependencyInjection()
+        {
+            Mvx.LazyConstructAndRegisterSingleton<IUserSettings, UserSettings>();
+            Mvx.LazyConstructAndRegisterSingleton<ISpotSet, SpotSet>();
+
+            Mvx.ConstructAndRegisterSingleton<ISerialStream, SerialStream>();
+            Mvx.ConstructAndRegisterSingleton<IDesktopDuplicatorReader, DesktopDuplicatorReader>();
+        }
+
+        private void SetupLoggingForProcessWideEvents()
+        {
+            AppDomain.CurrentDomain.UnhandledException +=
+    (sender, args) => ApplicationWideException(sender, args.ExceptionObject as Exception, "CurrentDomain.UnhandledException");
+
+            DispatcherUnhandledException += (sender, args) => ApplicationWideException(sender, args.Exception, "DispatcherUnhandledException");
+
+            Exit += (s, e) => _log.Debug("Application exit!");
+            SystemEvents.PowerModeChanged += (s, e) => _log.Debug("Changing Powermode to {0}", e.Mode);
+        }
+
+        [System.Diagnostics.Conditional("DEBUG")]
+        private void SetupDebugLogging()
+        {
             var config = new LoggingConfiguration();
             var debuggerTarget = new DebuggerTarget() { Layout = "${processtime} ${message:exceptionSeparator=\n\t:withException=true}" };
             config.AddTarget("debugger", debuggerTarget);
             config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, debuggerTarget));
 
             LogManager.Configuration = config;
-#endif
-            _log.Debug($"adrilight {VersionNumber}: Main() started.");
 
-            AppDomain.CurrentDomain.UnhandledException +=
-    (sender, args) => ApplicationOnThreadException(sender, args.ExceptionObject as Exception);
-
-            Settings.Load();
-
-            DispatcherUnhandledException += (sender, args) => ApplicationOnThreadException(sender, args.Exception);
-
-            Exit += (s, e) => _log.Debug("Application exit!");
-            SystemEvents.PowerModeChanged += (s, e) => _log.Debug("Changing Powermode to {0}", e.Mode);
-
-            SetupNotifyIcon();
-
-            //subscribe for changes in the settings
-            AdriSettings.Default.PropertyChanged += (s, e) => SpotSet.Refresh();
-            //exeucte once to setup the leds
-            SpotSet.Refresh();
-
-            //subscribe for changes in the settings
-            AdriSettings.Default.PropertyChanged += (s, e) => RefreshCapturingState();
-            //exeucte once to start the capturing initially
-            RefreshCapturingState();
-
-
-            //subscribe for changes in the settings
-            AdriSettings.Default.PropertyChanged += (s, e) => RefreshTransferState();
-            //exeucte once to start the serial stream initially
-            RefreshTransferState();
-
-
-            if (!Settings.StartMinimized)
-            {
-                OpenSettingsWindow();
-            }
+            _log.Info($"DEBUG logging set up!");
         }
-
 
         SettingsWindow _mainForm;
         private void OpenSettingsWindow()
@@ -101,63 +114,6 @@ namespace adrilight
             _mainForm = null;
         }
 
-        private static DesktopDuplicatorReader _desktopDuplicatorReader;
-        private static CancellationTokenSource _cancellationTokenSource;
-
-        private static void RefreshCapturingState()
-        {
-
-            var isRunning = _cancellationTokenSource != null && _desktopDuplicatorReader != null && _desktopDuplicatorReader.IsRunning;
-            var shouldBeRunning = Settings.TransferActive || Settings.OverlayActive;
-
-            if (isRunning && !shouldBeRunning)
-            {
-                //stop it!
-                _log.Debug("stopping the capturing");
-                _cancellationTokenSource.Cancel();
-                _cancellationTokenSource = null;
-                _desktopDuplicatorReader = null;
-            }
-            else if (!isRunning && shouldBeRunning)
-            {
-                //start it
-                _log.Debug("starting the capturing");
-                _cancellationTokenSource = new CancellationTokenSource();
-                _desktopDuplicatorReader = new DesktopDuplicatorReader();
-                var thread = new Thread(() => _desktopDuplicatorReader.Run(_cancellationTokenSource.Token))
-                {
-                    IsBackground = true,
-                    Priority = ThreadPriority.BelowNormal,
-                    Name = "DesktopDuplicatorReader"
-                };
-                thread.Start();
-            }
-        }
-
-        private static SerialStream _mSerialStream;
-
-
-        private static void RefreshTransferState()
-        {
-            if (null == _mSerialStream)
-            {
-                _mSerialStream = new SerialStream();
-            }
-
-            if (Settings.TransferActive && !_mSerialStream.IsRunning)
-            {
-                //start it
-                _log.Debug("starting the serial stream");
-                _mSerialStream.Start();
-            }
-            else if (!Settings.TransferActive && _mSerialStream.IsRunning)
-            {
-                //stop it
-                _log.Debug("stopping the serial stream");
-                _mSerialStream.Stop();
-            }
-        }
-
         private void SetupNotifyIcon()
         {
             var icon = new System.Drawing.Icon(Assembly.GetExecutingAssembly().GetManifestResourceStream("adrilight.adrilight_icon.ico"));
@@ -179,6 +135,7 @@ namespace adrilight
 
 
         public static string VersionNumber { get; } = GetVersionNumber();
+        private IUserSettings UserSettings { get; set; }
 
         private static string GetVersionNumber()
         {
@@ -192,12 +149,13 @@ namespace adrilight
         }
 
 
-        private void ApplicationOnThreadException(object sender, Exception ex)
+        private void ApplicationWideException(object sender, Exception ex, string eventSource)
         {
-            _log.Fatal(ex, $"DispatcherUnhandledException from sender={sender}, adrilight version={VersionNumber}");
+            _log.Fatal(ex, $"ApplicationWideException from sender={sender}, adrilight version={VersionNumber}, eventSource={eventSource}");
 
             var sb = new StringBuilder();
             sb.AppendLine($"Sender: {sender}");
+            sb.AppendLine($"Source: {eventSource}");
             if (sender != null)
             {
                 sb.AppendLine($"Sender Type: {sender.GetType().FullName}");
