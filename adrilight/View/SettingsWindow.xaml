@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:adrilight.ui"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="300" Width="300">
-    <Grid>
+        Title="SettingsWindow" Height="300" Width="300"
+        DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}">
+    <StackPanel>
         <TextBlock>Muhh!!!</TextBlock>
-    </Grid>
+        <CheckBox IsChecked="{Binding Settings.Autostart}" />
+        <TextBox Text="{Binding Settings.SpotsX,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+    </StackPanel>
 </Window>

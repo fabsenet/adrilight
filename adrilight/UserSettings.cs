@@ -1,11 +1,11 @@
-﻿using MvvmCross.Core.ViewModels;
+﻿using GalaSoft.MvvmLight;
 using NLog;
 using System;
 
 namespace adrilight
 {
 
-    sealed class UserSettings : MvxViewModel, IUserSettings
+    sealed class UserSettings : ViewModelBase, IUserSettings
     {
         private ILogger _log = LogManager.GetCurrentClassLogger();
 

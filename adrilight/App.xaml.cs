@@ -1,9 +1,7 @@
 ﻿using adrilight.ui;
+using adrilight.ViewModel;
 using Microsoft.Win32;
-using MvvmCross.Core.ViewModels;
-using MvvmCross.Platform;
-using MvvmCross.Wpf.Platform;
-using MvvmCross.Wpf.Views.Presenters;
+using Ninject;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -22,9 +20,7 @@ using System.Windows.Threading;
 using AdriSettings = adrilight.Properties.Settings;
 
 namespace adrilight
-{
-
-
+{   
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
@@ -43,10 +39,10 @@ namespace adrilight
             SetupDependencyInjection();
 
 
+            this.Resources["Locator"] = new ViewModelLocator(kernel);
 
 
-
-            UserSettings = Mvx.Resolve<IUserSettings>();
+            UserSettings = kernel.Get<IUserSettings>();
                         
             SetupNotifyIcon();
 
@@ -58,11 +54,11 @@ namespace adrilight
 
         private void SetupDependencyInjection()
         {
-            Mvx.LazyConstructAndRegisterSingleton<IUserSettings, UserSettings>();
-            Mvx.LazyConstructAndRegisterSingleton<ISpotSet, SpotSet>();
-
-            Mvx.ConstructAndRegisterSingleton<ISerialStream, SerialStream>();
-            Mvx.ConstructAndRegisterSingleton<IDesktopDuplicatorReader, DesktopDuplicatorReader>();
+            kernel = new StandardKernel();
+            kernel.Bind<IUserSettings>().To<UserSettings>().InSingletonScope();
+            kernel.Bind<ISpotSet>().To<SpotSet>().InSingletonScope();
+            kernel.Bind<ISerialStream>().To<SerialStream>().InSingletonScope();
+            kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReader>().InSingletonScope();
         }
 
         private void SetupLoggingForProcessWideEvents()
@@ -90,6 +86,8 @@ namespace adrilight
         }
 
         SettingsWindow _mainForm;
+        private IKernel kernel;
+
         private void OpenSettingsWindow()
         {
             if (_mainForm == null)

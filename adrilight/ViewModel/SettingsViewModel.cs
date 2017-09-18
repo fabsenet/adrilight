@@ -1,13 +1,13 @@
-﻿using MvvmCross.Core.ViewModels;
+﻿using GalaSoft.MvvmLight;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace adrilight.ui
+namespace adrilight.ViewModel
 {
-    class SettingsViewModel : MvxViewModel
+    class SettingsViewModel : ViewModelBase
     {
         public SettingsViewModel(IUserSettings userSettings)
         {
