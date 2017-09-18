@@ -1,5 +1,7 @@
-﻿using adrilight.ui;
+﻿using adrilight.Fakes;
+using adrilight.ui;
 using adrilight.ViewModel;
+using GalaSoft.MvvmLight;
 using Microsoft.Win32;
 using Ninject;
 using NLog;
@@ -36,7 +38,7 @@ namespace adrilight
             base.OnStartup(startupEvent);
 
             _log.Debug($"adrilight {VersionNumber}: Main() started.");
-            SetupDependencyInjection();
+            kernel = SetupDependencyInjection(false);
 
 
             this.Resources["Locator"] = new ViewModelLocator(kernel);
@@ -52,13 +54,26 @@ namespace adrilight
             }
         }
 
-        private void SetupDependencyInjection()
+        internal static IKernel SetupDependencyInjection(bool isInDesignMode)
         {
-            kernel = new StandardKernel();
-            kernel.Bind<IUserSettings>().To<UserSettings>().InSingletonScope();
-            kernel.Bind<ISpotSet>().To<SpotSet>().InSingletonScope();
-            kernel.Bind<ISerialStream>().To<SerialStream>().InSingletonScope();
-            kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReader>().InSingletonScope();
+            var kernel = new StandardKernel();
+            if(isInDesignMode)
+            {
+                //setup fakes
+                kernel.Bind<IUserSettings>().To<UserSettingsFake>().InSingletonScope();
+                kernel.Bind<ISpotSet>().To<SpotSet>().InSingletonScope(); // spotset needs no fake
+                kernel.Bind<ISerialStream>().To<SerialStreamFake>().InSingletonScope();
+                kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReaderFake>().InSingletonScope();
+            }
+            else
+            {
+                //setup real implementations
+                kernel.Bind<IUserSettings>().To<UserSettings>().InSingletonScope();
+                kernel.Bind<ISpotSet>().To<SpotSet>().InSingletonScope();
+                kernel.Bind<ISerialStream>().To<SerialStream>().InSingletonScope();
+                kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReader>().InSingletonScope();
+            }
+            return kernel;
         }
 
         private void SetupLoggingForProcessWideEvents()

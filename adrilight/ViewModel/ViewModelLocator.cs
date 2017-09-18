@@ -16,6 +16,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using Ninject;
+using System;
 
 namespace adrilight.ViewModel
 {
@@ -27,6 +28,14 @@ namespace adrilight.ViewModel
     {
         private readonly IKernel kernel;
 
+        public ViewModelLocator()
+        {
+            if (!ViewModelBase.IsInDesignModeStatic)
+                throw new InvalidOperationException("the parameter-less constructor of ViewModelLocator is expected to only ever be called in design time!");
+
+            this.kernel = App.SetupDependencyInjection(true);
+
+        }
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
         /// </summary>

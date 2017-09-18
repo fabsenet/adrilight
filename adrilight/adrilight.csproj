@@ -132,6 +132,9 @@
     <Compile Include="DesktopDuplication\DesktopFrame.cs" />
     <Compile Include="DesktopDuplication\MovedRegion.cs" />
     <Compile Include="DesktopDuplicatorReader.cs" />
+    <Compile Include="Fakes\DesktopDuplicatorReaderFake.cs" />
+    <Compile Include="Fakes\SerialStreamFake.cs" />
+    <Compile Include="Fakes\UserSettingsFake.cs" />
     <Compile Include="IDesktopDuplicatorReader.cs" />
     <Compile Include="ISerialStream.cs" />
     <Compile Include="ISpot.cs" />
