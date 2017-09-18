@@ -4,12 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:adrilight.ui"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="SettingsWindow" Height="300" Width="300"
         DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}">
-    <StackPanel>
-        <TextBlock>Muhh!!!</TextBlock>
-        <CheckBox IsChecked="{Binding Settings.Autostart}" />
-        <TextBox Text="{Binding Settings.SpotsX,UpdateSourceTrigger=PropertyChanged}"></TextBox>
-    </StackPanel>
+    <Grid>
+        <materialDesign:Card Padding="32" Margin="16">
+            <StackPanel>
+                <TextBlock>Muhh!!!</TextBlock>
+                <CheckBox IsChecked="{Binding Settings.Autostart}" />
+                <TextBox Text="{Binding Settings.SpotsX,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
 </Window>
