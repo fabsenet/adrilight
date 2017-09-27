@@ -14,6 +14,8 @@ namespace adrilight.ViewModel
             this.Settings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
         }
 
+        public string Title { get; } = $"adrilight {App.VersionNumber}";
+
         public IUserSettings Settings { get; }
     }
 }

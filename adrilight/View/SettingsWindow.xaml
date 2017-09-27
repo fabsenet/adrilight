@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:adrilight.ui"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="300" Width="300"
-        DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}">
+        DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
+        Title="{Binding Title}" Height="800" Width="1200">
     <Grid>
         <materialDesign:Card Padding="32" Margin="16">
             <StackPanel>
