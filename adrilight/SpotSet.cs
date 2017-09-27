@@ -22,8 +22,8 @@ namespace adrilight
 
         public ISpot[] Spots { get; set; }
 
-        public object Lock => @lock;
-        private readonly object @lock = new object();
+        public object Lock => _lock;
+        private readonly object _lock = new object();
 
         /// <summary>
         /// returns the number of leds
