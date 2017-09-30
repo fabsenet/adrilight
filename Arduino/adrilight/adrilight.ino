@@ -61,7 +61,7 @@ void processIncomingData()
 {
     if (waitForPreamble(TIMEOUT))
     {
-        Serial.readBytes(buffer, NUM_BYTES);
+        Serial.readBytes((char*)buffer, NUM_BYTES);
 
         while (byte_counter < NUM_BYTES)
         {
