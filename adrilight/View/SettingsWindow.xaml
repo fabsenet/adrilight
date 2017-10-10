@@ -6,15 +6,69 @@
         xmlns:local="clr-namespace:adrilight.ui"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{StaticResource MaterialDesignFont}"
         DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
-        Title="{Binding Title}" Height="800" Width="1200">
-    <Grid>
-        <materialDesign:Card Padding="32" Margin="16">
-            <StackPanel>
-                <TextBlock>Muhh!!!</TextBlock>
-                <CheckBox IsChecked="{Binding Settings.Autostart}" />
-                <TextBox Text="{Binding Settings.SpotsX,UpdateSourceTrigger=PropertyChanged}"></TextBox>
-            </StackPanel>
-        </materialDesign:Card>
-    </Grid>
+        Title="{Binding Title}" Height="800" Width="1200" WindowStartupLocation="CenterScreen">
+    <materialDesign:DialogHost>
+        <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding IsLeftMenuOpen}">
+            <!--<materialDesign:DrawerHost IsLeftDrawerOpen="True">-->
+            <materialDesign:DrawerHost.LeftDrawerContent>
+                <DockPanel MinWidth="212">
+                    <!--<ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                                    DockPanel.Dock="Top"
+                                    HorizontalAlignment="Right" Margin="16"
+                                    IsChecked="{Binding IsLeftMenuOpen}" />-->
+
+                    <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                            Mode="Accent" DockPanel.Dock="Top">
+                        <DockPanel>
+                            <Image Source="Images/adrilight_icon.ico" Height="212" DockPanel.Dock="Top"/>
+                            <TextBlock Padding="16" Text="{Binding Title}" TextAlignment="Center" />
+                        </DockPanel>
+                    </materialDesign:ColorZone>
+                    <ListBox x:Name="DemoItemsListBox" Margin="0 16 0 16"                    
+                             ItemsSource="{Binding SelectableViewParts}"
+                             SelectedItem="{Binding SelectedViewPart}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="domain:DemoItem">
+                                <TextBlock Text="{Binding ViewPartName}" Margin="32 0 32 0" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </materialDesign:DrawerHost.LeftDrawerContent>
+            <DockPanel>
+                <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                                            Mode="PrimaryDark" DockPanel.Dock="Top">
+                    <DockPanel>
+                        <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
+                              IsChecked="{Binding IsLeftMenuOpen}"/>
+                        <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                            <StackPanel>
+                                <Button Content="Project Page" Command="{Binding OpenUrlProjectPageCommand}"/>
+                                <Button Content="I have an issue..." Command="{Binding OpenUrlIssuesPageCommand}"/>
+                                <Button Content="Latest Release" Command="{Binding OpenUrlLatestReleaseCommand}"/>
+                                <Separator/>
+                                <Button Content="Exit adrilight" Command="{Binding ExitAdrilight}"/>
+                            </StackPanel>
+                        </materialDesign:PopupBox>
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Text="{Binding Title}" />
+                    </DockPanel>
+                </materialDesign:ColorZone>
+
+                <!--<materialDesign:Card Padding="32" Margin="16">
+                    <StackPanel>
+                        <TextBlock>1Muhh!!!</TextBlock>
+                    </StackPanel>
+                </materialDesign:Card>-->
+                <ContentPresenter Content="{Binding SelectedViewPart.Content}" />
+            </DockPanel>
+        </materialDesign:DrawerHost>
+    </materialDesign:DialogHost>
 </Window>
