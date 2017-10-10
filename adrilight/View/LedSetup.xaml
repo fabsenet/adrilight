@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="adrilight.View.LedSetup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:adrilight.View"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+                DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
+             d:DesignHeight="300" d:DesignWidth="600">
+    <WrapPanel Margin="0 0 8 8">
+        <materialDesign:Card Margin="4 4 0 0" Width="200">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="140" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 0" >
+                    <TextBlock FontWeight="Bold">Horizontal LED Count</TextBlock>
+                    <StackPanel>
+                        <ComboBox materialDesign:HintAssist.Hint="Virtualisation" 
+                          MinWidth="72"
+                          Margin="0 0 0 0"
+                          VerticalAlignment="Bottom"         
+IsEditable="True"                   
+                          ItemsSource="{Binding PossibleLedCountsHorizontal}"                          
+                          SelectedValue="{Binding Settings.SpotsX}">
+                            <ComboBox.SelectedItem>
+                                <Binding Path="SelectedValueOne" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                </Binding>
+                            </ComboBox.SelectedItem>
+                            <ComboBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel />
+                                </ItemsPanelTemplate>
+                            </ComboBox.ItemsPanel>
+                        </ComboBox>
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
+                        This is the number of LEDs your setup has in a horizontal row.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+    </WrapPanel>
+</UserControl>

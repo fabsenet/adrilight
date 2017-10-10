@@ -1,5 +1,6 @@
 ﻿using adrilight.Fakes;
 using adrilight.ui;
+using adrilight.View;
 using adrilight.ViewModel;
 using GalaSoft.MvvmLight;
 using Microsoft.Win32;
@@ -19,6 +20,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using Ninject.Extensions.Conventions;
 using AdriSettings = adrilight.Properties.Settings;
 
 namespace adrilight
@@ -73,6 +75,12 @@ namespace adrilight
                 kernel.Bind<ISerialStream>().To<SerialStream>().InSingletonScope();
                 kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReader>().InSingletonScope();
             }
+            kernel.Bind<SettingsViewModel>().ToSelf().InSingletonScope();
+
+            kernel.Bind(x => x.FromThisAssembly()
+            .SelectAllClasses()
+            .InheritedFrom<ISelectableViewPart>()
+            .BindAllInterfaces());
             return kernel;
         }
 
