@@ -7,9 +7,9 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
                 DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
-             d:DesignHeight="300" d:DesignWidth="600">
+             d:DesignHeight="300" d:DesignWidth="700">
     <WrapPanel Margin="0 0 8 8">
-        <materialDesign:Card Margin="4 4 0 0" Width="200">
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="140" />
@@ -17,29 +17,50 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="1" Margin="8 24 8 0" >
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Horizontal LED Count</TextBlock>
-                    <StackPanel>
-                        <ComboBox materialDesign:HintAssist.Hint="Virtualisation" 
-                          MinWidth="72"
-                          Margin="0 0 0 0"
-                          VerticalAlignment="Bottom"         
-IsEditable="True"                   
-                          ItemsSource="{Binding PossibleLedCountsHorizontal}"                          
-                          SelectedValue="{Binding Settings.SpotsX}">
-                            <ComboBox.SelectedItem>
-                                <Binding Path="SelectedValueOne" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                                </Binding>
-                            </ComboBox.SelectedItem>
-                            <ComboBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <VirtualizingStackPanel />
-                                </ItemsPanelTemplate>
-                            </ComboBox.ItemsPanel>
-                        </ComboBox>
-                    </StackPanel>
+                    <DockPanel>
+                        <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 8"
+                                VerticalAlignment="Bottom" 
+                                Text="{Binding Settings.SpotsX, UpdateSourceTrigger=PropertyChanged}" />
+                        <Slider Minimum="1" 
+                                Maximum="{Binding SpotsXMaximum}" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                Value="{Binding Settings.SpotsX}"
+                                Margin="0 0 0 8"/>
+                    </DockPanel>
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
                         This is the number of LEDs your setup has in a horizontal row.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="140" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">Vertical LED Count</TextBlock>
+                    <DockPanel>
+                        <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 8"
+                                VerticalAlignment="Bottom" 
+                                Text="{Binding Settings.SpotsY, UpdateSourceTrigger=PropertyChanged}" />
+                        <Slider Minimum="1" 
+                                Maximum="{Binding SpotsYMaximum}" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                Value="{Binding Settings.SpotsY}"
+                                Margin="0 0 0 8"/>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
+                        This is the number of LEDs your setup has in a vertical row.
                     </TextBlock>
                 </StackPanel>
             </Grid>

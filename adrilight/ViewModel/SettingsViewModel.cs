@@ -34,6 +34,15 @@ namespace adrilight.ViewModel
 
             PossibleLedCountsVertical = Enumerable.Range(10, 190).ToList();
             PossibleLedCountsHorizontal = Enumerable.Range(10, 290).ToList();
+
+            Settings.PropertyChanged += (s, e) =>
+            {
+                switch (e.PropertyName)
+                {
+                    case nameof(Settings.SpotsX): RaisePropertyChanged(() => SpotsXMaximum);
+                        break;
+                }
+            };
         }
 
         public string Title { get; } = $"adrilight {App.VersionNumber}";
@@ -69,5 +78,22 @@ namespace adrilight.ViewModel
 
         public ICommand ExitAdrilight { get; } = new RelayCommand(() => _log.Warn("exiting not implemented"), () => false);
 
+        private int _spotsXMaximum = 300;
+        public int SpotsXMaximum
+        {
+            get
+            {
+                return _spotsXMaximum = Math.Max(Settings.SpotsX, _spotsXMaximum);
+            }
+        }
+
+        private int _spotsYMaximum = 300;
+        public int SpotsYMaximum
+        {
+            get
+            {
+                return _spotsYMaximum = Math.Max(Settings.SpotsY, _spotsYMaximum);
+            }
+        }
     }
 }

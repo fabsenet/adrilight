@@ -19,7 +19,7 @@
         <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding IsLeftMenuOpen}">
             <!--<materialDesign:DrawerHost IsLeftDrawerOpen="True">-->
             <materialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel MinWidth="212">
+                <DockPanel Width="352">
                     <!--<ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
                                     DockPanel.Dock="Top"
                                     HorizontalAlignment="Right" Margin="16"
@@ -28,7 +28,7 @@
                     <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                             Mode="Accent" DockPanel.Dock="Top">
                         <DockPanel>
-                            <Image Source="Images/adrilight_icon.ico" Height="212" DockPanel.Dock="Top"/>
+                            <Image Source="Images/adrilight_icon.ico" DockPanel.Dock="Top"/>
                             <TextBlock Padding="16" Text="{Binding Title}" TextAlignment="Center" />
                         </DockPanel>
                     </materialDesign:ColorZone>
