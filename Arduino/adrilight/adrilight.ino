@@ -2,7 +2,6 @@
 
 #define NUM_LEDS (2*73+2*41)
 #define LED_DATA_PIN 3
-#define NUM_BYTES (NUM_LEDS*3) // 3 colors  
 
 #define BRIGHTNESS 255
 #define UPDATES_PER_SECOND 60
@@ -14,17 +13,16 @@
 #define MODE_BLACK 2
 uint8_t mode = MODE_ANIMATION;
 
+uint8_t currentBrightness = BRIGHTNESS;
 byte MESSAGE_PREAMBLE[] = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
 uint8_t PREAMBLE_LENGTH = 10;
 uint8_t current_preamble_position = 0;
 
 unsigned long last_serial_available = -1L;
 
-int led_counter = 0;
-int byte_counter = 0;
-
 CRGB leds[NUM_LEDS];
-byte buffer[NUM_BYTES];
+CRGB leds2[NUM_LEDS];
+byte buffer[3];
 
 // Filler animation attributes
 CRGBPalette16 currentPalette = RainbowColors_p;
@@ -33,118 +31,134 @@ uint8_t startIndex = 0;
 
 void setup()
 {
-    Serial.begin(1000000); // 115200
-    FastLED.clear(true);
-    FastLED.addLeds<WS2812B, LED_DATA_PIN, GRB>(leds, NUM_LEDS);
-    FastLED.setBrightness(BRIGHTNESS);
+  Serial.begin(1000000);
+  FastLED.clear(true);
+  FastLED.addLeds<WS2812B, LED_DATA_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.setBrightness(currentBrightness);
+  FastLED.setDither(0);
 }
 
 void loop()
 {
-    switch (mode) {
-        case MODE_ANIMATION: 
-            fillLEDsFromPaletteColors();
-            break;
-        
-        case MODE_AMBILIGHT:
-            processIncomingData();
-            break;
+  switch (mode) {
+    case MODE_ANIMATION:
+      fillLEDsFromPaletteColors();
+      break;
 
-            case MODE_BLACK:
-            showBlack();
-            break;
-    }
-    
+    case MODE_AMBILIGHT:
+      processIncomingData();
+      break;
+
+    case MODE_BLACK:
+      showBlack();
+      break;
+  }
 }
-
 void processIncomingData()
 {
-    if (waitForPreamble(TIMEOUT))
+  if (waitForPreamble(TIMEOUT))
+  {
+    for (int ledNum = 0; ledNum < NUM_LEDS; ledNum++)
     {
-        Serial.readBytes((char*)buffer, NUM_BYTES);
+      //we always have to read 3 bytes (RGB!)
+      //if it is less, we ignore this frame and wait for the next preamble
+      if (Serial.readBytes((char*)buffer, 3) < 3) return;
 
-        while (byte_counter < NUM_BYTES)
-        {
-            byte blue = buffer[byte_counter++];
-            byte green = buffer[byte_counter++];
-            byte red = buffer[byte_counter++];
-            
-            leds[led_counter++] = CRGB(red, green, blue);
-        }
+      byte blue = buffer[0];
+      byte green = buffer[1];
+      byte red = buffer[2];
 
-        FastLED.show();
-        
-        // flush the serial buffer to avoid flickering
-        while(Serial.available()) { Serial.read(); } 
-        
-        byte_counter = 0;
-        led_counter = 0;
+      //there should be a last "invisible color" because black is actually possible!
+      if (ledNum == NUM_LEDS-1 && red == 0 && blue == 0 && green == 0) return;
+
+      //debug: show black as red!
+      //if (red == 0 && blue == 0 && green == 0) red = 255;
+      
+      leds2[ledNum] = CRGB(red, green, blue);
     }
-    else
+    for (int ledNum = 0; ledNum < NUM_LEDS; ledNum++)
     {
-        //if we get here, there must have been data before(so the user already knows, it works!)
-        //simply go to black!
-        mode = MODE_BLACK;  
+      leds[ledNum]=leds2[ledNum];
     }
+    if (currentBrightness < BRIGHTNESS)
+    {
+      currentBrightness++;
+      FastLED.setBrightness(currentBrightness);
+    }
+
+      //this should only be done, if a trailing preamble (=postamble?) is received.
+      //If it is not received, it is possible, the connection was lost and the LED
+      //buffer should not be used
+      
+      //send LED data to actual LEDs
+      FastLED.show();
+  }
+  else
+  {
+    //if we get here, there must have been data before(so the user already knows, it works!)
+    //simply go to black!
+    mode = MODE_BLACK;
+  }
 }
 
 bool waitForPreamble(int timeout)
 {
-    last_serial_available = millis();
-    current_preamble_position = 0;
-    while (current_preamble_position < PREAMBLE_LENGTH)
+  last_serial_available = millis();
+  current_preamble_position = 0;
+  while (current_preamble_position < PREAMBLE_LENGTH)
+  {
+    if (Serial.available() > 0)
     {
-        if (Serial.available() > 0)
-        {
-            last_serial_available = millis();
+      last_serial_available = millis();
 
-            if (Serial.read() == MESSAGE_PREAMBLE[current_preamble_position])
-            {
-                current_preamble_position++;
-            }
-            else
-            {
-                current_preamble_position = 0;
-            }
-        }
-
-        if (millis() - last_serial_available > timeout)
-        {
-            return false;
-        }
+      if (Serial.read() == MESSAGE_PREAMBLE[current_preamble_position])
+      {
+        current_preamble_position++;
+      }
+      else
+      {
+        current_preamble_position = 0;
+      }
     }
-    return true;
+
+    if (millis() - last_serial_available > timeout)
+    {
+      return false;
+    }
+  }
+  return true;
 }
 
 void fillLEDsFromPaletteColors()
 {
-    startIndex++;
+  startIndex++;
 
-    uint8_t colorIndex = startIndex;
-    for( int i = 0; i < NUM_LEDS; i++) {
-            leds[i] = ColorFromPalette(currentPalette, colorIndex, BRIGHTNESS, currentBlending);
-            colorIndex += 3;
-        }
+  uint8_t colorIndex = startIndex;
+  for ( int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = ColorFromPalette(currentPalette, colorIndex, BRIGHTNESS, currentBlending);
+    colorIndex += 3;
+  }
 
-    FastLED.delay(1000 / UPDATES_PER_SECOND);
+  FastLED.delay(1000 / UPDATES_PER_SECOND);
 
-    if (Serial.available() > 0)
-    {
-        mode = MODE_AMBILIGHT;
-    }
+  if (Serial.available() > 0)
+  {
+    mode = MODE_AMBILIGHT;
+  }
 }
 
 void showBlack()
-{     
-    for( int i = 0; i < NUM_LEDS; i++) 
-    {
-        leds[i] = CRGB(0,0,0);
-    }
-    FastLED.delay(1000 / UPDATES_PER_SECOND);
+{
+  if (currentBrightness > 0)
+  {
+    currentBrightness--;
+    FastLED.setBrightness(currentBrightness);
+  }
 
-    if (Serial.available() > 0)
-    {
-        mode = MODE_AMBILIGHT;
-    }
+  FastLED.delay(1000 / UPDATES_PER_SECOND);
+
+  if (Serial.available() > 0)
+  {
+    mode = MODE_AMBILIGHT;
+  }
 }
-
