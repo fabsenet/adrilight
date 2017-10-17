@@ -126,5 +126,10 @@
                 </StackPanel>
             </Grid>
         </materialDesign:Card>
+
+        <StackPanel Margin="8">
+            
+        </StackPanel>
+        
     </WrapPanel>
 </UserControl>

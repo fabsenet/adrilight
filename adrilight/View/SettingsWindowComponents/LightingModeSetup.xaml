@@ -20,6 +20,14 @@
                          VerticalAlignment="Center">
                 Non-linear fading
             </RadioButton>
+
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Width="200" HorizontalAlignment="Right">
+                   Saturation Treshold
+                </TextBlock>
+                <TextBox Text="{Binding Settings.SaturationTreshold}" />
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>
