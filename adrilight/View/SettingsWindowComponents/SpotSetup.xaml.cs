@@ -1,4 +1,5 @@
-﻿using System;
+﻿using adrilight.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,29 +14,32 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace adrilight.View
+namespace adrilight.View.SettingsWindowComponents
 {
     /// <summary>
-    /// Interaction logic for LedSetup.xaml
+    /// Interaction logic for LightingMode.xaml
     /// </summary>
-    public partial class LedSetup : UserControl
+    public partial class SpotSetup : UserControl
     {
-        public LedSetup()
+        public SpotSetup()
         {
             InitializeComponent();
         }
 
-        public class LedSetupSelectableViewPart : ISelectableViewPart
-        {
-            private readonly Lazy<LedSetup> lazyContent;
 
-            public LedSetupSelectableViewPart(Lazy<LedSetup> lazyContent)
+
+        public class LightingModeSetupSelectableViewPart : ISelectableViewPart
+        {
+            private readonly Lazy<SpotSetup> lazyContent;
+
+            public LightingModeSetupSelectableViewPart(Lazy<SpotSetup> lazyContent)
             {
                 this.lazyContent = lazyContent ?? throw new ArgumentNullException(nameof(lazyContent));
             }
-            public int Order => 10;
 
-            public string ViewPartName => "Physical LED Setup";
+            public int Order => 50;
+
+            public string ViewPartName => "Spot Detection Setup";
 
             public object Content { get => lazyContent.Value; }
         }

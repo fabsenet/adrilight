@@ -164,14 +164,17 @@
     <Compile Include="Spot.cs" />
     <Compile Include="SpotSet.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
-    <Compile Include="View\ComPortSetup.xaml.cs">
+    <Compile Include="View\SettingsWindowComponents\ComPortSetup.xaml.cs">
       <DependentUpon>ComPortSetup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ISelectableViewPart.cs" />
-    <Compile Include="View\LedSetup.xaml.cs">
+    <Compile Include="ViewModel\ISelectableViewPart.cs" />
+    <Compile Include="View\SettingsWindowComponents\LedSetup.xaml.cs">
       <DependentUpon>LedSetup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\LightingModeSetup.xaml.cs">
+    <Compile Include="View\SettingsWindowComponents\SpotSetup.xaml.cs">
+      <DependentUpon>SpotSetup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingsWindowComponents\LightingModeSetup.xaml.cs">
       <DependentUpon>LightingModeSetup.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SettingsWindow.xaml.cs">
@@ -234,15 +237,19 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="View\ComPortSetup.xaml">
+    <Page Include="View\SettingsWindowComponents\ComPortSetup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\LedSetup.xaml">
+    <Page Include="View\SettingsWindowComponents\LedSetup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\LightingModeSetup.xaml">
+    <Page Include="View\SettingsWindowComponents\SpotSetup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SettingsWindowComponents\LightingModeSetup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

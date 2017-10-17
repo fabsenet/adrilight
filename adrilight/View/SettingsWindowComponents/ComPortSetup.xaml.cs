@@ -1,4 +1,5 @@
-﻿using System;
+﻿using adrilight.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,32 +14,32 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace adrilight.View
+namespace adrilight.View.SettingsWindowComponents
 {
     /// <summary>
-    /// Interaction logic for LightingMode.xaml
+    /// Interaction logic for ComPortSetup.xaml
     /// </summary>
-    public partial class LightingModeSetup : UserControl
+    public partial class ComPortSetup : UserControl
     {
-        public LightingModeSetup()
+        public ComPortSetup()
         {
             InitializeComponent();
         }
 
 
 
-        public class LightingModeSetupSelectableViewPart : ISelectableViewPart
+        public class ComPortSetupSelectableViewPart : ISelectableViewPart
         {
-            private readonly Lazy<LightingModeSetup> lazyContent;
+            private readonly Lazy<ComPortSetup> lazyContent;
 
-            public LightingModeSetupSelectableViewPart(Lazy<LightingModeSetup> lazyContent)
+            public ComPortSetupSelectableViewPart(Lazy<ComPortSetup> lazyContent)
             {
                 this.lazyContent = lazyContent ?? throw new ArgumentNullException(nameof(lazyContent));
             }
 
-            public int Order => 60;
+            public int Order => 100;
 
-            public string ViewPartName => "Lighting Mode Selection";
+            public string ViewPartName => "Serial Communication Setup";
 
             public object Content { get => lazyContent.Value; }
         }

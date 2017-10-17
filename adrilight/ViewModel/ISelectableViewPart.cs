@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace adrilight.View
+namespace adrilight.ViewModel
 {
     interface ISelectableViewPart
     {
