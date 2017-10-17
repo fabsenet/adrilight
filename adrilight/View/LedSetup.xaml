@@ -28,10 +28,9 @@
                         <Slider Minimum="1" 
                                 Maximum="{Binding SpotsXMaximum}" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
-                                Value="{Binding Settings.SpotsX}"
-                                Margin="0 0 0 8"/>
+                                Value="{Binding Settings.SpotsX}" />
                     </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
                         This is the number of LEDs your setup has in a horizontal row.
                     </TextBlock>
                 </StackPanel>
@@ -56,10 +55,9 @@
                         <Slider Minimum="1" 
                                 Maximum="{Binding SpotsYMaximum}" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
-                                Value="{Binding Settings.SpotsY}"
-                                Margin="0 0 0 8"/>
+                                Value="{Binding Settings.SpotsY}"/>
                     </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
                         This is the number of LEDs your setup has in a vertical row.
                     </TextBlock>
                 </StackPanel>
