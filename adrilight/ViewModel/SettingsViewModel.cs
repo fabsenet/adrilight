@@ -21,7 +21,7 @@ namespace adrilight.ViewModel
         private const string IssuesPage = "https://github.com/fabsenet/adrilight/issues";
         private const string LatestReleasePage = "https://github.com/fabsenet/adrilight/releases/latest";
 
-        public SettingsViewModel(IUserSettings userSettings, IList<ISelectableViewPart> selectableViewParts)
+        public SettingsViewModel(IUserSettings userSettings, IList<ISelectableViewPart> selectableViewParts, ISpotSet spotSet)
         {
             if (selectableViewParts == null)
             {
@@ -29,6 +29,7 @@ namespace adrilight.ViewModel
             }
 
             this.Settings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
+            this.spotSet = spotSet ?? throw new ArgumentNullException(nameof(spotSet));
             SelectableViewParts = selectableViewParts.OrderBy(p => p.Order)
                 .ToList();
             SelectedViewPart = SelectableViewParts.First();
@@ -40,21 +41,40 @@ namespace adrilight.ViewModel
             {
                 switch (e.PropertyName)
                 {
-                    case nameof(Settings.SpotsX): RaisePropertyChanged(() => SpotsXMaximum);
+                    case nameof(Settings.SpotsX):
+                        RaisePropertyChanged(() => SpotsXMaximum);
+                        RaisePropertyChanged(() => LedCount);
+                        break;
+
+                    case nameof(Settings.SpotsY):
+                        RaisePropertyChanged(() => SpotsYMaximum);
+                        RaisePropertyChanged(() => LedCount);
+                        break;
+
+                    case nameof(Settings.LedsPerSpot):
+                        RaisePropertyChanged(() => LedCount);
+                        break;
+
+                    case nameof(Settings.UseLinearLighting):
+                        RaisePropertyChanged(() => UseNonLinearLighting);
                         break;
                 }
             };
         }
 
         public string Title { get; } = $"adrilight {App.VersionNumber}";
-
+        public int LedCount => spotSet.CountLeds(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot;
         private bool _isLeftMenuOpen;
         public bool IsLeftMenuOpen
         {
             get => _isLeftMenuOpen;
             set => Set(ref _isLeftMenuOpen, value);
         }
-
+        public bool UseNonLinearLighting
+        {
+            get => !Settings.UseLinearLighting;
+            set => Settings.UseLinearLighting = !value;
+        }
         public IUserSettings Settings { get; }
         public IList<String> AvailableComPorts { get; } = SerialPort.GetPortNames();
 
@@ -91,6 +111,8 @@ namespace adrilight.ViewModel
         }
 
         private int _spotsYMaximum = 300;
+        private readonly ISpotSet spotSet;
+
         public int SpotsYMaximum
         {
             get

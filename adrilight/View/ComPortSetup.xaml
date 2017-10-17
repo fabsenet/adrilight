@@ -11,11 +11,15 @@
         <materialDesign:Card Margin="4 4 4 4" Width="300">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="140" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
+                <materialDesign:PackIcon Kind="Settings" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"/>
+                
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">COM Port</TextBlock>
                     <ComboBox SelectedValue="{Binding Settings.ComPort}" ItemsSource="{Binding AvailableComPorts}" />
@@ -29,11 +33,15 @@
         <materialDesign:Card Margin="4 4 4 4" Width="300">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="140" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
+                <materialDesign:PackIcon Kind="PlayPause" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"/>
+                
                 <StackPanel Grid.Row="1" Margin="8 24 8 8">
                     <DockPanel>
                     <ToggleButton DockPanel.Dock="Right"

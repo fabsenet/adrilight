@@ -7,16 +7,20 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
                 DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
-             d:DesignHeight="300" d:DesignWidth="700">
+             d:DesignHeight="2967" d:DesignWidth="700">
     <WrapPanel Margin="0 0 8 8">
         <materialDesign:Card Margin="4 4 4 4" Width="300">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="140" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
+                <materialDesign:PackIcon Kind="BorderTop" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+                
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Horizontal LED Count</TextBlock>
                     <DockPanel>
@@ -39,11 +43,15 @@
         <materialDesign:Card Margin="4 4 4 4" Width="300">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="140" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
+                <materialDesign:PackIcon Kind="BorderLeft" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+                
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Vertical LED Count</TextBlock>
                     <DockPanel>
@@ -59,6 +67,61 @@
                     </DockPanel>
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
                         This is the number of LEDs your setup has in a vertical row.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon  Kind="AlertOutline"  
+                                          Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center">
+                </materialDesign:PackIcon>
+                <StackPanel Grid.Row="1" Margin="8 24 8 8">
+                    <DockPanel>
+                        <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 0"
+                                Text="{Binding Settings.LedsPerSpot, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock FontWeight="Bold">Leds per spot</TextBlock>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                        This is the number of LEDs you want to act as a single pixel. 
+                        You are strongly encouraged to set this to 1! If your setup requires this to be 
+                        greater than one, please open up an issue on the github page and let us know why! 
+                        This feature is subject for removal!
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <materialDesign:PackIcon Kind="Calculator" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"/>
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <DockPanel>
+                        <TextBlock FontWeight="Bold">Complete LED Count</TextBlock>
+                        <TextBlock Text="{Binding LedCount}" 
+                               Foreground="{DynamicResource SecondaryAccentBrush}"
+                               DockPanel.Dock="Right"
+                               TextWrapping="Wrap" HorizontalAlignment="Right" />
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                        This is the complete number of LEDs your hardware setup has. 
+                        If your LED strip has actually more 
+                        or less, you should check the settings on this page.
                     </TextBlock>
                 </StackPanel>
             </Grid>

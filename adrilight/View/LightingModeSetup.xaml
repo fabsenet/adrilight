@@ -7,6 +7,19 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            
+        <StackPanel Margin="8">
+            <RadioButton IsChecked="{Binding Settings.UseLinearLighting}"
+                         Style="{StaticResource MaterialDesignRadioButton}" 
+                         Margin="0 0 0 8" 
+                         VerticalAlignment="Center">
+                Linear Lighting
+            </RadioButton>
+            <RadioButton IsChecked="{Binding UseNonLinearLighting}"
+                         Style="{StaticResource MaterialDesignRadioButton}" 
+                         Margin="0 0 0 8" 
+                         VerticalAlignment="Center">
+                Non-linear fading
+            </RadioButton>
+        </StackPanel>
     </Grid>
 </UserControl>
