@@ -81,6 +81,11 @@ namespace adrilight
             .SelectAllClasses()
             .InheritedFrom<ISelectableViewPart>()
             .BindAllInterfaces());
+
+            //eagerly create required singletons [could be replaced with actual pipeline]
+            var desktopDuplicationReader = kernel.Get<IDesktopDuplicatorReader>();
+            var serialStream = kernel.Get<ISerialStream>();
+
             return kernel;
         }
 

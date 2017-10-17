@@ -4,9 +4,48 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:adrilight.View"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
-    </Grid>
+             d:DesignHeight="300" d:DesignWidth="650">
+    <WrapPanel>
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="140" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">COM Port</TextBlock>
+                    <ComboBox SelectedValue="{Binding Settings.ComPort}" ItemsSource="{Binding AvailableComPorts}" />
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                        This the COM Port tu use for the communication with the arduino.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="140" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8">
+                    <DockPanel>
+                    <ToggleButton DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
+                          ToolTip="MaterialDesignSwitchAccentToggleButton" IsChecked="{Binding Settings.TransferActive}" />
+                        <TextBlock FontWeight="Bold">Enable Sending</TextBlock>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                        This switch controls whether adrilight should actually send color information to the arduino via the selected COM port.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+    </WrapPanel>
 </UserControl>

@@ -13,13 +13,14 @@
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{StaticResource MaterialDesignFont}"
+        d:DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
         DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
-        Title="{Binding Title}" Height="800" Width="1200" WindowStartupLocation="CenterScreen">
+        Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinWidth="730" MinHeight="480">
     <materialDesign:DialogHost>
         <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding IsLeftMenuOpen}">
             <!--<materialDesign:DrawerHost IsLeftDrawerOpen="True">-->
             <materialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel Width="352">
+                <DockPanel Width="256">
                     <!--<ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
                                     DockPanel.Dock="Top"
                                     HorizontalAlignment="Right" Margin="16"
@@ -62,12 +63,9 @@
                     </DockPanel>
                 </materialDesign:ColorZone>
 
-                <!--<materialDesign:Card Padding="32" Margin="16">
-                    <StackPanel>
-                        <TextBlock>1Muhh!!!</TextBlock>
-                    </StackPanel>
-                </materialDesign:Card>-->
-                <ContentPresenter Content="{Binding SelectedViewPart.Content}" />
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ContentPresenter Content="{Binding SelectedViewPart.Content}" />
+                </ScrollViewer>
             </DockPanel>
         </materialDesign:DrawerHost>
     </materialDesign:DialogHost>

@@ -17,6 +17,7 @@ namespace adrilight
             SpotSet = spotSet ?? throw new ArgumentNullException(nameof(spotSet));
 
             UserSettings.PropertyChanged += UserSettings_PropertyChanged;
+            RefreshTransferState();
             _log.Info($"SerialStream created.");
         }
 
@@ -133,7 +134,7 @@ namespace adrilight
                         if (openedComPort != UserSettings.ComPort)
                         {
                             serialPort?.Close();
-
+                            
                             serialPort = new SerialPort(UserSettings.ComPort, baudRate);
                             serialPort.Open();
                             openedComPort = UserSettings.ComPort;
@@ -191,7 +192,7 @@ namespace adrilight
             GC.SuppressFinalize(this);
         }
 
-        protected void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {

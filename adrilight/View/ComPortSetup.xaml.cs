@@ -38,7 +38,7 @@ namespace adrilight.View
 
             public int Order => 100;
 
-            public string ViewPartName => "Serial Communcation Setup";
+            public string ViewPartName => "Serial Communication Setup";
 
             public object Content { get => lazyContent.Value; }
         }

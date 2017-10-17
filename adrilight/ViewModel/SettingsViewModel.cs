@@ -5,6 +5,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -55,6 +56,8 @@ namespace adrilight.ViewModel
         }
 
         public IUserSettings Settings { get; }
+        public IList<String> AvailableComPorts { get; } = SerialPort.GetPortNames();
+
         public IList<ISelectableViewPart> SelectableViewParts { get; }
 
         public IList<int> PossibleLedCountsHorizontal { get; }
@@ -76,7 +79,7 @@ namespace adrilight.ViewModel
         public ICommand OpenUrlLatestReleaseCommand { get; } = new RelayCommand(() => OpenUrl(LatestReleasePage));
         private static void OpenUrl(string url) => Process.Start(url);
 
-        public ICommand ExitAdrilight { get; } = new RelayCommand(() => _log.Warn("exiting not implemented"), () => false);
+        public ICommand ExitAdrilight { get; } = new RelayCommand(() => App.Current.Shutdown(0));
 
         private int _spotsXMaximum = 300;
         public int SpotsXMaximum
