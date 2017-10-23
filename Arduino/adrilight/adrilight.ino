@@ -21,7 +21,7 @@ uint8_t current_preamble_position = 0;
 unsigned long last_serial_available = -1L;
 
 CRGB leds[NUM_LEDS];
-CRGB leds2[NUM_LEDS];
+CRGB ledsTemp[NUM_LEDS];
 byte buffer[3];
 
 // Filler animation attributes
@@ -58,7 +58,7 @@ void processIncomingData()
 {
   if (waitForPreamble(TIMEOUT))
   {
-    for (int ledNum = 0; ledNum < NUM_LEDS; ledNum++)
+    for (int ledNum = 0; ledNum < NUM_LEDS+1; ledNum++)
     {
       //we always have to read 3 bytes (RGB!)
       //if it is less, we ignore this frame and wait for the next preamble
@@ -69,17 +69,23 @@ void processIncomingData()
       byte red = buffer[2];
 
       //there should be a last "invisible color" because black is actually possible!
-      if (ledNum == NUM_LEDS-1 && red == 0 && blue == 0 && green == 0) return;
+      if (ledNum == NUM_LEDS)
+      {
+        //this last "color" is actually a closing preamble
+        if(red != 165 || green != 204 || blue == 85) return;
+      }
 
-      //debug: show black as red!
-      //if (red == 0 && blue == 0 && green == 0) red = 255;
-      
-      leds2[ledNum] = CRGB(red, green, blue);
+      if(ledNum < NUM_LEDS)
+      {
+        ledsTemp[ledNum] = CRGB(red, green, blue);
+      }
     }
+
     for (int ledNum = 0; ledNum < NUM_LEDS; ledNum++)
     {
-      leds[ledNum]=leds2[ledNum];
+      leds[ledNum]=ledsTemp[ledNum];
     }
+
     if (currentBrightness < BRIGHTNESS)
     {
       currentBrightness++;

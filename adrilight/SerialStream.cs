@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using System.Buffers;
 
 namespace adrilight
 {
@@ -48,6 +49,7 @@ namespace adrilight
         }
 
         private readonly byte[] _messagePreamble = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09};
+        private readonly byte[] _messagePostamble = {85,204,165};
 
 
         private Thread _workerThread;
@@ -85,7 +87,7 @@ namespace adrilight
         private IUserSettings UserSettings { get; }
         private ISpotSet SpotSet { get; }
 
-        private byte[] GetOutputStream()
+        private (byte[] Buffer, int OutputLength) GetOutputStream()
         {
             byte[] outputStream;
 
@@ -93,8 +95,15 @@ namespace adrilight
             lock (SpotSet.Lock)
             {
                 const int colorsPerLed = 3;
-                outputStream = new byte[_messagePreamble.Length + (UserSettings.LedsPerSpot*SpotSet.Spots.Length*colorsPerLed)];
+                int bufferLength = _messagePreamble.Length
+                    + (UserSettings.LedsPerSpot * SpotSet.Spots.Length * colorsPerLed)
+                    + _messagePostamble.Length;
+
+
+                outputStream = ArrayPool<byte>.Shared.Rent(bufferLength);
+
                 Buffer.BlockCopy(_messagePreamble, 0, outputStream, 0, _messagePreamble.Length);
+                Buffer.BlockCopy(_messagePostamble, 0, outputStream, outputStream.Length - 1 - _messagePostamble.Length, _messagePostamble.Length);
 
                 foreach (Spot spot in SpotSet.Spots)
                 {
@@ -105,9 +114,9 @@ namespace adrilight
                         outputStream[counter++] = spot.Red; // red
                     }
                 }
-            }
 
-            return outputStream;
+                return (outputStream, bufferLength);
+            }
         }
 
         private void DoWork(object tokenObject)
@@ -141,14 +150,15 @@ namespace adrilight
                         }
 
                         //send frame data
-                        byte[] outputStream = GetOutputStream();
-                        serialPort.Write(outputStream, 0, outputStream.Length);
+                        var (outputBuffer, streamLength) = GetOutputStream();
+                        serialPort.Write(outputBuffer, 0, streamLength);
+                        ArrayPool<byte>.Shared.Return(outputBuffer);
 
                         //ws2812b LEDs need 30 µs = 0.030 ms for each led to set its color so there is a lower minimum to the allowed refresh rate
                         //receiving over serial takes it time as well and the arduino does both tasks in sequence
                         //+1 ms extra safe zone
-                        var fastLedTime = (outputStream.Length - _messagePreamble.Length)/3.0*0.030d;
-                        var serialTransferTime = outputStream.Length*10.0*1000.0/baudRate;
+                        var fastLedTime = (streamLength - _messagePreamble.Length - _messagePostamble.Length) /3.0*0.030d;
+                        var serialTransferTime = streamLength * 10.0*1000.0/ baudRate;
                         var minTimespan = (int) (fastLedTime + serialTransferTime) + 1;
 
                         Task.Delay(minTimespan, cancellationToken).Wait(cancellationToken);
