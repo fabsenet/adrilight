@@ -2,12 +2,14 @@
 
 #define NUM_LEDS (2*73+2*41)
 #define LED_DATA_PIN 3
+#define BRIGHTNESS 255 //range is 0..255 with 255 beeing the MAX brightness
 
-#define BRIGHTNESS 255
+// --------------------------------------------------------------------------------------------
+// NO CHANGE REQUIRED BELOW THIS LINE
+// --------------------------------------------------------------------------------------------
+
 #define UPDATES_PER_SECOND 60
-
 #define TIMEOUT 3000
-
 #define MODE_ANIMATION 0
 #define MODE_AMBILIGHT 1
 #define MODE_BLACK 2
@@ -64,40 +66,39 @@ void processIncomingData()
       //if it is less, we ignore this frame and wait for the next preamble
       if (Serial.readBytes((char*)buffer, 3) < 3) return;
 
-      byte blue = buffer[0];
-      byte green = buffer[1];
-      byte red = buffer[2];
-
-      //there should be a last "invisible color" because black is actually possible!
-      if (ledNum == NUM_LEDS)
-      {
-        //this last "color" is actually a closing preamble
-        if(red != 165 || green != 204 || blue == 85) return;
-      }
 
       if(ledNum < NUM_LEDS)
-      {
+      {          
+        byte blue = buffer[0];
+        byte green = buffer[1];
+        byte red = buffer[2];
         ledsTemp[ledNum] = CRGB(red, green, blue);
       }
-    }
+      else if (ledNum == NUM_LEDS)
+      {
+        //this must be the "postamble" 
+        //this last "color" is actually a closing preamble
+        //if the postamble does not match the expected values, the colors will not be shown
+        if(buffer[0] == 85 && buffer[1] == 204 && buffer[2] == 165) {
+          //the preamble is correct, update the leds!     
 
-    for (int ledNum = 0; ledNum < NUM_LEDS; ledNum++)
-    {
-      leds[ledNum]=ledsTemp[ledNum];
-    }
-
-    if (currentBrightness < BRIGHTNESS)
-    {
-      currentBrightness++;
-      FastLED.setBrightness(currentBrightness);
-    }
-
-      //this should only be done, if a trailing preamble (=postamble?) is received.
-      //If it is not received, it is possible, the connection was lost and the LED
-      //buffer should not be used
+          // TODO: can we flip the used buffer instead of copying the data?
+          for (int ledNum = 0; ledNum < NUM_LEDS; ledNum++)
+          {
+            leds[ledNum]=ledsTemp[ledNum];
+          }
       
-      //send LED data to actual LEDs
-      FastLED.show();
+          if (currentBrightness < BRIGHTNESS)
+          {
+            currentBrightness++;
+            FastLED.setBrightness(currentBrightness);
+          }
+          
+          //send LED data to actual LEDs
+          FastLED.show();
+        }
+      }
+    }
   }
   else
   {

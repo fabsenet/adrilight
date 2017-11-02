@@ -103,7 +103,7 @@ namespace adrilight
                 outputStream = ArrayPool<byte>.Shared.Rent(bufferLength);
 
                 Buffer.BlockCopy(_messagePreamble, 0, outputStream, 0, _messagePreamble.Length);
-                Buffer.BlockCopy(_messagePostamble, 0, outputStream, outputStream.Length - 1 - _messagePostamble.Length, _messagePostamble.Length);
+                Buffer.BlockCopy(_messagePostamble, 0, outputStream, bufferLength - _messagePostamble.Length, _messagePostamble.Length);
 
                 foreach (Spot spot in SpotSet.Spots)
                 {
