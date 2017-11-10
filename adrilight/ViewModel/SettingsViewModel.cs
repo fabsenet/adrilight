@@ -64,12 +64,7 @@ namespace adrilight.ViewModel
 
         public string Title { get; } = $"adrilight {App.VersionNumber}";
         public int LedCount => spotSet.CountLeds(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot;
-        private bool _isLeftMenuOpen;
-        public bool IsLeftMenuOpen
-        {
-            get => _isLeftMenuOpen;
-            set => Set(ref _isLeftMenuOpen, value);
-        }
+
         public bool UseNonLinearLighting
         {
             get => !Settings.UseLinearLighting;
@@ -90,7 +85,6 @@ namespace adrilight.ViewModel
             set
             {
                 Set(ref _selectedViewPart, value);
-                IsLeftMenuOpen = false;
             }
         }
 

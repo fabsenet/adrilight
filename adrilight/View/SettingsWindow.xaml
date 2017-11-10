@@ -15,58 +15,46 @@
         FontFamily="{StaticResource MaterialDesignFont}"
         d:DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
         DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
-        Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinWidth="730" MinHeight="480">
-    <materialDesign:DialogHost>
-        <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding IsLeftMenuOpen}">
-            <!--<materialDesign:DrawerHost IsLeftDrawerOpen="True">-->
-            <materialDesign:DrawerHost.LeftDrawerContent>
-                <DockPanel Width="256">
-                    <!--<ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
-                                    DockPanel.Dock="Top"
-                                    HorizontalAlignment="Right" Margin="16"
-                                    IsChecked="{Binding IsLeftMenuOpen}" />-->
+        Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinWidth="730" MinHeight="480" d:DesignWidth="1461.241" d:DesignHeight="739.969">
+    <DockPanel>
 
-                    <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth2"
+        <DockPanel Background="{DynamicResource MaterialDesignCardBackground}" Width="256" LastChildFill="True" DockPanel.Dock="Left" materialDesign:ShadowAssist.ShadowDepth="Depth2">
+
+            <materialDesign:ColorZone materialDesign:ShadowAssist.ShadowDepth="Depth1"
                                             Mode="Accent" DockPanel.Dock="Top">
-                        <DockPanel>
-                            <Image Source="Images/adrilight_icon.ico" DockPanel.Dock="Top"/>
-                            <TextBlock Padding="16" Text="{Binding Title}" TextAlignment="Center" />
-                        </DockPanel>
-                    </materialDesign:ColorZone>
-                    <ListBox x:Name="DemoItemsListBox" Margin="0 16 0 16"                    
+                <DockPanel>
+                    <Image Source="Images/adrilight_icon.ico" DockPanel.Dock="Top"/>
+                    <TextBlock Padding="16" Text="{Binding Title}" TextAlignment="Center" />
+                </DockPanel>
+            </materialDesign:ColorZone>
+            <ListBox x:Name="DemoItemsListBox" Margin="0 16 0 16"  
                              ItemsSource="{Binding SelectableViewParts}"
                              SelectedItem="{Binding SelectedViewPart}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate DataType="domain:DemoItem">
-                                <TextBlock Text="{Binding ViewPartName}" Margin="32 0 32 0" />
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </DockPanel>
-            </materialDesign:DrawerHost.LeftDrawerContent>
-            <DockPanel>
-                <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2"
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="domain:DemoItem">
+                        <TextBlock Text="{Binding ViewPartName}" Margin="32 0 32 0" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+        <materialDesign:ColorZone Padding="16" materialDesign:ShadowAssist.ShadowDepth="Depth2"
                                             Mode="PrimaryDark" DockPanel.Dock="Top">
-                    <DockPanel>
-                        <ToggleButton Style="{StaticResource MaterialDesignHamburgerToggleButton}" 
-                              IsChecked="{Binding IsLeftMenuOpen}"/>
-                        <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
-                            <StackPanel>
-                                <Button Content="Project Page" Command="{Binding OpenUrlProjectPageCommand}"/>
-                                <Button Content="I have an issue..." Command="{Binding OpenUrlIssuesPageCommand}"/>
-                                <Button Content="Latest Release" Command="{Binding OpenUrlLatestReleaseCommand}"/>
-                                <Separator/>
-                                <Button Content="Exit adrilight" Command="{Binding ExitAdrilight}"/>
-                            </StackPanel>
-                        </materialDesign:PopupBox>
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Text="{Binding Title}" />
-                    </DockPanel>
-                </materialDesign:ColorZone>
-
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ContentPresenter Content="{Binding SelectedViewPart.Content}" />
-                </ScrollViewer>
+            <DockPanel>
+                <materialDesign:PopupBox DockPanel.Dock="Right" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                    <StackPanel>
+                        <Button Content="Project Page" Command="{Binding OpenUrlProjectPageCommand}"/>
+                        <Button Content="I have an issue..." Command="{Binding OpenUrlIssuesPageCommand}"/>
+                        <Button Content="Latest Release" Command="{Binding OpenUrlLatestReleaseCommand}"/>
+                        <Separator/>
+                        <Button Content="Exit adrilight" Command="{Binding ExitAdrilight}"/>
+                    </StackPanel>
+                </materialDesign:PopupBox>
+                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="22" Text="{Binding Title}" />
             </DockPanel>
-        </materialDesign:DrawerHost>
-    </materialDesign:DialogHost>
+        </materialDesign:ColorZone>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ContentPresenter Content="{Binding SelectedViewPart.Content}" />
+        </ScrollViewer>
+    </DockPanel>
 </Window>
