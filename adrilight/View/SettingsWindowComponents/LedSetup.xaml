@@ -7,7 +7,7 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
                 DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
-            d:DesignWidth="700">
+            d:DesignWidth="1273.6" d:DesignHeight="602.4">
     <WrapPanel Margin="0 0 8 8">
         <materialDesign:Card Margin="4 4 4 4" Width="300">
             <Grid>
@@ -127,9 +127,90 @@
             </Grid>
         </materialDesign:Card>
 
-        <StackPanel Margin="8">
-            
-        </StackPanel>
-        
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="Cat" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"/>
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8">
+                    <DockPanel>
+                        <ToggleButton DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
+                          ToolTip="MaterialDesignSwitchAccentToggleButton" IsChecked="{Binding Settings.MirrorX}" />
+                        <TextBlock FontWeight="Bold">Mirror X</TextBlock>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                        todo: is this actually only changing the direction? clockwise vs. counter-clockwise?
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="Cat" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"/>
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8">
+                    <DockPanel>
+                        <ToggleButton DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
+                          ToolTip="MaterialDesignSwitchAccentToggleButton" IsChecked="{Binding Settings.MirrorY}" />
+                        <TextBlock FontWeight="Bold">Mirror Y</TextBlock>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                        todo: is this actually only changing the direction? clockwise vs. counter-clockwise?
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="Cat" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">LED Offset</TextBlock>
+                    <DockPanel>
+                        <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 8"
+                                VerticalAlignment="Bottom" 
+                                Text="{Binding Settings.OffsetLed, UpdateSourceTrigger=PropertyChanged}" />
+                        <Slider Minimum="0" 
+                                Maximum="{Binding OffsetLedMaximum}" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                Value="{Binding Settings.OffsetLed}" />
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                        todo
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
     </WrapPanel>
 </UserControl>
