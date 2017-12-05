@@ -33,7 +33,7 @@
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                 Value="{Binding Settings.SpotWidth}" />
                     </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
                         This is the width in pixels of a single spot used to detect the color for a single LED pixel. A smaller number will yield sharper image reproduction behind your screen. A larger number will yield a feeling for the base color of a movie scene. Try to start with a value of 30.
                     </TextBlock>
                 </StackPanel>
@@ -65,7 +65,7 @@
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                 Value="{Binding Settings.SpotHeight}" />
                     </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
                         This is the height of a single spot in pixels. Start with keeping this value the same as the spot width and try around from there.
                     </TextBlock>
                 </StackPanel>
@@ -97,7 +97,7 @@
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                 Value="{Binding Settings.BorderDistanceX}" />
                     </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
                         The horizontal distance between the screen edge and the start of each spot in pixels. Start with a value of 0.
                     </TextBlock>
                 </StackPanel>
@@ -129,7 +129,7 @@
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                 Value="{Binding Settings.BorderDistanceY}" />
                     </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
                         The vertical distance betweend the screen edge and the start of each spot in pixels. If you want adrilight to ignore your windows taskbar or the common black bars movies, you should start with a value of maybe 100. Otherwise use 0.
                     </TextBlock>
                 </StackPanel>
@@ -161,7 +161,7 @@
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                 Value="{Binding Settings.OffsetX}" />
                     </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
                         This value describes a shift of all LEDs on the vertical axes (up/down). The suggestion is to have this value always on 0. It is also subject for removal. If you are using this, you are strongly encouraged to open up an issue on the github project page about it.
                     </TextBlock>
                 </StackPanel>
@@ -193,7 +193,7 @@
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                 Value="{Binding Settings.OffsetY}" />
                     </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
                         This value describes a shift of all LEDs on the horizontal axes (left/right). The suggestion is to have this value always on 0. It is also subject for removal. If you are using this, you are strongly encouraged to open up an issue on the github project page about it.
                     </TextBlock>
                 </StackPanel>

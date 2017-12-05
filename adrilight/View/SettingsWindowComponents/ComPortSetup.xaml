@@ -23,7 +23,7 @@
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">COM Port</TextBlock>
                     <ComboBox SelectedValue="{Binding Settings.ComPort}" ItemsSource="{Binding AvailableComPorts}" />
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
                         This the COM Port tu use for the communication with the arduino.
                     </TextBlock>
                 </StackPanel>
@@ -49,7 +49,7 @@
                           ToolTip="MaterialDesignSwitchAccentToggleButton" IsChecked="{Binding Settings.TransferActive}" />
                         <TextBlock FontWeight="Bold">Enable Sending</TextBlock>
                     </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0">
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
                         This switch controls whether adrilight should actually send color information to the arduino via the selected COM port.
                     </TextBlock>
                 </StackPanel>
