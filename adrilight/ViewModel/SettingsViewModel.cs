@@ -44,15 +44,18 @@ namespace adrilight.ViewModel
                     case nameof(Settings.SpotsX):
                         RaisePropertyChanged(() => SpotsXMaximum);
                         RaisePropertyChanged(() => LedCount);
+                        RaisePropertyChanged(() => OffsetLedMaximum);
                         break;
 
                     case nameof(Settings.SpotsY):
                         RaisePropertyChanged(() => SpotsYMaximum);
                         RaisePropertyChanged(() => LedCount);
+                        RaisePropertyChanged(() => OffsetLedMaximum);
                         break;
 
                     case nameof(Settings.LedsPerSpot):
                         RaisePropertyChanged(() => LedCount);
+                        RaisePropertyChanged(() => OffsetLedMaximum);
                         break;
 
                     case nameof(Settings.UseLinearLighting):
@@ -118,14 +121,7 @@ namespace adrilight.ViewModel
                 return _spotsYMaximum = Math.Max(Settings.SpotsY, _spotsYMaximum);
             }
         }
-        private int _offsetLedMaximum = 1;
-        public int OffsetLedMaximum
-        {
-            get
-            {
-                return _offsetLedMaximum = Math.Max(Settings.OffsetLed, _offsetLedMaximum);
-            }
-        }
-        //LedOffsetMaximum
+
+        public int OffsetLedMaximum => Math.Max(Settings.OffsetLed, LedCount);
     }
 }
