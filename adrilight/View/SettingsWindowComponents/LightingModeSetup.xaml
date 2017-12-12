@@ -50,7 +50,7 @@
                               IsChecked="{Binding Settings.UseLinearLighting}"
 	                          VerticalAlignment="Center"
 	                          Style="{StaticResource MaterialDesignSwitchToggleButton}"
-	                          ToolTip="Default ToggleButton Style" />
+	                          ToolTip="Linear Lighting" />
             </StackPanel>
         </materialDesign:Card>
 
@@ -64,7 +64,7 @@
                                   IsChecked="{Binding UseNonLinearLighting}"
 	                              VerticalAlignment="Center"
 	                              Style="{StaticResource MaterialDesignSwitchToggleButton}"
-	                              ToolTip="Default ToggleButton Style" />
+	                              ToolTip="Non-Linear Fading" />
                 </StackPanel>
                 <materialDesign:PackIcon Kind="Heart" Width="24" Height="24" Foreground="{StaticResource PrimaryHueLightBrush}" Margin="292,8,0,0" RenderTransformOrigin="0.5,0.5" >
                     <materialDesign:PackIcon.RenderTransform>

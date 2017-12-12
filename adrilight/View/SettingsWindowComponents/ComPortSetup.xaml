@@ -46,7 +46,7 @@
                     <DockPanel>
                     <ToggleButton DockPanel.Dock="Right"
                         Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
-                          ToolTip="MaterialDesignSwitchAccentToggleButton" IsChecked="{Binding Settings.TransferActive}" />
+                          ToolTip="Enable Sending" IsChecked="{Binding Settings.TransferActive}" />
                         <TextBlock FontWeight="Bold">Enable Sending</TextBlock>
                     </DockPanel>
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">

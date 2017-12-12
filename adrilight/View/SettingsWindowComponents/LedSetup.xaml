@@ -156,13 +156,13 @@
                     <DockPanel>
                         <ToggleButton DockPanel.Dock="Right"
                         Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
-                          ToolTip="MaterialDesignSwitchAccentToggleButton" IsChecked="{Binding Settings.MirrorX}" />
+                          ToolTip="Mirror X" IsChecked="{Binding Settings.MirrorX}" />
                         <TextBlock FontWeight="Bold">Mirror X</TextBlock>
                     </DockPanel>
                     <DockPanel Margin="0 8 0 0">
                         <ToggleButton DockPanel.Dock="Right"
                         Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
-                          ToolTip="MaterialDesignSwitchAccentToggleButton" IsChecked="{Binding Settings.MirrorY}" />
+                          ToolTip="Mirror Y" IsChecked="{Binding Settings.MirrorY}" />
                         <TextBlock FontWeight="Bold">Mirror Y</TextBlock>
                     </DockPanel>
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Justify" Margin="0 8 0 0">

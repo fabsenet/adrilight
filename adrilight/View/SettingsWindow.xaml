@@ -53,7 +53,7 @@
             </DockPanel>
         </materialDesign:ColorZone>
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left">
             <ContentPresenter Content="{Binding SelectedViewPart.Content}" />
         </ScrollViewer>
     </DockPanel>
