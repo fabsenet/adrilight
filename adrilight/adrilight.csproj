@@ -153,6 +153,7 @@
     <Compile Include="ISpot.cs" />
     <Compile Include="ISpotSet.cs" />
     <Compile Include="IUserSettings.cs" />
+    <Compile Include="Messaging\TraceFrameMessage.cs" />
     <Compile Include="Overlay.cs">
       <SubType>Form</SubType>
     </Compile>

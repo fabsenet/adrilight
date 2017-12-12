@@ -2,19 +2,75 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-        <StackPanel Margin="8">
-            
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Width="200" HorizontalAlignment="Right">
-                    Test-Overlay
+             d:DesignHeight="900" d:DesignWidth="900">
+    <Grid Width="900">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <materialDesign:Card Margin="4 4 4 0" Grid.ColumnSpan="2">
+            <StackPanel Margin="8 8 8 8">
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Justify" FontWeight="Bold">
+                    What is a lighting mode doing?
                 </TextBlock>
-                <CheckBox IsChecked="{Binding Settings.OverlayActive}" />
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                    After adrilight fetched the screen color of the screen region for each pixel of the LED strip it can transform these raw color values values. This can be used to optimize the visual result of LED strip.
+                    <LineBreak />
+                    <LineBreak />
+                    <Bold>Linear Lighting</Bold> will not transform the raw colors in any way. The result is a perceived image with is mostly focused on brightness but not on color.
+                    <LineBreak />
+                    <LineBreak />
+                    <Bold>Non-linear Fading</Bold> on the other hand is designed to match the human eye and how it perceives color and brightness. It tends to be overall a bit darker but it also has more contrast between dark und bright parts of a single scene. It also emphasizes color much more. 
+                    <LineBreak />
+                    <LineBreak />
+                    You should play around with this as much as you like. Open your favorite movie, application or game and test the modes. Avoid testing with images of a pure solid color as it is not realistic.
+                </TextBlock>
             </StackPanel>
-            
-        </StackPanel>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="0">
+            <StackPanel Margin="8 8 8 8">
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Center" FontWeight="Bold">
+                    Enable Preview
+                </TextBlock>
+                <ToggleButton Margin="8" 
+                              IsChecked="{Binding Settings.OverlayActive}"
+	                          VerticalAlignment="Center"
+	                          Style="{StaticResource MaterialDesignSwitchToggleButton}"
+	                          ToolTip="Linear Lighting" />
+            </StackPanel>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="1">
+            <StackPanel Margin="38 8 8 8">
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Left" FontWeight="Bold">
+                    Performance Warning!
+                </TextBlock>
+                <TextBlock Margin="8">
+                    Do not forget to disable the preview when you are done because it uses your system resources even if it is not visible at all!
+                </TextBlock>
+            </StackPanel>
+        </materialDesign:Card>
+
+        <materialDesign:PackIcon Kind="BatteryAlert" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="1" Grid.Column="1" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
+            <materialDesign:PackIcon.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="3.376"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </materialDesign:PackIcon.RenderTransform>
+        </materialDesign:PackIcon>
+
     </Grid>
 </UserControl>
