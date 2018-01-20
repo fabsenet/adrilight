@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Windows.Media;
+
+using Color = System.Windows.Media.Color;
 
 namespace adrilight {
 
@@ -24,14 +27,14 @@ namespace adrilight {
         public Rectangle RectangleOverlayBorder { get; private set; }
         public Rectangle RectangleOverlayFilling { get; private set; }
 
-        private readonly SolidBrush _brush = new SolidBrush(Color.Black);
+        private Color _color = Colors.Black;
 
-        public SolidBrush OnDemandBrush
+        public Color OnDemandColor
         {
             get
             {
-                _brush.Color = Color.FromArgb(Red, Green, Blue);
-                 return _brush;
+                _color = Color.FromRgb(Red, Green, Blue);
+                 return _color;
             }
         }
         public byte Red { get; private set; }
@@ -47,7 +50,6 @@ namespace adrilight {
         }
 
         public void Dispose() {
-            _brush?.Dispose();
         }
 
         private DateTime? _lastMissingValueIndication;

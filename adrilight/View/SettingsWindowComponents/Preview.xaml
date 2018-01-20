@@ -17,27 +17,7 @@
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
 
-        <materialDesign:Card Margin="4 4 4 0" Grid.ColumnSpan="2">
-            <StackPanel Margin="8 8 8 8">
-                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Justify" FontWeight="Bold">
-                    What is a lighting mode doing?
-                </TextBlock>
-                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
-                    After adrilight fetched the screen color of the screen region for each pixel of the LED strip it can transform these raw color values values. This can be used to optimize the visual result of LED strip.
-                    <LineBreak />
-                    <LineBreak />
-                    <Bold>Linear Lighting</Bold> will not transform the raw colors in any way. The result is a perceived image with is mostly focused on brightness but not on color.
-                    <LineBreak />
-                    <LineBreak />
-                    <Bold>Non-linear Fading</Bold> on the other hand is designed to match the human eye and how it perceives color and brightness. It tends to be overall a bit darker but it also has more contrast between dark und bright parts of a single scene. It also emphasizes color much more. 
-                    <LineBreak />
-                    <LineBreak />
-                    You should play around with this as much as you like. Open your favorite movie, application or game and test the modes. Avoid testing with images of a pure solid color as it is not realistic.
-                </TextBlock>
-            </StackPanel>
-        </materialDesign:Card>
-
-        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="0">
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="0">
             <StackPanel Margin="8 8 8 8">
                 <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Center" FontWeight="Bold">
                     Enable Preview
@@ -50,18 +30,17 @@
             </StackPanel>
         </materialDesign:Card>
 
-        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="1">
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="1">
             <StackPanel Margin="38 8 8 8">
                 <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Left" FontWeight="Bold">
                     Performance Warning!
                 </TextBlock>
-                <TextBlock Margin="8">
+                <TextBlock Margin="8" TextWrapping="Wrap">
                     Do not forget to disable the preview when you are done because it uses your system resources even if it is not visible at all!
                 </TextBlock>
             </StackPanel>
         </materialDesign:Card>
-
-        <materialDesign:PackIcon Kind="BatteryAlert" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="1" Grid.Column="1" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
+        <materialDesign:PackIcon Kind="BatteryAlert" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="1" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
             <materialDesign:PackIcon.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -71,6 +50,41 @@
                 </TransformGroup>
             </materialDesign:PackIcon.RenderTransform>
         </materialDesign:PackIcon>
+
+
+        <materialDesign:Card Margin="4 4 4 0" Grid.Row="1" Grid.ColumnSpan="2">
+            <Viewbox Margin="8 8 8 8" Width="auto" Height="500">
+                <Canvas Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}" Background="#FFFFFF">
+                    <Rectangle Width="{Binding ScreenWidth}" Height="{Binding ScreenHeight}" RadiusX="10" RadiusY="10" StrokeThickness="6" Stroke="#FFBF7575" Canvas.Left="300" Canvas.Top="300" Fill="Purple" />
+                    <ItemsControl ItemsSource="{Binding PreviewSpots}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Left" Value="{Binding Rectangle.X}"/>
+                                <Setter Property="Canvas.Top" Value="{Binding Rectangle.Y}"/>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Rectangle Width="{Binding Rectangle.Width}" Height="{Binding Rectangle.Height}">
+                                    <Rectangle.Fill>
+                                        <RadialGradientBrush>
+                                            <GradientStop Color="{Binding OnDemandColor}"  Offset="0"/>
+                                            <GradientStop Color="Transparent" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Canvas>
+            </Viewbox>
+        </materialDesign:Card>
+        
 
     </Grid>
 </UserControl>

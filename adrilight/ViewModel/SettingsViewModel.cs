@@ -123,5 +123,28 @@ namespace adrilight.ViewModel
         }
 
         public int OffsetLedMaximum => Math.Max(Settings.OffsetLed, LedCount);
+
+        public int ScreenWidth => (int) System.Windows.SystemParameters.PrimaryScreenWidth;
+        public int ScreenHeight => (int) System.Windows.SystemParameters.PrimaryScreenHeight;
+
+        private const int CanvasPadding = 300;
+
+        public int CanvasWidth => ScreenWidth + 2 * CanvasPadding;
+        public int CanvasHeight => ScreenHeight + 2 * CanvasPadding;
+
+        public List<Spot> PreviewSpots
+        {
+            get
+            {
+                var list = new List<Spot>();
+                list.Add(new Spot(CanvasPadding+0, CanvasPadding+0, 200, 200));
+                list.Add(new Spot(CanvasPadding+500, CanvasPadding+100, 200, 200));
+
+                list[0].SetColor(0, 155, 255);
+                list[1].SetColor(255, 155, 255);
+
+                return list;
+            }
+        }
     }
 }

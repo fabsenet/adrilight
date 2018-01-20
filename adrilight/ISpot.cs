@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Color = System.Windows.Media.Color;
 
 namespace adrilight
 {
@@ -8,7 +9,7 @@ namespace adrilight
         byte Green { get; }
         byte Blue { get; }
 
-        SolidBrush OnDemandBrush { get; }
+        Color OnDemandColor { get; }
         Rectangle Rectangle { get; }
         Rectangle RectangleOverlayBorder { get; }
         Rectangle RectangleOverlayFilling { get; }
