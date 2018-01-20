@@ -17,7 +17,7 @@
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
 
-        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="0">
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch">
             <StackPanel Margin="8 8 8 8">
                 <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Center" FontWeight="Bold">
                     Enable Preview
@@ -30,7 +30,7 @@
             </StackPanel>
         </materialDesign:Card>
 
-        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="1">
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch">
             <StackPanel Margin="38 8 8 8">
                 <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Left" FontWeight="Bold">
                     Performance Warning!
