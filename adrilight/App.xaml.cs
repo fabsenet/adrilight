@@ -22,6 +22,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Ninject.Extensions.Conventions;
 using AdriSettings = adrilight.Properties.Settings;
+using adrilight.Resources;
 
 namespace adrilight
 {   
@@ -71,6 +72,7 @@ namespace adrilight
             {
                 //setup real implementations
                 kernel.Bind<IUserSettings>().To<UserSettings>().InSingletonScope();
+                kernel.Bind<IContext>().To<WpfContext>().InSingletonScope();
                 kernel.Bind<ISpotSet>().To<SpotSet>().InSingletonScope();
                 kernel.Bind<ISerialStream>().To<SerialStream>().InSingletonScope();
                 kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReader>().InSingletonScope();

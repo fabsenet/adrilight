@@ -17,30 +17,17 @@
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
 
-        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch">
-            <StackPanel Margin="8 8 8 8">
-                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Center" FontWeight="Bold">
-                    Enable Preview
-                </TextBlock>
-                <ToggleButton Margin="8" 
-                              IsChecked="{Binding Settings.OverlayActive}"
-	                          VerticalAlignment="Center"
-	                          Style="{StaticResource MaterialDesignSwitchToggleButton}"
-	                          ToolTip="Linear Lighting" />
-            </StackPanel>
-        </materialDesign:Card>
-
-        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch">
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
             <StackPanel Margin="38 8 8 8">
                 <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Left" FontWeight="Bold">
                     Performance Warning!
                 </TextBlock>
                 <TextBlock Margin="8" TextWrapping="Wrap">
-                    Do not forget to disable the preview when you are done because it uses your system resources even if it is not visible at all!
+                    This preview uses more system resources than adrilight uses normally. If you leave the preview page or close the settings window, the preview is no longer created.
                 </TextBlock>
             </StackPanel>
         </materialDesign:Card>
-        <materialDesign:PackIcon Kind="BatteryAlert" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="1" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
+        <materialDesign:PackIcon Kind="BatteryAlert" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
             <materialDesign:PackIcon.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -54,8 +41,17 @@
 
         <materialDesign:Card Margin="4 4 4 0" Grid.Row="1" Grid.ColumnSpan="2">
             <Viewbox Margin="8 8 8 8" Width="auto" Height="500">
-                <Canvas Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}" Background="#FFFFFF">
-                    <Rectangle Width="{Binding ScreenWidth}" Height="{Binding ScreenHeight}" RadiusX="10" RadiusY="10" StrokeThickness="6" Stroke="#FFBF7575" Canvas.Left="300" Canvas.Top="300" Fill="Purple" />
+                <Canvas Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}">
+                    <Canvas.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF686868"/>
+                            <GradientStop Color="#FFC2C2C2" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Canvas.Background>
+
+                    <Image Source="{Binding PreviewImageSource}" Width="{Binding ScreenWidth}" Height="{Binding ScreenHeight}" Margin="4" Canvas.Left="300" Canvas.Top="300"></Image>
+                    <Rectangle Width="{Binding ScreenWidth}" Height="{Binding ScreenHeight}" RadiusX="10" RadiusY="10" StrokeThickness="6" Stroke="#FFBF7575" Canvas.Left="300" Canvas.Top="300" />
+
                     <ItemsControl ItemsSource="{Binding PreviewSpots}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -84,7 +80,7 @@
                 </Canvas>
             </Viewbox>
         </materialDesign:Card>
-        
+
 
     </Grid>
 </UserControl>

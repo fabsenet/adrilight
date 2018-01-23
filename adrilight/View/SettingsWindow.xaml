@@ -15,7 +15,7 @@
         FontFamily="{StaticResource MaterialDesignFont}"
         d:DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
         DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
-        Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinWidth="1200" MinHeight="700" d:DesignWidth="1461.241" d:DesignHeight="739.969">
+        Title="{Binding Title}" WindowStartupLocation="CenterScreen" MinWidth="1200" MinHeight="700" d:DesignWidth="1461.241" d:DesignHeight="739.969" Closed="Window_Closed">
     <DockPanel>
 
         <DockPanel Background="{DynamicResource MaterialDesignCardBackground}" Width="256" LastChildFill="True" DockPanel.Dock="Left" materialDesign:ShadowAssist.ShadowDepth="Depth2">

@@ -163,6 +163,8 @@
     <Compile Include="DxPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RawRectangleExtensions.cs" />
+    <Compile Include="Resources\IContext.cs" />
+    <Compile Include="Resources\WpfContext.cs" />
     <Compile Include="SerialStream.cs" />
     <Compile Include="UserSettings.cs" />
     <Compile Include="Spot.cs" />
@@ -231,9 +233,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="adrilight_icon.ico" />
   </ItemGroup>

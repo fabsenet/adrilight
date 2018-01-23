@@ -1,4 +1,5 @@
-﻿using System;
+﻿using adrilight.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,22 @@ namespace adrilight.ui
         public SettingsWindow()
         {
             InitializeComponent();
+
+
+            var settingsViewModel = DataContext as SettingsViewModel;
+            if (settingsViewModel != null)
+            {
+                settingsViewModel.IsSettingsWindowOpen = true;
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            var settingsViewModel = DataContext as SettingsViewModel;
+            if(settingsViewModel != null)
+            {
+                settingsViewModel.IsSettingsWindowOpen = false;
+            }
         }
     }
 }

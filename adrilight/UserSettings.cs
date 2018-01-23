@@ -153,7 +153,7 @@ namespace adrilight
             }
         }
 
-        public bool OverlayActive
+        public bool IsPreviewEnabled
         {
             get { return _overlayActive; }
             set
@@ -161,7 +161,7 @@ namespace adrilight
                 _overlayActive = value;
                 Properties.Settings.Default.OVERLAY_ACTIVE = value;
                 Properties.Settings.Default.Save();
-                RaisePropertyChanged(() => OverlayActive);
+                RaisePropertyChanged(() => IsPreviewEnabled);
             }
         }
 

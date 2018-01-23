@@ -28,11 +28,11 @@ namespace adrilight.View.SettingsWindowComponents
 
 
 
-        public class LightingModeSetupSelectableViewPart : ISelectableViewPart
+        public class PreviewSelectableViewPart : ISelectableViewPart
         {
             private readonly Lazy<Preview> lazyContent;
 
-            public LightingModeSetupSelectableViewPart(Lazy<Preview> lazyContent)
+            public PreviewSelectableViewPart(Lazy<Preview> lazyContent)
             {
                 this.lazyContent = lazyContent ?? throw new ArgumentNullException(nameof(lazyContent));
             }

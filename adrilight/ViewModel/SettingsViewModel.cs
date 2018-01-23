@@ -1,15 +1,22 @@
-﻿using adrilight.View;
+﻿using adrilight.Resources;
+using adrilight.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO.Ports;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace adrilight.ViewModel
 {
@@ -21,7 +28,7 @@ namespace adrilight.ViewModel
         private const string IssuesPage = "https://github.com/fabsenet/adrilight/issues";
         private const string LatestReleasePage = "https://github.com/fabsenet/adrilight/releases/latest";
 
-        public SettingsViewModel(IUserSettings userSettings, IList<ISelectableViewPart> selectableViewParts, ISpotSet spotSet)
+        public SettingsViewModel(IUserSettings userSettings, IList<ISelectableViewPart> selectableViewParts, ISpotSet spotSet, IContext context)
         {
             if (selectableViewParts == null)
             {
@@ -30,6 +37,7 @@ namespace adrilight.ViewModel
 
             this.Settings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
             this.spotSet = spotSet ?? throw new ArgumentNullException(nameof(spotSet));
+            Context = context ?? throw new ArgumentNullException(nameof(context));
             SelectableViewParts = selectableViewParts.OrderBy(p => p.Order)
                 .ToList();
             SelectedViewPart = SelectableViewParts.First();
@@ -78,6 +86,7 @@ namespace adrilight.ViewModel
             set => Settings.UseLinearLighting = !value;
         }
         public IUserSettings Settings { get; }
+        public IContext Context { get; }
         public IList<String> AvailableComPorts { get; } = SerialPort.GetPortNames();
 
         public IList<ISelectableViewPart> SelectableViewParts { get; }
@@ -92,8 +101,78 @@ namespace adrilight.ViewModel
             set
             {
                 Set(ref _selectedViewPart, value);
+                _log.Info($"SelectedViewPart is now {_selectedViewPart?.ViewPartName}");
+
+                IsPreviewTabOpen = _selectedViewPart is View.SettingsWindowComponents.Preview.PreviewSelectableViewPart;
             }
         }
+
+        private bool _isPreviewTabOpen;
+        public bool IsPreviewTabOpen
+        {
+            get => _isPreviewTabOpen;
+            private set
+            {
+                Set(ref _isPreviewTabOpen, value);
+                _log.Info($"IsPreviewTabOpen is now {_isPreviewTabOpen}");
+            }
+        }
+
+        private bool _isSettingsWindowOpen;
+        public bool IsSettingsWindowOpen
+        {
+            get => _isSettingsWindowOpen;
+            set
+            {
+                Set(ref _isSettingsWindowOpen, value);
+                _log.Info($"IsSettingsWindowOpen is now {_isSettingsWindowOpen}");
+            }
+        }
+
+        [DllImport("gdi32.dll")] public static extern bool DeleteObject(IntPtr hObject);
+        public void SetPreviewImage(Bitmap image)
+        {
+            Context.Invoke(() =>
+            {
+                if (PreviewImageSource == null)
+                {
+                    //first run creates writableimage
+                    var imagePtr = image.GetHbitmap();
+                    try
+                    {
+                        var bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(imagePtr, IntPtr.Zero, System.Windows.Int32Rect.Empty, System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+                        PreviewImageSource = new WriteableBitmap(bitmapSource);
+                    }
+                    finally
+                    {
+                        var i = DeleteObject(imagePtr);
+                    }
+                }
+                else
+                {
+                    //next runs reuse the writable image
+                    Rectangle colorBitmapRectangle = new Rectangle(0, 0, image.Width, image.Height);
+                    Int32Rect colorBitmapInt32Rect = new Int32Rect(0, 0, PreviewImageSource.PixelWidth, PreviewImageSource.PixelHeight);
+
+                    BitmapData data = image.LockBits(colorBitmapRectangle, ImageLockMode.WriteOnly, image.PixelFormat);
+
+                    PreviewImageSource.WritePixels(colorBitmapInt32Rect, data.Scan0, data.Width * data.Height * 4, data.Stride);
+
+                    image.UnlockBits(data);
+                }
+            });
+        }
+        public WriteableBitmap _previewImageSource;
+        public WriteableBitmap PreviewImageSource
+        {
+            get => _previewImageSource;
+            set
+            {
+                _log.Info("PreviewImageSource created.");
+                Set(ref _previewImageSource, value);
+            }
+        }
+
 
         public ICommand OpenUrlProjectPageCommand { get; } = new RelayCommand(() => OpenUrl(ProjectPage));
         public ICommand OpenUrlIssuesPageCommand { get; } = new RelayCommand(() => OpenUrl(IssuesPage));
@@ -124,8 +203,8 @@ namespace adrilight.ViewModel
 
         public int OffsetLedMaximum => Math.Max(Settings.OffsetLed, LedCount);
 
-        public int ScreenWidth => (int) System.Windows.SystemParameters.PrimaryScreenWidth;
-        public int ScreenHeight => (int) System.Windows.SystemParameters.PrimaryScreenHeight;
+        public int ScreenWidth => (int)System.Windows.SystemParameters.PrimaryScreenWidth;
+        public int ScreenHeight => (int)System.Windows.SystemParameters.PrimaryScreenHeight;
 
         private const int CanvasPadding = 300;
 
@@ -137,8 +216,8 @@ namespace adrilight.ViewModel
             get
             {
                 var list = new List<Spot>();
-                list.Add(new Spot(CanvasPadding+0, CanvasPadding+0, 200, 200));
-                list.Add(new Spot(CanvasPadding+500, CanvasPadding+100, 200, 200));
+                list.Add(new Spot(CanvasPadding + 0, CanvasPadding + 0, 200, 200));
+                list.Add(new Spot(CanvasPadding + 500, CanvasPadding + 100, 200, 200));
 
                 list[0].SetColor(0, 155, 255);
                 list[1].SetColor(255, 155, 255);
@@ -146,5 +225,6 @@ namespace adrilight.ViewModel
                 return list;
             }
         }
+
     }
 }

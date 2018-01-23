@@ -8,18 +8,21 @@ using adrilight.DesktopDuplication;
 using NLog;
 using Polly;
 using System.Linq;
+using System.Windows.Media.Imaging;
+using adrilight.ViewModel;
+using System.Runtime.InteropServices;
 
 namespace adrilight
 {
-    public class DesktopDuplicatorReader : IDesktopDuplicatorReader
+    internal class DesktopDuplicatorReader : IDesktopDuplicatorReader
     {
         private readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
-        public DesktopDuplicatorReader(IUserSettings userSettings, ISpotSet spotSet)
+        public DesktopDuplicatorReader(IUserSettings userSettings, ISpotSet spotSet, SettingsViewModel settingsViewModel)
         {
             UserSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
             SpotSet = spotSet ?? throw new ArgumentNullException(nameof(spotSet));
-
+            SettingsViewModel = settingsViewModel ?? throw new ArgumentNullException(nameof(settingsViewModel));
             _retryPolicy = Policy.Handle<Exception>()
                 .WaitAndRetryForever(ProvideDelayDuration);
 
@@ -34,7 +37,7 @@ namespace adrilight
             switch (e.PropertyName)
             {
                 case nameof(UserSettings.TransferActive):
-                case nameof(UserSettings.OverlayActive):
+                case nameof(UserSettings.IsPreviewEnabled):
                     RefreshCapturingState();
                     break;
             }
@@ -47,7 +50,7 @@ namespace adrilight
         private void RefreshCapturingState()
         {
             var isRunning = _cancellationTokenSource != null && IsRunning;
-            var shouldBeRunning = UserSettings.TransferActive || UserSettings.OverlayActive;
+            var shouldBeRunning = UserSettings.TransferActive || UserSettings.IsPreviewEnabled;
 
             if (isRunning && !shouldBeRunning)
             {
@@ -73,6 +76,7 @@ namespace adrilight
 
         private IUserSettings UserSettings { get; }
         private ISpotSet SpotSet { get; }
+        private SettingsViewModel SettingsViewModel { get; }
 
         private readonly Policy _retryPolicy;
 
@@ -118,6 +122,10 @@ namespace adrilight
 
 
                     var image = frame.DesktopImage;
+                    if (SettingsViewModel.IsSettingsWindowOpen && SettingsViewModel.IsPreviewTabOpen)
+                    {
+                        SettingsViewModel.SetPreviewImage(image);
+                    }
                     image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppRgb, bitmapData);
                     lock (SpotSet.Lock)
                     {
@@ -153,6 +161,7 @@ namespace adrilight
                             });
                     }
                     image.UnlockBits(bitmapData);
+                    image.Dispose();
                 }
             }
             finally
@@ -164,6 +173,7 @@ namespace adrilight
                 IsRunning = false;
             }
         }
+        
 
         private DateTime? _lastNotNullFrameDateTime;
         private DateTime? _lastNotNullFrameLoggedDateTime;

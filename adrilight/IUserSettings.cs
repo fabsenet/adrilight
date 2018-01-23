@@ -16,7 +16,7 @@ namespace adrilight
         int OffsetLed { get; set; }
         int OffsetX { get; set; }
         int OffsetY { get; set; }
-        bool OverlayActive { get; set; }
+        bool IsPreviewEnabled { get; set; }
         byte SaturationTreshold { get; set; }
         int SpotHeight { get; set; }
         int SpotsX { get; set; }

@@ -20,7 +20,7 @@ namespace adrilight.Fakes
         public int OffsetLed { get; set; } = 22;
         public int OffsetX { get; set; } = 0;
         public int OffsetY { get; set; } = 0;
-        public bool OverlayActive { get; set; } = false;
+        public bool IsPreviewEnabled { get; set; } = false;
         public byte SaturationTreshold { get; set; } = 4;
         public int SpotsX { get; set; } = 80;
         public int SpotsY { get; set; } = 55;
