@@ -26,18 +26,21 @@ namespace adrilight
             _retryPolicy = Policy.Handle<Exception>()
                 .WaitAndRetryForever(ProvideDelayDuration);
 
-            UserSettings.PropertyChanged += UserSettings_PropertyChanged;
+            UserSettings.PropertyChanged += PropertyChanged;
+            SettingsViewModel.PropertyChanged += PropertyChanged;
             RefreshCapturingState();
 
             _log.Info($"DesktopDuplicatorReader created.");
         }
 
-        private void UserSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
                 case nameof(UserSettings.TransferActive):
                 case nameof(UserSettings.IsPreviewEnabled):
+                case nameof(SettingsViewModel.IsSettingsWindowOpen):
+                case nameof(SettingsViewModel.IsPreviewTabOpen):
                     RefreshCapturingState();
                     break;
             }
@@ -50,7 +53,8 @@ namespace adrilight
         private void RefreshCapturingState()
         {
             var isRunning = _cancellationTokenSource != null && IsRunning;
-            var shouldBeRunning = UserSettings.TransferActive || UserSettings.IsPreviewEnabled;
+            var shouldBeRunning = UserSettings.TransferActive
+                    || SettingsViewModel.IsSettingsWindowOpen && SettingsViewModel.IsPreviewTabOpen;
 
             if (isRunning && !shouldBeRunning)
             {
