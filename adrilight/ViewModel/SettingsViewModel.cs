@@ -129,7 +129,9 @@ namespace adrilight.ViewModel
             }
         }
 
-        [DllImport("gdi32.dll")] public static extern bool DeleteObject(IntPtr hObject);
+        [DllImport("gdi32.dll")]
+        public static extern bool DeleteObject(IntPtr hObject);
+
         public void SetPreviewImage(Bitmap image)
         {
             Context.Invoke(() =>
