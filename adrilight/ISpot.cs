@@ -11,8 +11,6 @@ namespace adrilight
 
         Color OnDemandColor { get; }
         Rectangle Rectangle { get; }
-        Rectangle RectangleOverlayBorder { get; }
-        Rectangle RectangleOverlayFilling { get; }
 
         void IndicateMissingValue();
         void SetColor(byte red, byte green, byte blue);

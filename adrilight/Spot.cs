@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Media;
@@ -8,24 +9,16 @@ using Color = System.Windows.Media.Color;
 namespace adrilight {
 
     [DebuggerDisplay("Spot: Rectangle={Rectangle}, Color={Red},{Green},{Blue}")]
-    sealed class Spot : IDisposable, ISpot
+    sealed class Spot : ViewModelBase, IDisposable, ISpot
     {
 
         public Spot(int x, int y, int aWidth, int aHeight)
         {
             var topLeft = new DxPoint(x - aWidth/2, y - aHeight/2);
             Rectangle = new Rectangle(topLeft.X, topLeft.Y, aWidth, aHeight);
-
-            RectangleOverlayBorder = new Rectangle(topLeft.X + 2, topLeft.Y + 2, aWidth - 4, aHeight - 4);
-            RectangleOverlayFilling = new Rectangle(topLeft.X + 4, topLeft.Y + 4, aWidth - 8, aHeight - 8);
         }
 
-
-
-
         public Rectangle Rectangle { get; private set; }
-        public Rectangle RectangleOverlayBorder { get; private set; }
-        public Rectangle RectangleOverlayFilling { get; private set; }
 
         private Color _color = Colors.Black;
 
@@ -34,9 +27,20 @@ namespace adrilight {
             get
             {
                 _color = Color.FromRgb(Red, Green, Blue);
-                 return _color;
+                return _color;
             }
         }
+        private Color _colorT = Colors.Transparent;
+
+        public Color OnDemandColorTransparent
+        {
+            get
+            {
+                _color = Color.FromArgb(0, Red, Green, Blue);
+                return _color;
+            }
+        }
+
         public byte Red { get; private set; }
         public byte Green { get; private set; }
         public byte Blue { get; private set; }
@@ -47,6 +51,9 @@ namespace adrilight {
             Green = green;
             Blue = blue;
             _lastMissingValueIndication = null;
+
+            RaisePropertyChanged(() => OnDemandColor);
+            RaisePropertyChanged(() => OnDemandColorTransparent);
         }
 
         public void Dispose() {
@@ -59,7 +66,7 @@ namespace adrilight {
 
         public void IndicateMissingValue()
         {
-            //trhis method might be called while another thread is calling setcolor() and we need the local copy to have a fixed value
+            //this method might be called while another thread is calling setcolor() and we need the local copy to have a fixed value
             var localCopyLastMissingValueIndication = _lastMissingValueIndication;
 
             if (!localCopyLastMissingValueIndication.HasValue)
@@ -74,9 +81,7 @@ namespace adrilight {
             var dimFactor =(float) (1 - (DateTime.UtcNow - localCopyLastMissingValueIndication.Value).TotalMilliseconds / _dimToBlackIntervalInMs);
             dimFactor = Math.Max(0, Math.Min(1, dimFactor));
 
-            Red = (byte) (dimFactor*_dimR);
-            Green = (byte) (dimFactor*_dimG);
-            Blue = (byte) (dimFactor*_dimB);
+            SetColor((byte)(dimFactor * _dimR), (byte)(dimFactor * _dimG), (byte)(dimFactor * _dimB));
         }
     }
 }

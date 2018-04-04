@@ -27,6 +27,7 @@
                 </TextBlock>
             </StackPanel>
         </materialDesign:Card>
+        
         <materialDesign:PackIcon Kind="BatteryAlert" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
             <materialDesign:PackIcon.RenderTransform>
                 <TransformGroup>
@@ -49,10 +50,13 @@
                         </LinearGradientBrush>
                     </Canvas.Background>
 
-                    <Image Source="{Binding PreviewImageSource}" Width="{Binding ScreenWidth}" Height="{Binding ScreenHeight}" Margin="4" Canvas.Left="300" Canvas.Top="300"></Image>
-                    <Rectangle Width="{Binding ScreenWidth}" Height="{Binding ScreenHeight}" RadiusX="10" RadiusY="10" StrokeThickness="6" Stroke="#FFBF7575" Canvas.Left="300" Canvas.Top="300" />
+                    <Image Source="{Binding PreviewImageSource}" 
+                           Width="{Binding ScreenWidth}" Height="{Binding ScreenHeight}"
+                           Margin="4" 
+                           Canvas.Left="{Binding CanvasPadding}" Canvas.Top="{Binding CanvasPadding}" Opacity="0.7" />
 
-                    <ItemsControl ItemsSource="{Binding PreviewSpots}">
+                    <ItemsControl ItemsSource="{Binding PreviewSpots}"
+                           Canvas.Left="{Binding CanvasPadding}" Canvas.Top="{Binding CanvasPadding}" >
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <Canvas Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}" />
@@ -70,7 +74,7 @@
                                     <Rectangle.Fill>
                                         <RadialGradientBrush>
                                             <GradientStop Color="{Binding OnDemandColor}"  Offset="0"/>
-                                            <GradientStop Color="Transparent" Offset="1"/>
+                                            <GradientStop Color="{Binding OnDemandColorTransparent}" Offset="1"/>
                                         </RadialGradientBrush>
                                     </Rectangle.Fill>
                                 </Rectangle>
@@ -82,5 +86,26 @@
         </materialDesign:Card>
 
 
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
+            <StackPanel Margin="38 8 8 8">
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Left" FontWeight="Bold">
+                    What you should test here...
+                </TextBlock>
+                <TextBlock Margin="8" TextWrapping="Wrap">
+                    You should use this page for ... TODO
+                </TextBlock>
+            </StackPanel>
+        </materialDesign:Card>
+
+        <materialDesign:PackIcon Kind="CommentAlert" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
+            <materialDesign:PackIcon.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="3.376"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </materialDesign:PackIcon.RenderTransform>
+        </materialDesign:PackIcon>
     </Grid>
 </UserControl>

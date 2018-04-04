@@ -163,6 +163,14 @@ namespace adrilight
                                 spot.SetColor(finalR, finalG, finalB);
 
                             });
+
+                        if (SettingsViewModel.IsPreviewTabOpen)
+                        {
+                            //copy all color data to the preview
+                            var needsNewArray = SettingsViewModel.PreviewSpots?.Length != SpotSet.Spots.Length;
+                            
+                            SettingsViewModel.PreviewSpots = SpotSet.Spots;
+                        }
                     }
                     image.UnlockBits(bitmapData);
                     image.Dispose();
