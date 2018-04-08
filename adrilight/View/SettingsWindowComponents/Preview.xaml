@@ -23,7 +23,7 @@
                     Performance Warning!
                 </TextBlock>
                 <TextBlock Margin="8" TextWrapping="Wrap">
-                    This preview uses more system resources than adrilight uses normally. If you leave the preview page or close the settings window, the preview is no longer created.
+                    This preview uses more system resources than adrilight normally does. If you leave the preview page or close the settings window, the preview is no longer created.
                 </TextBlock>
             </StackPanel>
         </materialDesign:Card>
@@ -91,8 +91,10 @@
                 <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Left" FontWeight="Bold">
                     What you should test here...
                 </TextBlock>
-                <TextBlock Margin="8" TextWrapping="Wrap">
-                    You should use this page for ... TODO
+                <TextBlock Margin="8" TextWrapping="Wrap" TextAlignment="Justify">
+                    You should use this page for testing! If you cannot see your screen content on this page, something might be wrong with screen content reading. Try rebooting or closing of other screen capture apps.
+                    <LineBreak />
+                    The actual rendered LED colors are overlayed so you can see, what color they should have. All color corrections are already applied.
                 </TextBlock>
             </StackPanel>
         </materialDesign:Card>
@@ -102,7 +104,7 @@
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
-                    <RotateTransform Angle="3.376"/>
+                    <RotateTransform Angle="-3.376"/>
                     <TranslateTransform/>
                 </TransformGroup>
             </materialDesign:PackIcon.RenderTransform>

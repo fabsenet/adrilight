@@ -10,7 +10,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -22,7 +21,7 @@
                 <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Left" FontWeight="Bold">
                     Why you need white balance and how to do it!
                 </TextBlock>
-                <TextBlock Margin="8" TextWrapping="Wrap">
+                <TextBlock Margin="8" TextWrapping="Wrap"  TextAlignment="Justify">
                     If you think of some neutral white like a piece of paper, what color does it actually have? Well that depends on the light. Your TV or monitor can display a neutral white or grey also with a warm or cold tint making it more blueish like daylight or making it more yellowish like artifical lighting. Also the LED strip you are using may have its own tint as well.
                     <LineBreak />
                     <LineBreak />
@@ -42,20 +41,8 @@
                 </TextBlock>
             </StackPanel>
         </materialDesign:Card>
-        
-        <materialDesign:PackIcon Kind="PollBox" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
-            <materialDesign:PackIcon.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="3.376"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </materialDesign:PackIcon.RenderTransform>
-        </materialDesign:PackIcon>
 
-
-
+        <materialDesign:PackIcon Kind="PollBox" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" />
 
         <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
             <Grid Margin="38 8 8 38">
