@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="adrilight.View.SettingsWindowComponents.Whitebalance"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="900" d:DesignWidth="900">
+    <Grid Width="900">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
+            <StackPanel Margin="38 8 8 8">
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Left" FontWeight="Bold">
+                    Why you need white balance and how to do it!
+                </TextBlock>
+                <TextBlock Margin="8" TextWrapping="Wrap">
+                    If you think of some neutral white like a piece of paper, what color does it actually have? Well that depends on the light. Your TV or monitor can display a neutral white or grey also with a warm or cold tint making it more blueish like daylight or making it more yellowish like artifical lighting. Also the LED strip you are using may have its own tint as well.
+                    <LineBreak />
+                    <LineBreak />
+                    
+                    What you need to do is: 
+                    <LineBreak />
+                    1. Make your room as dark as possible to reduce the interference from other light sources.
+                    <LineBreak />
+                    2. Setup your TV or monitor screen as you see fit.
+                    <LineBreak />
+                    3. Then display some grey content on the screen and adjust the sliders on this page until the color of the LEDs matches the color of your TV.
+                    <LineBreak />
+                    <LineBreak />
+                    Bonus tip: try to leave the sliders as far on the right as you can. 
+                    Turning them too low will reduce maximum LED brightness and the overall dynamic range of the LEDs.
+                    At least one of them should always be on 100.
+                </TextBlock>
+            </StackPanel>
+        </materialDesign:Card>
+        
+        <materialDesign:PackIcon Kind="PollBox" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
+            <materialDesign:PackIcon.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="3.376"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </materialDesign:PackIcon.RenderTransform>
+        </materialDesign:PackIcon>
+
+
+
+
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
+            <Grid Margin="38 8 8 38">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" VerticalAlignment="Bottom">Red</TextBlock>
+                <TextBlock Grid.Row="1" VerticalAlignment="Bottom">Green</TextBlock>
+                <TextBlock Grid.Row="2" VerticalAlignment="Bottom">Blue</TextBlock>
+
+                <Slider Grid.Row="0" Grid.Column="1" Width="200"
+                    Minimum="1" Maximum="100" Value="{Binding Settings.WhitebalanceRed}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                 />
+                <Slider Grid.Row="1" Grid.Column="1" Width="200"
+                    Minimum="1" Maximum="100" Value="{Binding Settings.WhitebalanceGreen}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                 />
+                <Slider Grid.Row="2" Grid.Column="1" Width="200"
+                    Minimum="1" Maximum="100" Value="{Binding Settings.WhitebalanceBlue}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                 />
+
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Settings.WhitebalanceRed}" VerticalAlignment="Bottom" />
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Settings.WhitebalanceGreen}" VerticalAlignment="Bottom" />
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Settings.WhitebalanceBlue}" VerticalAlignment="Bottom" />
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>

@@ -273,5 +273,41 @@ namespace adrilight.Properties {
                 this["LAST_UPDATE_CHECKDATE_UTC"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public byte WhitebalanceRed {
+            get {
+                return ((byte)(this["WhitebalanceRed"]));
+            }
+            set {
+                this["WhitebalanceRed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public byte WhitebalanceGreen {
+            get {
+                return ((byte)(this["WhitebalanceGreen"]));
+            }
+            set {
+                this["WhitebalanceGreen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public byte WhitebalanceBlue {
+            get {
+                return ((byte)(this["WhitebalanceBlue"]));
+            }
+            set {
+                this["WhitebalanceBlue"] = value;
+            }
+        }
     }
 }

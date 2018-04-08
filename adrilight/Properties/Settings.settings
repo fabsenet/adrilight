@@ -65,5 +65,14 @@
     <Setting Name="LAST_UPDATE_CHECKDATE_UTC" Type="System.Nullable&lt;System.DateTime&gt;" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="WhitebalanceRed" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="WhitebalanceGreen" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="WhitebalanceBlue" Type="System.Byte" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

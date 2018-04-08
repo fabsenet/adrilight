@@ -29,6 +29,10 @@ namespace adrilight
         private bool _startMinimized;
         private DateTime? _lastUpdateCheck;
 
+        private byte _whitebalanceRed;
+        private byte _whitebalanceGreen;
+        private byte _whitebalanceBlue;
+
         public UserSettings()
         {
             var settings = Properties.Settings.Default;
@@ -55,6 +59,9 @@ namespace adrilight
             _autostart = settings.AUTOSTART;
             _startMinimized = settings.START_MINIMIZED;
             _lastUpdateCheck = settings.LAST_UPDATE_CHECKDATE_UTC;
+            _whitebalanceRed = settings.WhitebalanceRed;
+            _whitebalanceGreen = settings.WhitebalanceGreen;
+            _whitebalanceBlue = settings.WhitebalanceBlue;
 
             _log.Info($"UserSettings created.");
         }
@@ -306,6 +313,43 @@ namespace adrilight
                 Properties.Settings.Default.LAST_UPDATE_CHECKDATE_UTC = value;
                 Properties.Settings.Default.Save();
                 RaisePropertyChanged(() => LastUpdateCheck);
+            }
+        }
+
+
+        public byte WhitebalanceRed
+        {
+            get => _whitebalanceRed;
+            set
+            {
+                _whitebalanceRed = value;
+                Properties.Settings.Default.WhitebalanceRed = value;
+                Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => WhitebalanceRed);
+            }
+        }
+
+        public byte WhitebalanceGreen
+        {
+            get => _whitebalanceGreen;
+            set
+            {
+                _whitebalanceGreen = value;
+                Properties.Settings.Default.WhitebalanceGreen = value;
+                Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => WhitebalanceGreen);
+            }
+        }
+
+        public byte WhitebalanceBlue
+        {
+            get => _whitebalanceBlue;
+            set
+            {
+                _whitebalanceBlue = value;
+                Properties.Settings.Default.WhitebalanceBlue = value;
+                Properties.Settings.Default.Save();
+                RaisePropertyChanged(() => WhitebalanceBlue);
             }
         }
     }

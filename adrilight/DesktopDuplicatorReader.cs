@@ -255,9 +255,9 @@ namespace adrilight
             //"white" on wall was 66,68,77 without white balance
             //white balance
             //todo: introduce settings for white balance adjustments
-            r = 66f / 66f * r;
-            g = 66f / 68f * g;
-            b = 66f / 77f * b;
+            r *= UserSettings.WhitebalanceRed / 100f;
+            g *= UserSettings.WhitebalanceGreen / 100f;
+            b *= UserSettings.WhitebalanceBlue /100f;
 
             if (!useLinearLighting)
             {

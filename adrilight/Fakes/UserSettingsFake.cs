@@ -30,6 +30,10 @@ namespace adrilight.Fakes
         public bool TransferActive { get; set; } = false;
         public bool UseLinearLighting { get; set; } = false;
 
+        public byte WhitebalanceRed { get; set; } = 100;
+        public byte WhitebalanceGreen { get; set; } = 100;
+        public byte WhitebalanceBlue { get; set; } = 100;
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
