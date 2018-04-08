@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using Rectangle = SharpDX.Mathematics.Interop.RawRectangle;
 
-namespace adrilight
+namespace adrilight.Extensions
 {
     static class RawRectangleExtensions
     {

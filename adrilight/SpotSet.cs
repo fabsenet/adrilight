@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using adrilight.Extensions;
+using NLog;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
@@ -50,11 +51,10 @@ namespace adrilight
             {
                 Spots = new Spot[CountLeds(UserSettings.SpotsX, UserSettings.SpotsY)];
 
-                var rectangle = ExpectedScreenBound = Screen.PrimaryScreen.Bounds;
+                var screen = ExpectedScreenBound = Screen.PrimaryScreen.Bounds;
 
-                var canvasSizeX = (rectangle.Width - 2* UserSettings.BorderDistanceX);
-                var screenHeight = rectangle.Height;
-                var canvasSizeY = (screenHeight - 2* UserSettings.BorderDistanceY);
+                var canvasSizeX = (screen.Width - 2* UserSettings.BorderDistanceX);
+                var canvasSizeY = (screen.Height - 2* UserSettings.BorderDistanceY);
 
                 var xResolution = UserSettings.SpotsX > 1 ? (canvasSizeX - UserSettings.SpotWidth)/(UserSettings.SpotsX - 1) : 0;
                 var xRemainingOffset = UserSettings.SpotsX > 1 ? ((canvasSizeX - UserSettings.SpotWidth)%(UserSettings.SpotsX - 1))/2 : 0;
@@ -75,11 +75,11 @@ namespace adrilight
 
                         if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
                         {
-                            var x = Math.Max(0,
-                                Math.Min(rectangle.Width,
-                                    xRemainingOffset + UserSettings.BorderDistanceX + UserSettings.OffsetX + i*(xResolution) + UserSettings.SpotWidth/2));
-                            var y = Math.Max(0,
-                                Math.Min(screenHeight, yRemainingOffset + UserSettings.BorderDistanceY + UserSettings.OffsetY + j*(yResolution) + UserSettings.SpotHeight/2));
+                            var x = (xRemainingOffset + UserSettings.BorderDistanceX + UserSettings.OffsetX + i * (xResolution) + UserSettings.SpotWidth / 2)
+                                    .Clamp(0, screen.Width);
+
+                            var y = (yRemainingOffset + UserSettings.BorderDistanceY + UserSettings.OffsetY + j * (yResolution) + UserSettings.SpotHeight / 2)
+                                    .Clamp(0, screen.Height);
 
                             var index = counter++; // in first row index is always counter
 
@@ -102,8 +102,9 @@ namespace adrilight
                                     index += relationIndex - (i*2);
                                 }
                             }
-                            var spotWidth = Math.Min(UserSettings.SpotWidth, Math.Min(x, rectangle.Width - x));
-                            var spotHeight = Math.Min(UserSettings.SpotHeight, Math.Min(y, screenHeight - y));
+                            var spotWidth = Math.Min(UserSettings.SpotWidth, Math.Min(x, screen.Width - x));
+                            var spotHeight = Math.Min(UserSettings.SpotHeight, Math.Min(y, screen.Height - y));
+
                             Spots[index] = new Spot(x, y, spotWidth, spotHeight);
                         }
                     }
@@ -123,15 +124,8 @@ namespace adrilight
 
             for (var i = 0; i < halfLength; i++)
             {
-                Swap(startIndex + i, endIndex - i);
+                Spots.Swap(startIndex + i, endIndex - i);
             }
-        }
-
-        private void Swap(int index1, int index2)
-        {
-            var temp = Spots[index1];
-            Spots[index1] = Spots[index2];
-            Spots[index2] = temp;
         }
 
         private void MirrorX()
@@ -141,7 +135,7 @@ namespace adrilight
             {
                 var index1 = i;
                 var index2 = (Spots.Length - 1) - (UserSettings.SpotsY - 2) - i;
-                Swap(index1, index2);
+                Spots.Swap(index1, index2);
             }
 
             // mirror first column
@@ -159,7 +153,7 @@ namespace adrilight
             {
                 var index1 = UserSettings.SpotsX + i;
                 var index2 = (Spots.Length - 1) - i;
-                Swap(index1, index2);
+                Spots.Swap(index1, index2);
             }
 
             // mirror first row

@@ -155,6 +155,8 @@
     <Compile Include="DesktopDuplication\DesktopFrame.cs" />
     <Compile Include="DesktopDuplication\MovedRegion.cs" />
     <Compile Include="DesktopDuplicatorReader.cs" />
+    <Compile Include="Extensions\ArrayExtensions.cs" />
+    <Compile Include="Extensions\MathExtensions.cs" />
     <Compile Include="Fakes\DesktopDuplicatorReaderFake.cs" />
     <Compile Include="Fakes\SerialStreamFake.cs" />
     <Compile Include="Fakes\SpotSetFake.cs" />
@@ -176,7 +178,7 @@
     </None>
     <Compile Include="DxPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RawRectangleExtensions.cs" />
+    <Compile Include="Extensions\RawRectangleExtensions.cs" />
     <Compile Include="Resources\IContext.cs" />
     <Compile Include="Resources\WpfContext.cs" />
     <Compile Include="SerialStream.cs" />
