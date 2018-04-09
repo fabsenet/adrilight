@@ -148,9 +148,6 @@
                 <materialDesign:PackIcon Kind="Cached" Margin="0 8 0 0" Width="132" Height="132"
                                          VerticalAlignment="Center"
                                          HorizontalAlignment="Center"/>
-                <materialDesign:PackIcon Kind="AlertOctagon" Margin="164,80,68,0" Width="60" Height="60"
-                                         VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                         HorizontalAlignment="Center" ToolTip="This will be simplified in a later release!"/>
 
                 <StackPanel Grid.Row="1" Margin="8 24 8 8">
                     <DockPanel>
