@@ -34,11 +34,11 @@ namespace adrilight
             if (spotsX <= 1 || spotsY <= 1)
             {
                 //special case because it is not really a rectangle of lights but a single light or a line of lights
-                return spotsX*spotsY;
+                return spotsX * spotsY;
             }
 
             //normal case
-            return 2*spotsX + 2*spotsY - 4;
+            return 2 * spotsX + 2 * spotsY - 4;
         }
 
         public Rectangle ExpectedScreenBound { get; private set; }
@@ -53,13 +53,13 @@ namespace adrilight
 
                 var screen = ExpectedScreenBound = Screen.PrimaryScreen.Bounds;
 
-                var canvasSizeX = (screen.Width - 2* UserSettings.BorderDistanceX);
-                var canvasSizeY = (screen.Height - 2* UserSettings.BorderDistanceY);
+                var canvasSizeX = screen.Width - 2 * UserSettings.BorderDistanceX;
+                var canvasSizeY = screen.Height - 2 * UserSettings.BorderDistanceY;
 
-                var xResolution = UserSettings.SpotsX > 1 ? (canvasSizeX - UserSettings.SpotWidth)/(UserSettings.SpotsX - 1) : 0;
-                var xRemainingOffset = UserSettings.SpotsX > 1 ? ((canvasSizeX - UserSettings.SpotWidth)%(UserSettings.SpotsX - 1))/2 : 0;
-                var yResolution = UserSettings.SpotsY > 1 ? (canvasSizeY - UserSettings.SpotHeight)/(UserSettings.SpotsY - 1) : 0;
-                var yRemainingOffset = UserSettings.SpotsY > 1 ? ((canvasSizeY - UserSettings.SpotHeight)%(UserSettings.SpotsY - 1))/2 : 0;
+                var xResolution = UserSettings.SpotsX > 1 ? (canvasSizeX - UserSettings.SpotWidth) / (UserSettings.SpotsX - 1) : 0;
+                var xRemainingOffset = UserSettings.SpotsX > 1 ? ((canvasSizeX - UserSettings.SpotWidth) % (UserSettings.SpotsX - 1)) / 2 : 0;
+                var yResolution = UserSettings.SpotsY > 1 ? (canvasSizeY - UserSettings.SpotHeight) / (UserSettings.SpotsY - 1) : 0;
+                var yRemainingOffset = UserSettings.SpotsY > 1 ? ((canvasSizeY - UserSettings.SpotHeight) % (UserSettings.SpotsY - 1)) / 2 : 0;
 
                 var counter = 0;
                 var relationIndex = UserSettings.SpotsX - UserSettings.SpotsY + 1;
@@ -75,10 +75,10 @@ namespace adrilight
 
                         if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
                         {
-                            var x = (xRemainingOffset + UserSettings.BorderDistanceX + UserSettings.OffsetX + i * (xResolution) + UserSettings.SpotWidth / 2)
+                            var x = (xRemainingOffset + UserSettings.BorderDistanceX + UserSettings.OffsetX + i * xResolution)
                                     .Clamp(0, screen.Width);
 
-                            var y = (yRemainingOffset + UserSettings.BorderDistanceY + UserSettings.OffsetY + j * (yResolution) + UserSettings.SpotHeight / 2)
+                            var y = (yRemainingOffset + UserSettings.BorderDistanceY + UserSettings.OffsetY + j * yResolution)
                                     .Clamp(0, screen.Height);
 
                             var index = counter++; // in first row index is always counter
@@ -102,10 +102,8 @@ namespace adrilight
                                     index += relationIndex - (i*2);
                                 }
                             }
-                            var spotWidth = Math.Min(UserSettings.SpotWidth, Math.Min(x, screen.Width - x));
-                            var spotHeight = Math.Min(UserSettings.SpotHeight, Math.Min(y, screen.Height - y));
 
-                            Spots[index] = new Spot(x, y, spotWidth, spotHeight);
+                            Spots[index] = new Spot(x, y, UserSettings.SpotWidth, UserSettings.SpotHeight);
                         }
                     }
                 }

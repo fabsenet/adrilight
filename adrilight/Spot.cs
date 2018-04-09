@@ -12,10 +12,9 @@ namespace adrilight {
     sealed class Spot : ViewModelBase, IDisposable, ISpot
     {
 
-        public Spot(int x, int y, int aWidth, int aHeight)
+        public Spot(int top, int left, int width, int height)
         {
-            var topLeft = new DxPoint(x - aWidth/2, y - aHeight/2);
-            Rectangle = new Rectangle(topLeft.X, topLeft.Y, aWidth, aHeight);
+            Rectangle = new Rectangle(top, left, width, height);
         }
 
         public Rectangle Rectangle { get; private set; }
