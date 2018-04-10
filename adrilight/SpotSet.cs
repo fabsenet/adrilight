@@ -99,7 +99,7 @@ namespace adrilight
 
                                 if (!isFirstRow && isLastRow)
                                 {
-                                    index += relationIndex - (i*2);
+                                    index += relationIndex - i * 2;
                                 }
                             }
 
