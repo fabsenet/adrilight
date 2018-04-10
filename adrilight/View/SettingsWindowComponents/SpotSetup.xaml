@@ -5,8 +5,29 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="877.533" d:DesignWidth="1304.8">
-    <WrapPanel Margin="0 0 8 8">
+             d:DesignHeight="1711.2" d:DesignWidth="1004.8">
+    <StackPanel>
+        <materialDesign:Card Margin="4 4 4 0">
+            <StackPanel Margin="8 8 8 8">
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Justify" FontWeight="Bold">
+                    What is a spot?
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                    A spot is a screen region. Adrilight fetches the screen content and computes the average color in this region. It will then transmit this color to the corresponding LED. There is a spot for each LED.
+                    <LineBreak/>
+                    <LineBreak/>
+                    You can control the size of each spot. A small spot will more accurately reproduce the scene details but tends to flicker. A larger spot will reproduce the feeling of a scene like dark, blueish, warm, ...
+                    <LineBreak/>
+                    <LineBreak/>
+                    You can also control the distance of the spots from the screen edges. this can help if you want to "ignore" black bars in movies or your windows taskbar for example.
+                    <LineBreak/>
+                    <LineBreak/>
+                    At last, you can move all spots left/right or up/down using the offset sliders. 
+                    <Span Foreground="{DynamicResource PrimaryHueMidBrush}">There is no real usecase known for this and it will be removed in a future release. If you are using it, please open up an issue on the project page and let us know your usecase!</Span>
+                </TextBlock>
+            </StackPanel>
+        </materialDesign:Card>
+        <WrapPanel Margin="0 0 8 8">
 
         <materialDesign:Card Margin="4 4 4 4" Width="300">
             <Grid>
@@ -149,11 +170,11 @@
                 <materialDesign:PackIcon Kind="Alert" Margin="0 8 0 0" Width="132" Height="132"
                                          VerticalAlignment="Center"
                                          HorizontalAlignment="Center" />
-                <materialDesign:PackIcon Kind="AlertOctagon" Margin="164,80,68,0" Width="60" Height="60"
+                    <materialDesign:PackIcon Kind="AlertOctagon" Margin="164,80,68,0" Width="60" Height="60"
                                          VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                         HorizontalAlignment="Center" ToolTip="This will be simplified in a later release!"/>
-
-                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                                         HorizontalAlignment="Center" ToolTip="This will be removed in a future release!"/>
+                
+                    <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Offset X</TextBlock>
                     <DockPanel>
                         <TextBox DockPanel.Dock="Right"
@@ -167,12 +188,9 @@
                                 Value="{Binding Settings.OffsetX}" />
                     </DockPanel>
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
-                        This value describes a shift of all spots on the vertical axes (up/down). 
-                        The suggestion is to have this value always on 0. 
-                    </TextBlock>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0"
-                               Foreground="{DynamicResource PrimaryHueMidBrush}">
-                        This feature is subject for removal! If you are using this, you are strongly encouraged to open up an issue on the github project page about it.
+                        This value describes a shift of all spots on the vertical axes (up/down). The suggestion is to have this value always on 0. 
+                        <LineBreak/>
+                        <Span Foreground="{DynamicResource PrimaryHueMidBrush}">It is also subject for removal. If you are using this, you are strongly encouraged to open up an issue on the github project page about it.</Span>
                     </TextBlock>
                 </StackPanel>
             </Grid>
@@ -189,9 +207,9 @@
                 <materialDesign:PackIcon Kind="Alert" Margin="0 8 0 0" Width="132" Height="132"
                                          VerticalAlignment="Center"
                                          HorizontalAlignment="Center" />
-                <materialDesign:PackIcon Kind="AlertOctagon" Margin="164,80,68,0" Width="60" Height="60"
+                    <materialDesign:PackIcon Kind="AlertOctagon" Margin="164,80,68,0" Width="60" Height="60"
                                          VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                         HorizontalAlignment="Center" ToolTip="This will be simplified in a later release!"/>
+                                         HorizontalAlignment="Center" ToolTip="This will be removed in a future release!"/>
 
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Offset Y</TextBlock>
@@ -207,16 +225,14 @@
                                 Value="{Binding Settings.OffsetY}" />
                     </DockPanel>
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
-                        This value describes a shift of all spots on the horizontal axes (left/right). 
-                        The suggestion is to have this value always on 0. 
-                    </TextBlock>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0"
-                               Foreground="{DynamicResource PrimaryHueMidBrush}">
-                        This feature is subject for removal! If you are using this, you are strongly encouraged to open up an issue on the github project page about it.
+                        This value describes a shift of all spots on the horizontal axes (left/right). The suggestion is to have this value always on 0. 
+                        <LineBreak/>
+                        <Span Foreground="{DynamicResource PrimaryHueMidBrush}">It is also subject for removal. If you are using this, you are strongly encouraged to open up an issue on the github project page about it.</Span>
                     </TextBlock>
                 </StackPanel>
             </Grid>
         </materialDesign:Card>
 
     </WrapPanel>
+    </StackPanel>
 </UserControl>
