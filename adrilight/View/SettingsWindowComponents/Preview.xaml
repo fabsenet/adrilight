@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+              xmlns:fakes="clr-namespace:adrilight.Fakes"
+              xmlns:vm="clr-namespace:adrilight.ViewModel"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -12,6 +14,7 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{StaticResource MaterialDesignFont}"
              mc:Ignorable="d" 
+              d:DataContext="{Binding Source={d:DesignInstance {x:Type vm:ViewModelLocator}, IsDesignTimeCreatable=True}, Path=SettingsViewModel}"
              d:DesignHeight="900" d:DesignWidth="900">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />

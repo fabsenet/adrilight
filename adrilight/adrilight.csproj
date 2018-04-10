@@ -157,6 +157,7 @@
     <Compile Include="DesktopDuplicatorReader.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\MathExtensions.cs" />
+    <Compile Include="Fakes\ContextFake.cs" />
     <Compile Include="Fakes\DesktopDuplicatorReaderFake.cs" />
     <Compile Include="Fakes\SerialStreamFake.cs" />
     <Compile Include="Fakes\SpotSetFake.cs" />

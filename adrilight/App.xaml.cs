@@ -64,6 +64,7 @@ namespace adrilight
             {
                 //setup fakes
                 kernel.Bind<IUserSettings>().To<UserSettingsFake>().InSingletonScope();
+                kernel.Bind<IContext>().To<ContextFake>().InSingletonScope();
                 kernel.Bind<ISpotSet>().To<SpotSetFake>().InSingletonScope();
                 kernel.Bind<ISerialStream>().To<SerialStreamFake>().InSingletonScope();
                 kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReaderFake>().InSingletonScope();

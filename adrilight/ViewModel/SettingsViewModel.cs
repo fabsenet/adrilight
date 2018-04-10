@@ -231,24 +231,9 @@ namespace adrilight.ViewModel
         {
             get => _previewSpots;
             set {
-                //Set(() => PreviewSpots, ref _previewSpots, value);
                 _previewSpots = value;
                 RaisePropertyChanged();
             }
         }
-        //{
-        //    get
-        //    {
-        //        var list = new List<Spot>();
-        //        list.Add(new Spot(CanvasPadding + 0, CanvasPadding + 0, 200, 200));
-        //        list.Add(new Spot(CanvasPadding + 500, CanvasPadding + 100, 200, 200));
-
-        //        list[0].SetColor(0, 155, 255);
-        //        list[1].SetColor(255, 155, 255);
-
-        //        return list;
-        //    }
-        //}
-
     }
 }
