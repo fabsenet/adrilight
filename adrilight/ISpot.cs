@@ -11,6 +11,7 @@ namespace adrilight
 
         Color OnDemandColor { get; }
         Rectangle Rectangle { get; }
+        bool IsFirst { get; set; }
 
         void IndicateMissingValue();
         void SetColor(byte red, byte green, byte blue);

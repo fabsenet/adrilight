@@ -19,6 +19,12 @@ namespace adrilight {
 
         public Rectangle Rectangle { get; private set; }
 
+        private bool _isFirst;
+        public bool IsFirst {
+            get => _isFirst;
+            set { Set(() => IsFirst, ref _isFirst, value); }
+        }
+
         private Color _color = Colors.Black;
 
         public Color OnDemandColor

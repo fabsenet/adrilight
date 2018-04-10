@@ -112,6 +112,8 @@ namespace adrilight
                 if (UserSettings.OffsetLed != 0) Offset(UserSettings.OffsetLed);
                 if (UserSettings.SpotsY > 1 && UserSettings.MirrorX) MirrorX();
                 if (UserSettings.SpotsX > 1 && UserSettings.MirrorY) MirrorY();
+                
+                Spots[0].IsFirst = true;
             }
         }
 

@@ -6,6 +6,9 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="900">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+    </UserControl.Resources>
     <Grid Width="900">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -70,6 +73,7 @@
                         </ItemsControl.ItemContainerStyle>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
+                                <Grid>
                                 <Rectangle Width="{Binding Rectangle.Width}" Height="{Binding Rectangle.Height}">
                                     <Rectangle.Fill>
                                         <RadialGradientBrush>
@@ -78,6 +82,11 @@
                                         </RadialGradientBrush>
                                     </Rectangle.Fill>
                                 </Rectangle>
+                                    <Rectangle Visibility="{Binding IsFirst, Converter={StaticResource booleanToVisibilityConverter}}" Fill="Red"
+                                               Width="{Binding Rectangle.Width}" 
+                                               Height="{Binding Rectangle.Height}" />
+
+                                </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
