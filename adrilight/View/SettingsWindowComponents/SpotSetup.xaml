@@ -177,10 +177,19 @@
                 <materialDesign:PackIcon Kind="Alert" Margin="0 8 0 0" Width="132" Height="132"
                                          VerticalAlignment="Center"
                                          HorizontalAlignment="Center" />
-                    <materialDesign:PackIcon Kind="AlertOctagon" Margin="164,80,68,0" Width="60" Height="60"
+                    <materialDesign:PackIcon Kind="AlertOctagon" Margin="181,32,51,48" Width="60" Height="60"
                                          VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                         HorizontalAlignment="Center" ToolTip="This will be removed in a future release!"/>
-                
+                                         HorizontalAlignment="Center" ToolTip="This will be removed in a future release!" RenderTransformOrigin="0.5,0.5">
+                        <materialDesign:PackIcon.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-2.782"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </materialDesign:PackIcon.RenderTransform>
+                    </materialDesign:PackIcon>
+
                     <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Offset X</TextBlock>
                     <DockPanel>
@@ -214,11 +223,20 @@
                 <materialDesign:PackIcon Kind="Alert" Margin="0 8 0 0" Width="132" Height="132"
                                          VerticalAlignment="Center"
                                          HorizontalAlignment="Center" />
-                    <materialDesign:PackIcon Kind="AlertOctagon" Margin="164,80,68,0" Width="60" Height="60"
+                    <materialDesign:PackIcon Kind="AlertOctagon" Margin="175,24,57,56" Width="60" Height="60"
                                          VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                         HorizontalAlignment="Center" ToolTip="This will be removed in a future release!"/>
+                                         HorizontalAlignment="Center" ToolTip="This will be removed in a future release!" RenderTransformOrigin="0.5,0.5">
+                        <materialDesign:PackIcon.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="6.634"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </materialDesign:PackIcon.RenderTransform>
+                    </materialDesign:PackIcon>
 
-                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Offset Y</TextBlock>
                     <DockPanel>
                         <TextBox DockPanel.Dock="Right"
