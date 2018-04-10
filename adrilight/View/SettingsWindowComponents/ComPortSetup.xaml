@@ -3,6 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{StaticResource MaterialDesignFont}"
              xmlns:local="clr-namespace:adrilight.View.SettingsWindowComponents"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
@@ -24,7 +31,7 @@
                     <TextBlock FontWeight="Bold">COM Port</TextBlock>
                     <ComboBox SelectedValue="{Binding Settings.ComPort}" ItemsSource="{Binding AvailableComPorts}" />
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
-                        This the COM Port tu use for the communication with the arduino.
+                        This is the COM-Port used for the communication with the arduino.
                     </TextBlock>
                 </StackPanel>
             </Grid>
