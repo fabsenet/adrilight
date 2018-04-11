@@ -41,7 +41,8 @@ namespace adrilight
             return 2 * spotsX + 2 * spotsY - 4;
         }
 
-        public Rectangle ExpectedScreenBound { get; private set; }
+        public Rectangle ExpectedScreenBound { get; private set; } = Screen.PrimaryScreen.Bounds;
+
         private IUserSettings UserSettings { get; }
 
 
@@ -49,129 +50,136 @@ namespace adrilight
         {
             lock (Lock)
             {
-                Spots = new Spot[CountLeds(UserSettings.SpotsX, UserSettings.SpotsY)];
-
                 var screen = ExpectedScreenBound = Screen.PrimaryScreen.Bounds;
-
-                var canvasSizeX = screen.Width - 2 * UserSettings.BorderDistanceX;
-                var canvasSizeY = screen.Height - 2 * UserSettings.BorderDistanceY;
-
-                var xResolution = UserSettings.SpotsX > 1 ? (canvasSizeX - UserSettings.SpotWidth) / (UserSettings.SpotsX - 1) : 0;
-                var xRemainingOffset = UserSettings.SpotsX > 1 ? ((canvasSizeX - UserSettings.SpotWidth) % (UserSettings.SpotsX - 1)) / 2 : 0;
-                var yResolution = UserSettings.SpotsY > 1 ? (canvasSizeY - UserSettings.SpotHeight) / (UserSettings.SpotsY - 1) : 0;
-                var yRemainingOffset = UserSettings.SpotsY > 1 ? ((canvasSizeY - UserSettings.SpotHeight) % (UserSettings.SpotsY - 1)) / 2 : 0;
-
-                var counter = 0;
-                var relationIndex = UserSettings.SpotsX - UserSettings.SpotsY + 1;
-
-                for (var j = 0; j < UserSettings.SpotsY; j++)
-                {
-                    for (var i = 0; i < UserSettings.SpotsX; i++)
-                    {
-                        var isFirstColumn = i == 0;
-                        var isLastColumn = i == UserSettings.SpotsX - 1;
-                        var isFirstRow = j == 0;
-                        var isLastRow = j == UserSettings.SpotsY - 1;
-
-                        if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
-                        {
-                            var x = (xRemainingOffset + UserSettings.BorderDistanceX + UserSettings.OffsetX + i * xResolution)
-                                    .Clamp(0, screen.Width);
-
-                            var y = (yRemainingOffset + UserSettings.BorderDistanceY + UserSettings.OffsetY + j * yResolution)
-                                    .Clamp(0, screen.Height);
-
-                            var index = counter++; // in first row index is always counter
-
-                            if (UserSettings.SpotsX > 1 && UserSettings.SpotsY > 1)
-                            {
-                                if (!isFirstRow && !isLastRow)
-                                {
-                                    if (isFirstColumn)
-                                    {
-                                        index += relationIndex + ((UserSettings.SpotsY - 1 - j)*3);
-                                    }
-                                    else if (isLastColumn)
-                                    {
-                                        index -= j;
-                                    }
-                                }
-
-                                if (!isFirstRow && isLastRow)
-                                {
-                                    index += relationIndex - i * 2;
-                                }
-                            }
-
-                            Spots[index] = new Spot(x, y, UserSettings.SpotWidth, UserSettings.SpotHeight);
-                        }
-                    }
-                }
-
-
-                if (UserSettings.OffsetLed != 0) Offset(UserSettings.OffsetLed);
-                if (UserSettings.SpotsY > 1 && UserSettings.MirrorX) MirrorX();
-                if (UserSettings.SpotsX > 1 && UserSettings.MirrorY) MirrorY();
-                
-                Spots[0].IsFirst = true;
+                var userSettings = UserSettings;
+                Spots = BuildSpots(screen, userSettings);
             }
         }
 
-        private void Mirror(int startIndex, int length)
+        internal ISpot[] BuildSpots(Rectangle screen, IUserSettings userSettings)
+        {
+            ISpot[] spots = new Spot[CountLeds(userSettings.SpotsX, userSettings.SpotsY)];
+
+
+            var canvasSizeX = screen.Width - 2 * userSettings.BorderDistanceX;
+            var canvasSizeY = screen.Height - 2 * userSettings.BorderDistanceY;
+
+            var xResolution = userSettings.SpotsX > 1 ? (canvasSizeX - userSettings.SpotWidth) / (userSettings.SpotsX - 1) : 0;
+            var xRemainingOffset = userSettings.SpotsX > 1 ? ((canvasSizeX - userSettings.SpotWidth) % (userSettings.SpotsX - 1)) / 2 : 0;
+            var yResolution = userSettings.SpotsY > 1 ? (canvasSizeY - userSettings.SpotHeight) / (userSettings.SpotsY - 1) : 0;
+            var yRemainingOffset = userSettings.SpotsY > 1 ? ((canvasSizeY - userSettings.SpotHeight) % (userSettings.SpotsY - 1)) / 2 : 0;
+
+            var counter = 0;
+            var relationIndex = userSettings.SpotsX - userSettings.SpotsY + 1;
+
+            for (var j = 0; j < userSettings.SpotsY; j++)
+            {
+                for (var i = 0; i < userSettings.SpotsX; i++)
+                {
+                    var isFirstColumn = i == 0;
+                    var isLastColumn = i == userSettings.SpotsX - 1;
+                    var isFirstRow = j == 0;
+                    var isLastRow = j == userSettings.SpotsY - 1;
+
+                    if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
+                    {
+                        var x = (xRemainingOffset + userSettings.BorderDistanceX + userSettings.OffsetX + i * xResolution)
+                                .Clamp(0, screen.Width);
+
+                        var y = (yRemainingOffset + userSettings.BorderDistanceY + userSettings.OffsetY + j * yResolution)
+                                .Clamp(0, screen.Height);
+
+                        var index = counter++; // in first row index is always counter
+
+                        if (userSettings.SpotsX > 1 && userSettings.SpotsY > 1)
+                        {
+                            if (!isFirstRow && !isLastRow)
+                            {
+                                if (isFirstColumn)
+                                {
+                                    index += relationIndex + ((userSettings.SpotsY - 1 - j) * 3);
+                                }
+                                else if (isLastColumn)
+                                {
+                                    index -= j;
+                                }
+                            }
+
+                            if (!isFirstRow && isLastRow)
+                            {
+                                index += relationIndex - i * 2;
+                            }
+                        }
+
+                        spots[index] = new Spot(x, y, userSettings.SpotWidth, userSettings.SpotHeight);
+                    }
+                }
+            }
+
+
+            if (userSettings.OffsetLed != 0) Offset(ref spots, userSettings.OffsetLed);
+            if (userSettings.SpotsY > 1 && userSettings.MirrorX) MirrorX(spots, userSettings.SpotsX, userSettings.SpotsY);
+            if (userSettings.SpotsX > 1 && userSettings.MirrorY) MirrorY(spots, userSettings.SpotsX, userSettings.SpotsY);
+
+            spots[0].IsFirst = true;
+            return spots;
+        }
+
+        private static void Mirror(ISpot[] spots, int startIndex, int length)
         {
             var halfLength = (length/2);
             var endIndex = startIndex + length - 1;
 
             for (var i = 0; i < halfLength; i++)
             {
-                Spots.Swap(startIndex + i, endIndex - i);
+                spots.Swap(startIndex + i, endIndex - i);
             }
         }
 
-        private void MirrorX()
+        private static void MirrorX(ISpot[] spots, int spotsX, int spotsY)
         {
             // copy swap last row to first row inverse
-            for (var i = 0; i < UserSettings.SpotsX; i++)
+            for (var i = 0; i < spotsX; i++)
             {
                 var index1 = i;
-                var index2 = (Spots.Length - 1) - (UserSettings.SpotsY - 2) - i;
-                Spots.Swap(index1, index2);
+                var index2 = (spots.Length - 1) - (spotsY - 2) - i;
+                spots.Swap(index1, index2);
             }
 
             // mirror first column
-            Mirror(UserSettings.SpotsX, UserSettings.SpotsY - 2);
+            Mirror(spots, spotsX, spotsY - 2);
 
             // mirror last column
-            if (UserSettings.SpotsX > 1)
-                Mirror(2* UserSettings.SpotsX + UserSettings.SpotsY - 2, UserSettings.SpotsY - 2);
+            if (spotsX > 1)
+                Mirror(spots, 2 * spotsX + spotsY - 2, spotsY - 2);
         }
 
-        private void MirrorY()
+        private static void MirrorY(ISpot[] spots, int spotsX, int spotsY)
         {
             // copy swap last row to first row inverse
-            for (var i = 0; i < UserSettings.SpotsY - 2; i++)
+            for (var i = 0; i < spotsY - 2; i++)
             {
-                var index1 = UserSettings.SpotsX + i;
-                var index2 = (Spots.Length - 1) - i;
-                Spots.Swap(index1, index2);
+                var index1 = spotsX + i;
+                var index2 = (spots.Length - 1) - i;
+                spots.Swap(index1, index2);
             }
 
             // mirror first row
-            Mirror(0, UserSettings.SpotsX);
+            Mirror(spots, 0, spotsX);
 
             // mirror last row
-            if (UserSettings.SpotsY > 1)
-                Mirror(UserSettings.SpotsX + UserSettings.SpotsY - 2, UserSettings.SpotsX);
+            if (spotsY > 1)
+                Mirror(spots, spotsX + spotsY - 2, spotsX);
         }
 
-        private void Offset(int offset)
+        private static void Offset(ref ISpot[] spots, int offset)
         {
-            ISpot[] temp = new Spot[Spots.Length];
-            for (var i = 0; i < Spots.Length; i++)
+            ISpot[] temp = new Spot[spots.Length];
+            for (var i = 0; i < spots.Length; i++)
             {
-                temp[(i + temp.Length + offset)%temp.Length] = Spots[i];
+                temp[(i + temp.Length + offset)%temp.Length] = spots[i];
             }
-            Spots = temp;
+            spots = temp;
         }
 
         public void IndicateMissingValues()
