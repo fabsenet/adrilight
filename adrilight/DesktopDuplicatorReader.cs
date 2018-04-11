@@ -143,21 +143,19 @@ namespace adrilight
                                 int stepx = Math.Max(1, spot.Rectangle.Width / numberOfSteps);
                                 int stepy = Math.Max(1, spot.Rectangle.Height / numberOfSteps);
 
-                                int sumR;
-                                int sumG;
-                                int sumB;
-                                int count;
                                 if (imageRectangle.Width != SpotSet.ExpectedScreenBound.Width || imageRectangle.Height != SpotSet.ExpectedScreenBound.Height)
                                 {
                                     //the screen was resized or this is some kind of powersaving state
                                     SpotSet.IndicateMissingValues();
                                     return;
                                 }
-                                GetAverageColorOfRectangularRegion(spot.Rectangle, stepy, stepx, bitmapData, out sumR, out sumG, out sumB, out count);
+                                GetAverageColorOfRectangularRegion(spot.Rectangle, stepy, stepx, bitmapData, 
+                                    out int sumR, out int sumG, out int sumB, out int count);
 
                                 var countInverse = 1f / count;
-                                byte finalR, finalG, finalB;
-                                ApplyColorCorrections(sumR * countInverse, sumG * countInverse, sumB * countInverse, out finalR, out finalG, out finalB, useLinearLighting
+
+                                ApplyColorCorrections(sumR * countInverse, sumG * countInverse, sumB * countInverse
+                                    , out byte finalR, out byte finalG, out byte finalB, useLinearLighting
                                     , UserSettings.SaturationTreshold, spot.Red, spot.Green, spot.Blue);
 
                                 spot.SetColor(finalR, finalG, finalB);
