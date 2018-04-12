@@ -72,7 +72,10 @@ namespace adrilight
             else
             {
                 //setup real implementations
-                kernel.Bind<IUserSettings>().To<UserSettings>().InSingletonScope();
+                var settingsManager = new UserSettingsManager();
+                var settings = settingsManager.LoadIfExists() ?? settingsManager.MigrateOrDefault();
+                kernel.Bind<IUserSettings>().ToConstant(settings);
+
                 kernel.Bind<IContext>().To<WpfContext>().InSingletonScope();
                 kernel.Bind<ISpotSet>().To<SpotSet>().InSingletonScope();
                 kernel.Bind<ISerialStream>().To<SerialStream>().InSingletonScope();
