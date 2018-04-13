@@ -69,6 +69,17 @@ namespace adrilight
                 ReadAndApply(xdoc, settings, "MIRROR_X", s => s.MirrorX);
                 ReadAndApply(xdoc, settings, "MIRROR_Y", s => s.MirrorY);
                 ReadAndApply(xdoc, settings, "OFFSET_LED", s => s.OffsetLed);
+
+                ReadAndApply(xdoc, settings, "AUTOSTART", s => s.Autostart);
+                //migrate actual autostart registry stuff as well
+                if (settings.Autostart)
+                {
+                    StartUpManager.AddApplicationToCurrentUserStartup();
+                }
+                else
+                {
+                    StartUpManager.RemoveApplicationFromCurrentUserStartup();
+                }
             }
             
             settings.PropertyChanged += (_, __) => Save(settings);

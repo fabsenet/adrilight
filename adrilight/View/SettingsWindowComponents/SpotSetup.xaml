@@ -121,7 +121,7 @@
                                 VerticalAlignment="Bottom" 
                                 Text="{Binding Settings.BorderDistanceX, UpdateSourceTrigger=PropertyChanged}" />
                         <Slider Minimum="0" 
-                                Maximum="200" 
+                                Maximum="400" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                 Value="{Binding Settings.BorderDistanceX}" />
                     </DockPanel>
@@ -153,7 +153,7 @@
                                 VerticalAlignment="Bottom" 
                                 Text="{Binding Settings.BorderDistanceY, UpdateSourceTrigger=PropertyChanged}" />
                         <Slider Minimum="0" 
-                                Maximum="100" 
+                                Maximum="400" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                 Value="{Binding Settings.BorderDistanceY}" />
                     </DockPanel>

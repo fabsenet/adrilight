@@ -13,8 +13,8 @@ namespace adrilight
     internal class UserSettings : ViewModelBase, IUserSettings
     {
         private bool _autostart = false;
-        private int _borderDistanceX = 50;
-        private int _borderDistanceY = 50;
+        private int _borderDistanceX = 0;
+        private int _borderDistanceY = 100;
         private string _comPort = null;
         private DateTime? _lastUpdateCheck=DateTime.UtcNow;
         private int _ledsPerSpot = 1;
