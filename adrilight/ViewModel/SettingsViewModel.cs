@@ -77,6 +77,17 @@ namespace adrilight.ViewModel
                     case nameof(Settings.OffsetLed):
                         RaisePropertyChanged(() => OffsetLedMaximum);
                         break;
+
+                    case nameof(Settings.Autostart):
+                        if (Settings.Autostart)
+                        {
+                            StartUpManager.AddApplicationToCurrentUserStartup();
+                        }
+                        else
+                        {
+                            StartUpManager.RemoveApplicationFromCurrentUserStartup();
+                        }
+                        break;
                 }
             };
         }

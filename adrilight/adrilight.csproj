@@ -184,10 +184,10 @@
     <Compile Include="Resources\IContext.cs" />
     <Compile Include="Resources\WpfContext.cs" />
     <Compile Include="SerialStream.cs" />
-    <Compile Include="LegacyUserSettings.cs" />
     <Compile Include="Spot.cs" />
     <Compile Include="SpotSet.cs" />
     <Compile Include="UserSettingsManager.cs" />
+    <Compile Include="Util\StartupManager.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="View\SettingsWindowComponents\ComPortSetup.xaml.cs">
       <DependentUpon>ComPortSetup.xaml</DependentUpon>
@@ -195,6 +195,9 @@
     <Compile Include="ViewModel\ISelectableViewPart.cs" />
     <Compile Include="View\SettingsWindowComponents\LedSetup.xaml.cs">
       <DependentUpon>LedSetup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SettingsWindowComponents\GeneralSetup.xaml.cs">
+      <DependentUpon>GeneralSetup.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SettingsWindowComponents\Whitebalance.xaml.cs">
       <DependentUpon>Whitebalance.xaml</DependentUpon>
@@ -226,16 +229,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -270,6 +263,10 @@
     <Page Include="View\SettingsWindowComponents\LedSetup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SettingsWindowComponents\GeneralSetup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\SettingsWindowComponents\Whitebalance.xaml">
       <Generator>MSBuild:Compile</Generator>

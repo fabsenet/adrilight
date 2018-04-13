@@ -21,7 +21,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Ninject.Extensions.Conventions;
-using AdriSettings = adrilight.Properties.Settings;
 using adrilight.Resources;
 
 namespace adrilight
