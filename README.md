@@ -8,7 +8,7 @@
 
 Adrilight lights up LEDs behind your screen or TV to step up the viewing experience to the next level.
 
-It reads the Windows screen content using the Windows Desktop Duplication API, infers the average color in each zone (=spot) and transfers these colors to an arduino via USB. The arduino then sends this color data to WS2812b (or compatible) LED strips which are around your screen/monitor:
+It reads the Windows screen content using the Windows Desktop Duplication API, infers the average color in each zone (=spot) and transfers these colors to an arduino via USB. The arduino then sends this color data to [WS2812b](https://amzn.to/2GUWwxg) (or compatible) LED strips which are around your screen/monitor:
 
 > PC (adrilight.exe) => arduino (adrilight.ino) => LEDs
 
@@ -31,10 +31,11 @@ On a typical hardware setup, it will be capable to reach 60fps on your LEDs. It 
 This should be improved but a quick rundown on what to do:
 
 * Buy
-  * Arduino UNO (or compatible)
-  * WS2812b LED strip in the needed length
-  * 12V DC power supply with enough power (you need at least 1A for every 50 LEDs)
-  * (optionally) dc jack connector
+  * Arduino UNO or compatible (on [Amazon.com](https://amzn.to/2JJddJI) or [Amazon.de](https://amzn.to/2H0VQT2))
+  * WS2812b (on [Amazon.com](https://amzn.to/2vczgVN) or [Amazon.de](https://amzn.to/2GUWwxg)) LED strip in the needed length
+  * 12V DC power supply with enough power (on [Amazon.com](https://amzn.to/2GVh7Bo) or [Amazon.de](https://amzn.to/2v88cal)) (you need at least 1A for every 50 LEDs)
+  * (optionally) dc jack connector (on [Amazon.com](https://amzn.to/2ISFgVX) or [Amazon.de](https://amzn.to/2GXePlq))
+  * Affiliate links: if you use these links to buy the hardware, you are directly supporting the development of adrilight!
 * Build
   * Attach LED strip on the back of the television. The arrows must build a circle!
     * The strip can be devided in 4 pieces: Left/Right/Top/Bottom
