@@ -22,6 +22,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Ninject.Extensions.Conventions;
 using adrilight.Resources;
+using adrilight.Util;
 
 namespace adrilight
 {   
@@ -54,6 +55,9 @@ namespace adrilight
             {
                 OpenSettingsWindow();
             }
+
+
+            kernel.Get<AdrilightUpdater>().StartThread();
         }
 
         internal static IKernel SetupDependencyInjection(bool isInDesignMode)

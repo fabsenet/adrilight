@@ -131,6 +131,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.4.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -142,7 +143,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -181,6 +181,7 @@
     <Compile Include="Spots\SpotSet.cs" />
     <Compile Include="Settings\UserSettingsManager.cs" />
     <Compile Include="Util\StartupManager.cs" />
+    <Compile Include="Util\AdrilightUpdater.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="View\SettingsWindowComponents\ComPortSetup.xaml.cs">
       <DependentUpon>ComPortSetup.xaml</DependentUpon>
