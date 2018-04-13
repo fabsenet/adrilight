@@ -150,12 +150,11 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Autostart.cs" />
     <Compile Include="DesktopDuplication\DesktopDuplicationException.cs" />
     <Compile Include="DesktopDuplication\DesktopDuplicator.cs" />
     <Compile Include="DesktopDuplication\DesktopFrame.cs" />
     <Compile Include="DesktopDuplication\MovedRegion.cs" />
-    <Compile Include="DesktopDuplicatorReader.cs" />
+    <Compile Include="DesktopDuplication\DesktopDuplicatorReader.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
     <Compile Include="Extensions\MathExtensions.cs" />
     <Compile Include="Fakes\ContextFake.cs" />
@@ -163,30 +162,24 @@
     <Compile Include="Fakes\SerialStreamFake.cs" />
     <Compile Include="Fakes\SpotSetFake.cs" />
     <Compile Include="Fakes\UserSettingsFake.cs" />
-    <Compile Include="IDesktopDuplicatorReader.cs" />
-    <Compile Include="ISerialStream.cs" />
-    <Compile Include="ISpot.cs" />
-    <Compile Include="ISpotSet.cs" />
-    <Compile Include="IUserSettings.cs" />
-    <Compile Include="UserSettings.cs" />
+    <Compile Include="DesktopDuplication\IDesktopDuplicatorReader.cs" />
+    <Compile Include="Util\ISerialStream.cs" />
+    <Compile Include="Spots\ISpot.cs" />
+    <Compile Include="Spots\ISpotSet.cs" />
+    <Compile Include="Settings\IUserSettings.cs" />
+    <Compile Include="Settings\UserSettings.cs" />
     <Compile Include="Messaging\TraceFrameMessage.cs" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
-    </None>
-    <None Include="Overlay.cs">
-      <SubType>Form</SubType>
-    </None>
-    <None Include="Overlay.Designer.cs">
-      <DependentUpon>Overlay.cs</DependentUpon>
     </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\RawRectangleExtensions.cs" />
     <Compile Include="Resources\IContext.cs" />
     <Compile Include="Resources\WpfContext.cs" />
-    <Compile Include="SerialStream.cs" />
-    <Compile Include="Spot.cs" />
-    <Compile Include="SpotSet.cs" />
-    <Compile Include="UserSettingsManager.cs" />
+    <Compile Include="Util\SerialStream.cs" />
+    <Compile Include="Spots\Spot.cs" />
+    <Compile Include="Spots\SpotSet.cs" />
+    <Compile Include="Settings\UserSettingsManager.cs" />
     <Compile Include="Util\StartupManager.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="View\SettingsWindowComponents\ComPortSetup.xaml.cs">
@@ -215,9 +208,6 @@
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <None Include="Overlay.resx">
-      <DependentUpon>Overlay.cs</DependentUpon>
-    </None>
     <EmbeddedResource Include="..\version.txt">
       <Link>version.txt</Link>
     </EmbeddedResource>
