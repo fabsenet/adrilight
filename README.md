@@ -82,6 +82,16 @@ You have another idea for a feature? Please create an issue.
   * ...there is probably more
 * some arduino compatible devices have problems reaching the high baudrate of 1.000.000 Baud. This is a sad thing and cannot be changed because the high baud rate is absolutely needed to provide a fluent feeling. Using lower values is not supported. If this is your problem, the best thing is to get a better arduino clone.
 
+## Supporting the project
+
+* A translated UI is in planning. If you can provide translations for languages other than English and German and a willing to help, please let us know.
+* To support the project with 💰 , you can buy the hardware (or whatever you like) through the affiliate links for [amazon.com](https://amzn.to/2HyZQLA) or [amazon.de](https://amzn.to/2qtOTDv)
+
+## Thanks
+
+* This is a fork from the originally ambilight clone project [bambilight by MrBoe](https://github.com/MrBoe/Bambilight) and therefore (and to met the MIT licence) a big thank you goes to [MrBoe](https://github.com/MrBoe)
+* More thanks goes to [jasonpong](https://github.com/jasonpang) for his [sample code for the Desktop Duplication API](https://github.com/jasonpang/desktop-duplication-net)
+
 ## Changelog
 
 in order of newest changes first:
@@ -109,8 +119,3 @@ in order of newest changes first:
 * Performance work in how the color of each spot is detected
 * Converted screen capturing to use the Desktop Duplication API (heavily based on the [sample code from jasonpang](https://github.com/jasonpang/desktop-duplication-net)) 
 * initally forked from [bambilight by MrBoe](https://github.com/MrBoe/Bambilight) because of missing Windows 10 support
-
-## Thanks
-
-* This is a fork from the originally ambilight clone project [bambilight by MrBoe](https://github.com/MrBoe/Bambilight) and therefore (and to met the MIT licence) a big thank you goes to [MrBoe](https://github.com/MrBoe)
-* More thanks goes to [jasonpong](https://github.com/jasonpang) for his [sample code for the Desktop Duplication API](https://github.com/jasonpang/desktop-duplication-net)
