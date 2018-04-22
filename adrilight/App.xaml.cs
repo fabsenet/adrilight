@@ -49,7 +49,8 @@ namespace adrilight
 
 
             UserSettings = kernel.Get<IUserSettings>();
-                        
+            _telemetryClient = kernel.Get<TelemetryClient>();
+
             SetupNotifyIcon();
 
             if (!UserSettings.StartMinimized)
@@ -60,16 +61,21 @@ namespace adrilight
 
             kernel.Get<AdrilightUpdater>().StartThread();
 
-            SetupTrackingForProcessWideEvents(kernel.Get<TelemetryClient>());
+            SetupTrackingForProcessWideEvents(_telemetryClient);
         }
+
+        private TelemetryClient _telemetryClient;
 
         private static TelemetryClient SetupApplicationInsights(IUserSettings settings)
         {
-            TelemetryConfiguration.Active.InstrumentationKey = "65086b50-8c52-4b13-9b05-92fbe69c7a52";
-            var tc = new TelemetryClient();
-            tc.TrackEvent("AppStart");
+            var tc = new TelemetryClient
+            {
+                InstrumentationKey = "65086b50-8c52-4b13-9b05-92fbe69c7a52"
+            };
 
-            tc.Flush();
+            tc.Context.User.Id = settings.InstallationId.ToString();
+            tc.Context.Session.Id = Guid.NewGuid().ToString();
+            tc.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
 
             return tc;
         }
@@ -164,6 +170,7 @@ namespace adrilight
                 _mainForm = new SettingsWindow();
                 _mainForm.Closed += MainForm_FormClosed;
                 _mainForm.Show();
+                _telemetryClient.TrackEvent("SettingsWindow opened");
             }
             else
             {
@@ -179,6 +186,7 @@ namespace adrilight
             //deregister to avoid memory leak
             _mainForm.Closed -= MainForm_FormClosed;
             _mainForm = null;
+            _telemetryClient.TrackEvent("SettingsWindow closed");
         }
 
         private void SetupNotifyIcon()

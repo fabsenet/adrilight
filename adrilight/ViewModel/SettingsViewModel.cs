@@ -2,6 +2,7 @@
 using adrilight.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using Microsoft.ApplicationInsights;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,8 @@ namespace adrilight.ViewModel
         private const string IssuesPage = "https://github.com/fabsenet/adrilight/issues";
         private const string LatestReleasePage = "https://github.com/fabsenet/adrilight/releases/latest";
 
-        public SettingsViewModel(IUserSettings userSettings, IList<ISelectableViewPart> selectableViewParts, ISpotSet spotSet, IContext context)
+        public SettingsViewModel(IUserSettings userSettings, IList<ISelectableViewPart> selectableViewParts
+            , ISpotSet spotSet, IContext context, TelemetryClient tc)
         {
             if (selectableViewParts == null)
             {
@@ -48,6 +50,17 @@ namespace adrilight.ViewModel
 
             PossibleLedCountsVertical = Enumerable.Range(10, 190).ToList();
             PossibleLedCountsHorizontal = Enumerable.Range(10, 290).ToList();
+
+            PropertyChanged += (s, e) =>
+            {
+                switch (e.PropertyName)
+                {
+                    case nameof(SelectedViewPart):
+                        var name = SelectedViewPart?.ViewPartName ?? "nothing";
+                        tc.TrackPageView(name);
+                        break;
+                }
+            };
 
             Settings.PropertyChanged += (s, e) =>
             {

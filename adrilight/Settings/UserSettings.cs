@@ -64,5 +64,7 @@ namespace adrilight
         public byte WhitebalanceGreen { get => _whitebalanceGreen; set { Set(() => WhitebalanceGreen, ref _whitebalanceGreen, value); } }
         public byte WhitebalanceBlue { get => _whitebalanceBlue; set { Set(() => WhitebalanceBlue, ref _whitebalanceBlue, value); } }
 
+        public Guid InstallationId { get; set; } = Guid.NewGuid();
+
     }
 }

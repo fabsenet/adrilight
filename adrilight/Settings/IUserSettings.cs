@@ -26,6 +26,8 @@ namespace adrilight
         bool TransferActive { get; set; }
         bool UseLinearLighting { get; set; }
 
+        Guid InstallationId { get; set; }
+
         byte WhitebalanceRed { get; set; }
         byte WhitebalanceGreen { get; set; }
         byte WhitebalanceBlue { get; set; }

@@ -34,6 +34,8 @@ namespace adrilight.Fakes
         public byte WhitebalanceGreen { get; set; } = 100;
         public byte WhitebalanceBlue { get; set; } = 100;
 
+        public Guid InstallationId { get; set; } = Guid.NewGuid();
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
