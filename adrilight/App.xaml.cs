@@ -23,6 +23,8 @@ using System.Windows.Threading;
 using Ninject.Extensions.Conventions;
 using adrilight.Resources;
 using adrilight.Util;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.ApplicationInsights;
 
 namespace adrilight
 {   
@@ -43,7 +45,6 @@ namespace adrilight
             _log.Debug($"adrilight {VersionNumber}: Main() started.");
             kernel = SetupDependencyInjection(false);
 
-
             this.Resources["Locator"] = new ViewModelLocator(kernel);
 
 
@@ -58,6 +59,19 @@ namespace adrilight
 
 
             kernel.Get<AdrilightUpdater>().StartThread();
+
+            SetupTrackingForProcessWideEvents(kernel.Get<TelemetryClient>());
+        }
+
+        private static TelemetryClient SetupApplicationInsights(IUserSettings settings)
+        {
+            TelemetryConfiguration.Active.InstrumentationKey = "65086b50-8c52-4b13-9b05-92fbe69c7a52";
+            var tc = new TelemetryClient();
+            tc.TrackEvent("AppStart");
+
+            tc.Flush();
+
+            return tc;
         }
 
         internal static IKernel SetupDependencyInjection(bool isInDesignMode)
@@ -85,7 +99,7 @@ namespace adrilight
                 kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReader>().InSingletonScope();
             }
             kernel.Bind<SettingsViewModel>().ToSelf().InSingletonScope();
-
+            kernel.Bind<TelemetryClient>().ToConstant(SetupApplicationInsights(kernel.Get<IUserSettings>()));
             kernel.Bind(x => x.FromThisAssembly()
             .SelectAllClasses()
             .InheritedFrom<ISelectableViewPart>()
@@ -106,7 +120,25 @@ namespace adrilight
             DispatcherUnhandledException += (sender, args) => ApplicationWideException(sender, args.Exception, "DispatcherUnhandledException");
 
             Exit += (s, e) => _log.Debug("Application exit!");
+
             SystemEvents.PowerModeChanged += (s, e) => _log.Debug("Changing Powermode to {0}", e.Mode);
+        }
+
+        private void SetupTrackingForProcessWideEvents(TelemetryClient tc)
+        {
+            if (tc == null)
+            {
+                throw new ArgumentNullException(nameof(tc));
+            }
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) => tc.TrackException(args.ExceptionObject as Exception);
+
+            DispatcherUnhandledException += (sender, args) => tc.TrackException(args.Exception);
+
+            Exit += (s, e) => { tc.TrackEvent("AppExit"); tc.Flush(); };
+
+            SystemEvents.PowerModeChanged += (s, e) => tc.TrackEvent("PowerModeChanged", new Dictionary<string, string> { { "Mode", e.Mode.ToString() } });
+            tc.TrackEvent("AppStart");
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
