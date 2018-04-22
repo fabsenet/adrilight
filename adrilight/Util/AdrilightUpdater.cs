@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using NLog;
 using Semver;
+using Squirrel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,6 +19,8 @@ namespace adrilight.Util
     {
         private readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
+        private const string ADRILIGHT_RELEASES = "https://fabse.net/adrilight/Releases";
+
         public AdrilightUpdater(IUserSettings settings, IContext context)
         {
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
@@ -26,7 +29,7 @@ namespace adrilight.Util
 
         public void StartThread()
         {
-            var t = new Thread(async () => await StartVersionCheck())
+            var t = new Thread(async () => await StartSquirrel())
             {
                 Name = "adrilight Update Checker",
                 IsBackground = true,
@@ -38,72 +41,27 @@ namespace adrilight.Util
         public IUserSettings Settings { get; }
         public IContext Context { get; }
 
-        private async Task StartVersionCheck()
+        private async Task StartSquirrel()
         {
-            //avoid too many checks
-            if (Settings.LastUpdateCheck.HasValue && Settings.LastUpdateCheck > DateTime.UtcNow.AddHours(-8)) return;
-
-            try
+            using (var mgr = new UpdateManager(ADRILIGHT_RELEASES))
             {
-                var latestRelease = await TryGetLatestReleaseData();
-                if (latestRelease == null) return;
+                var releaseEntry = await mgr.UpdateApp();
 
-                string tagName = latestRelease.LatestVersionName;
-                var latestVersionNumber = SemVersion.Parse(tagName.TrimStart('v', 'V'));
 
-                Settings.LastUpdateCheck = DateTime.UtcNow;
+            //Context.Invoke(() =>
+            //{
+            //    string message = $"New version of adrilight is available! The new version is {latestVersionNumber} (you are running {App.VersionNumber}). Press OK to open the download page!";
+            //    const string title = "New Adrilight Version!";
+            //    var shouldOpenUrl = MessageBox.Show(message, title, MessageBoxButton.OKCancel) == MessageBoxResult.OK;
 
-                if (latestVersionNumber > App.VersionNumber)
-                {
-                    Context.Invoke(() =>
-                    {
-                        string message = $"New version of adrilight is available! The new version is {latestVersionNumber} (you are running {App.VersionNumber}). Press OK to open the download page!";
-                        const string title = "New Adrilight Version!";
-                        var shouldOpenUrl = MessageBox.Show(message, title, MessageBoxButton.OKCancel) == MessageBoxResult.OK;
+            //    if (shouldOpenUrl && latestRelease.LatestVersionUrl != null)
+            //    {
+            //        Process.Start(latestRelease.LatestVersionUrl);
+            //    }
+            //});
 
-                        if (shouldOpenUrl && latestRelease.LatestVersionUrl != null)
-                        {
-                            Process.Start(latestRelease.LatestVersionUrl);
-                        }
-                    });
-                }
             }
-            catch (Exception ex)
-            {
-                _log.Warn(ex, "Something failed in StartVersionCheck()");
-                throw;
-            }
+
         }
-
-        [DebuggerDisplay("GithubReleaseData: {LatestVersionName} {LatestVersionUrl}")]
-        private class GithubReleaseData
-        {
-            [JsonProperty("tag_name")]
-            public string LatestVersionName { get; set; }
-
-            [JsonProperty("html_url")]
-            public string LatestVersionUrl { get; set; }
-        }
-
-        private async Task<GithubReleaseData> TryGetLatestReleaseData()
-        {
-            try
-            {
-                using (var client = new HttpClient())
-                {
-                    client.DefaultRequestHeaders.Add("User-Agent", "fabsenet/adrilight");
-
-                    var jsonString = await client.GetStringAsync("https://api.github.com/repos/fabsenet/adrilight/releases/latest");
-                    var data = JsonConvert.DeserializeObject<GithubReleaseData>(jsonString);
-                    return data;
-                }
-            }
-            catch (Exception ex)
-            {
-                _log.Info(ex, "Check for latest release failed.");
-                return null;
-            }
-        }
-
     }
 }

@@ -190,7 +190,7 @@ namespace adrilight
 
             var notifyIcon = new System.Windows.Forms.NotifyIcon()
             {
-                Text = $"adrilight {GetVersionNumber()}",
+                Text = $"adrilight {VersionNumber}",
                 Icon = icon,
                 Visible = true,
                 ContextMenu = contextMenu
@@ -201,20 +201,8 @@ namespace adrilight
         }
 
 
-        public static string VersionNumber { get; } = GetVersionNumber();
+        public static string VersionNumber { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
         private IUserSettings UserSettings { get; set; }
-
-        private static string GetVersionNumber()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            string currentVersion;
-            using (var versionStream = assembly.GetManifestResourceStream("adrilight.version.txt"))
-            {
-                currentVersion = new StreamReader(versionStream).ReadToEnd().Trim();
-            }
-            return currentVersion;
-        }
-
 
         private void ApplicationWideException(object sender, Exception ex, string eventSource)
         {
@@ -238,7 +226,14 @@ namespace adrilight
             } while (ex != null);
 
             MessageBox.Show(sb.ToString(), "unhandled exception :-(");
-            Shutdown(-1);
+            try
+            {
+                Shutdown(-1);
+            }
+            catch
+            {
+                Environment.Exit(-1);
+            }
         }
     }
 }
