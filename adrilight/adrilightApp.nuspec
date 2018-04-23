@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>adrilight</id>
+    <id>adrilightApp</id>
     <!-- version will be replaced by MSBuild -->
     <version>0.0.0.0</version>
     <title>adrilight</title>
     <authors>fabsenet</authors>
-    <description>description</description>
+    <description>An Ambilight clone for Windows based sources - HTPC or just a normal PC</description>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <copyright>Copyright 2018</copyright>
+    <icon>https://fabse.net/adrilight/adrilight_icon.ico</icon>
     <dependencies />
   </metadata>
   <files>

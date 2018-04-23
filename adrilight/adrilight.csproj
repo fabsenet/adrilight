@@ -228,7 +228,9 @@
     <Compile Include="Settings\IUserSettings.cs" />
     <Compile Include="Settings\UserSettings.cs" />
     <Compile Include="Messaging\TraceFrameMessage.cs" />
-    <None Include="adrilight.nuspec" />
+    <None Include="adrilightApp.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -352,7 +354,7 @@
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
     </GetAssemblyIdentity>
-    <Exec Command="nuget pack adrilight.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Exec Command="squirrel --framework-version=net471 --releasify $(OutDir)adrilight.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg" />
+    <Exec Command="nuget pack adrilightApp.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
+    <Exec Command="squirrel --no-msi --framework-version=net471 --releasify $(OutDir)adrilightApp.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg" />
   </Target>
 </Project>
