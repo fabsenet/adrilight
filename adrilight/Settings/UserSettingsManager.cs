@@ -33,6 +33,8 @@ namespace adrilight
             var settings = JsonConvert.DeserializeObject<UserSettings>(json);
 
             settings.PropertyChanged += (_, __) => Save(settings);
+
+            HandleAutostart(settings);
             return settings;
         }
 
@@ -72,18 +74,23 @@ namespace adrilight
 
                 ReadAndApply(xdoc, settings, "AUTOSTART", s => s.Autostart);
                 //migrate actual autostart registry stuff as well
-                if (settings.Autostart)
-                {
-                    StartUpManager.AddApplicationToCurrentUserStartup();
-                }
-                else
-                {
-                    StartUpManager.RemoveApplicationFromCurrentUserStartup();
-                }
+                HandleAutostart(settings);
             }
-            
+
             settings.PropertyChanged += (_, __) => Save(settings);
             return settings;
+        }
+
+        private static void HandleAutostart(UserSettings settings)
+        {
+            if (settings.Autostart)
+            {
+                StartUpManager.AddApplicationToCurrentUserStartup();
+            }
+            else
+            {
+                StartUpManager.RemoveApplicationFromCurrentUserStartup();
+            }
         }
 
         private void ReadAndApply<T>(XDocument xdoc, IUserSettings settings, string settingName, Expression<Func<IUserSettings, T>> targetProperty)
