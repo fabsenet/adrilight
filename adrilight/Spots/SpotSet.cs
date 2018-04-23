@@ -116,6 +116,7 @@ namespace adrilight
                 }
             }
 
+            //TODO totally broken :(
 
             if (userSettings.OffsetLed != 0) Offset(ref spots, userSettings.OffsetLed);
             if (userSettings.SpotsY > 1 && userSettings.MirrorX) MirrorX(spots, userSettings.SpotsX, userSettings.SpotsY);
