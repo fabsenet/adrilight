@@ -25,26 +25,8 @@ namespace adrilight {
             set { Set(() => IsFirst, ref _isFirst, value); }
         }
 
-        private Color _color = Colors.Black;
-
-        public Color OnDemandColor
-        {
-            get
-            {
-                _color = Color.FromRgb(Red, Green, Blue);
-                return _color;
-            }
-        }
-        private Color _colorT = Colors.Transparent;
-
-        public Color OnDemandColorTransparent
-        {
-            get
-            {
-                _color = Color.FromArgb(0, Red, Green, Blue);
-                return _color;
-            }
-        }
+        public Color OnDemandColor => Color.FromRgb(Red, Green, Blue);
+        public Color OnDemandColorTransparent => Color.FromArgb(0, Red, Green, Blue);
 
         public byte Red { get; private set; }
         public byte Green { get; private set; }

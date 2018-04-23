@@ -9,7 +9,7 @@
     <description>An Ambilight clone for Windows based sources - HTPC or just a normal PC</description>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <copyright>Copyright 2018</copyright>
-    <icon>https://fabse.net/adrilight/adrilight_icon.ico</icon>
+    <iconUrl>https://fabse.net/adrilight/adrilight_icon.ico</iconUrl>
     <dependencies />
   </metadata>
   <files>

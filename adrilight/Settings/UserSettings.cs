@@ -35,6 +35,7 @@ namespace adrilight
         private byte _whitebalanceRed = 100;
         private byte _whitebalanceGreen = 100;
         private byte _whitebalanceBlue = 100;
+        private bool _sendRandomColors = false;
 
         //support future config file migration
         public int ConfigFileVersion { get; set; } = 1;
@@ -63,6 +64,8 @@ namespace adrilight
         public byte WhitebalanceRed { get => _whitebalanceRed; set { Set(() => WhitebalanceRed, ref _whitebalanceRed, value); } }
         public byte WhitebalanceGreen { get => _whitebalanceGreen; set { Set(() => WhitebalanceGreen, ref _whitebalanceGreen, value); } }
         public byte WhitebalanceBlue { get => _whitebalanceBlue; set { Set(() => WhitebalanceBlue, ref _whitebalanceBlue, value); } }
+
+        public bool SendRandomColors { get => _sendRandomColors; set { Set(() => SendRandomColors, ref _sendRandomColors, value); } }
 
         public Guid InstallationId { get; set; } = Guid.NewGuid();
 

@@ -31,5 +31,6 @@ namespace adrilight
         byte WhitebalanceRed { get; set; }
         byte WhitebalanceGreen { get; set; }
         byte WhitebalanceBlue { get; set; }
+        bool SendRandomColors { get; set; }
     }
 }

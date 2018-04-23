@@ -68,9 +68,11 @@ namespace adrilight
 
         private static TelemetryClient SetupApplicationInsights(IUserSettings settings)
         {
+            const string ik = "65086b50-8c52-4b13-9b05-92fbe69c7a52";
+            TelemetryConfiguration.Active.InstrumentationKey = ik;
             var tc = new TelemetryClient
             {
-                InstrumentationKey = "65086b50-8c52-4b13-9b05-92fbe69c7a52"
+                InstrumentationKey = ik
             };
 
             tc.Context.User.Id = settings.InstallationId.ToString();

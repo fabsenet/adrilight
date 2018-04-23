@@ -222,6 +222,7 @@
     <Compile Include="Fakes\SpotSetFake.cs" />
     <Compile Include="Fakes\UserSettingsFake.cs" />
     <Compile Include="DesktopDuplication\IDesktopDuplicatorReader.cs" />
+    <Compile Include="Util\ColorUtil.cs" />
     <Compile Include="Util\ISerialStream.cs" />
     <Compile Include="Spots\ISpot.cs" />
     <Compile Include="Spots\ISpotSet.cs" />
@@ -233,9 +234,6 @@
     </None>
     <None Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
     </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions\RawRectangleExtensions.cs" />
@@ -275,9 +273,6 @@
     </Compile>
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Resource Include="View\Images\adrilight_icon.ico" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="app.manifest" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

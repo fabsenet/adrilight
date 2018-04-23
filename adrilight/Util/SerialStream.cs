@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using System.Buffers;
+using System.Windows.Media;
+using adrilight.Util;
 
 namespace adrilight
 {
@@ -56,6 +58,8 @@ namespace adrilight
         private CancellationTokenSource _cancellationTokenSource;
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
+        private int frameCounter;
+        private int blackFrameCounter;
 
         public void Start()
         {
@@ -105,14 +109,34 @@ namespace adrilight
                 Buffer.BlockCopy(_messagePreamble, 0, outputStream, 0, _messagePreamble.Length);
                 Buffer.BlockCopy(_messagePostamble, 0, outputStream, bufferLength - _messagePostamble.Length, _messagePostamble.Length);
 
+                var allBlack = true;
                 foreach (Spot spot in SpotSet.Spots)
                 {
                     for (int i = 0; i < UserSettings.LedsPerSpot; i++)
                     {
-                        outputStream[counter++] = spot.Blue; // blue
-                        outputStream[counter++] = spot.Green; // green
-                        outputStream[counter++] = spot.Red; // red
+                        if (!UserSettings.SendRandomColors)
+                        {
+                            outputStream[counter++] = spot.Blue; // blue
+                            outputStream[counter++] = spot.Green; // green
+                            outputStream[counter++] = spot.Red; // red
+
+                            allBlack = allBlack && spot.Red == 0 && spot.Green == 0 && spot.Blue == 0;
+                        }
+                        else
+                        {
+                            allBlack = false;
+                            var n = frameCounter % 360;
+                            var c = ColorUtil.FromAhsb(255, n, 1, 0.5f);
+                            outputStream[counter++] = c.B; // blue
+                            outputStream[counter++] = c.G; // green
+                            outputStream[counter++] = c.R; // red
+                        }
                     }
+                }
+
+                if (allBlack)
+                {
+                    blackFrameCounter++;
                 }
 
                 return (outputStream, bufferLength);
@@ -126,8 +150,12 @@ namespace adrilight
 
             if (String.IsNullOrEmpty(UserSettings.ComPort))
             {
+                _log.Warn("Cannot start the serial sending because the comport is not selected.");
                 return;
             }
+
+            frameCounter = 0;
+            blackFrameCounter = 0;
 
             //retry after exceptions...
             while (!cancellationToken.IsCancellationRequested)
@@ -152,6 +180,7 @@ namespace adrilight
                         //send frame data
                         var (outputBuffer, streamLength) = GetOutputStream();
                         serialPort.Write(outputBuffer, 0, streamLength);
+                        if (++frameCounter % 256 == 0) _log.Debug($"Sent {frameCounter} frames already. {blackFrameCounter} were completely black.");
                         ArrayPool<byte>.Shared.Return(outputBuffer);
 
                         //ws2812b LEDs need 30 µs = 0.030 ms for each led to set its color so there is a lower minimum to the allowed refresh rate

@@ -13,7 +13,7 @@
              xmlns:local="clr-namespace:adrilight.View.SettingsWindowComponents"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="650">
+             d:DesignHeight="300" d:DesignWidth="991.636">
     <WrapPanel>
         <materialDesign:Card Margin="4 4 4 4" Width="300">
             <Grid>
@@ -37,6 +37,42 @@
             </Grid>
         </materialDesign:Card>
 
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="Bug" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                    <materialDesign:PackIcon.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="68.588"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </materialDesign:PackIcon.RenderTransform>
+                </materialDesign:PackIcon>
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8">
+                    <DockPanel>
+                        <ToggleButton DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
+                          ToolTip="Send Random Colors" IsChecked="{Binding Settings.SendRandomColors}" />
+                        <TextBlock FontWeight="Bold">Send Random Colors</TextBlock>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                        This is a test feature to find errors in the setup. If you turn this on, it will send random colors 
+                        to the arduino instead of the actual detected colors. Number of LEDs is still respected and it only 
+                        works, if you enable sending in the next card.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
         <materialDesign:Card Margin="4 4 4 4" Width="300">
             <Grid>
                 <Grid.RowDefinitions>
