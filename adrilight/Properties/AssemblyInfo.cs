@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
 [assembly: AssemblyTitle("adrilight")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("An Ambilight clone for Windows based sources - HTPC or just a normal PC")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("fabsenet")]
 [assembly: AssemblyProduct("adrilight")]
 [assembly: AssemblyCopyright("MIT Licence")]
 [assembly: AssemblyTrademark("")]
