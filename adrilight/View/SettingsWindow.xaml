@@ -55,7 +55,7 @@
             </DockPanel>
         </materialDesign:ColorZone>
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch">
             <ContentPresenter Content="{Binding SelectedViewPart.Content}" />
         </ScrollViewer>
     </DockPanel>
