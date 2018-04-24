@@ -30,7 +30,7 @@ namespace adrilight.ViewModel
         private const string LatestReleasePage = "https://github.com/fabsenet/adrilight/releases/latest";
 
         public SettingsViewModel(IUserSettings userSettings, IList<ISelectableViewPart> selectableViewParts
-            , ISpotSet spotSet, IContext context, TelemetryClient tc)
+            , ISpotSet spotSet, IContext context, TelemetryClient tc, SerialStream serialStream)
         {
             if (selectableViewParts == null)
             {
@@ -40,6 +40,7 @@ namespace adrilight.ViewModel
             this.Settings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
             this.spotSet = spotSet ?? throw new ArgumentNullException(nameof(spotSet));
             Context = context ?? throw new ArgumentNullException(nameof(context));
+            this.serialStream = serialStream ?? throw new ArgumentNullException(nameof(serialStream));
             SelectableViewParts = selectableViewParts.OrderBy(p => p.Order)
                 .ToList();
 #if DEBUG
@@ -101,6 +102,10 @@ namespace adrilight.ViewModel
                             StartUpManager.RemoveApplicationFromCurrentUserStartup();
                         }
                         break;
+
+                    case nameof(Settings.ComPort):
+                        RaisePropertyChanged(() => TransferCanBeStarted);
+                        break;
                 }
             };
         }
@@ -108,6 +113,7 @@ namespace adrilight.ViewModel
         public string Title { get; } = $"adrilight {App.VersionNumber}";
         public int LedCount => spotSet.CountLeds(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot;
 
+        public bool TransferCanBeStarted => serialStream.IsValid();
         public bool UseNonLinearLighting
         {
             get => !Settings.UseLinearLighting;
@@ -227,6 +233,7 @@ namespace adrilight.ViewModel
 
         private int _spotsYMaximum = 300;
         private readonly ISpotSet spotSet;
+        private readonly SerialStream serialStream;
 
         public int SpotsYMaximum
         {

@@ -110,6 +110,11 @@ namespace adrilight
                 //int
                 targetValue = Convert.ToInt32(text);
             }
+            else if (typeof(T) == typeof(byte))
+            {
+                //byte
+                targetValue = Convert.ToByte(text);
+            }
             else if (typeof(T) == typeof(bool))
             {
                 //bool

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using adrilight.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -8,6 +9,18 @@ namespace adrilight.Tests
     [TestClass]
     public class SpotsetTests
     {
+        [TestMethod]
+        public void SimpleSwap_Works()
+        {
+            var arr = new[] { 1, 2, 3, 4, 5 };
+
+            arr.Swap(1, 1);
+            Assert.AreEqual(2, arr[1], "self swap");
+
+            arr.Swap(1, 2);
+            CollectionAssert.AreEqual(new[] { 1, 3, 2, 4, 5 }, arr, "real swap");
+        }
+
         [TestMethod]
         public void BuildSpotset_Works1()
         {

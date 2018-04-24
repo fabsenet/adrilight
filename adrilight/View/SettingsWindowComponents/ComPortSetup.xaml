@@ -87,7 +87,7 @@
                 
                 <StackPanel Grid.Row="1" Margin="8 24 8 8">
                     <DockPanel>
-                    <ToggleButton DockPanel.Dock="Right"
+                        <ToggleButton DockPanel.Dock="Right" IsEnabled="{Binding TransferCanBeStarted}"
                         Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
                           ToolTip="Enable Sending" IsChecked="{Binding Settings.TransferActive}" />
                         <TextBlock FontWeight="Bold">Enable Sending</TextBlock>

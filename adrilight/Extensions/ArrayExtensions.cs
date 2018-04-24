@@ -12,7 +12,7 @@ namespace adrilight.Extensions
         {
             var temp = array[index2];
             array[index2] = array[index1];
-            array[index1] = array[index2];
+            array[index1] = temp;
         }
     }
 }

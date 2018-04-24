@@ -7,6 +7,7 @@ using NLog;
 using System.Buffers;
 using System.Windows.Media;
 using adrilight.Util;
+using System.Linq;
 
 namespace adrilight
 {
@@ -34,13 +35,23 @@ namespace adrilight
             }
         }
 
+        public bool IsValid() => SerialPort.GetPortNames().Contains(UserSettings.ComPort);
+
         private void RefreshTransferState()
         {
             if (UserSettings.TransferActive && !IsRunning)
             {
-                //start it
-                _log.Debug("starting the serial stream");
-                Start();
+                if (IsValid())
+                {
+
+                    //start it
+                    _log.Debug("starting the serial stream");
+                    Start();
+                }
+                else
+                {
+                    UserSettings.TransferActive = false;
+                }
             }
             else if (!UserSettings.TransferActive && IsRunning)
             {
@@ -51,7 +62,7 @@ namespace adrilight
         }
 
         private readonly byte[] _messagePreamble = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09};
-        private readonly byte[] _messagePostamble = {85,204,165};
+        private readonly byte[] _messagePostamble = { 85, 204, 165 };
 
 
         private Thread _workerThread;
