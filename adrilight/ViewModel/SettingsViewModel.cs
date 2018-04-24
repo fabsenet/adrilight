@@ -30,7 +30,7 @@ namespace adrilight.ViewModel
         private const string LatestReleasePage = "https://github.com/fabsenet/adrilight/releases/latest";
 
         public SettingsViewModel(IUserSettings userSettings, IList<ISelectableViewPart> selectableViewParts
-            , ISpotSet spotSet, IContext context, TelemetryClient tc, SerialStream serialStream)
+            , ISpotSet spotSet, IContext context, TelemetryClient tc, ISerialStream serialStream)
         {
             if (selectableViewParts == null)
             {
@@ -105,6 +105,7 @@ namespace adrilight.ViewModel
 
                     case nameof(Settings.ComPort):
                         RaisePropertyChanged(() => TransferCanBeStarted);
+                        RaisePropertyChanged(() => TransferCanNotBeStarted);
                         break;
                 }
             };
@@ -114,6 +115,8 @@ namespace adrilight.ViewModel
         public int LedCount => spotSet.CountLeds(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot;
 
         public bool TransferCanBeStarted => serialStream.IsValid();
+        public bool TransferCanNotBeStarted => !TransferCanBeStarted;
+
         public bool UseNonLinearLighting
         {
             get => !Settings.UseLinearLighting;
@@ -233,7 +236,7 @@ namespace adrilight.ViewModel
 
         private int _spotsYMaximum = 300;
         private readonly ISpotSet spotSet;
-        private readonly SerialStream serialStream;
+        private readonly ISerialStream serialStream;
 
         public int SpotsYMaximum
         {

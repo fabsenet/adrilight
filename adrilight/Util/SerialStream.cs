@@ -23,6 +23,12 @@ namespace adrilight
             UserSettings.PropertyChanged += UserSettings_PropertyChanged;
             RefreshTransferState();
             _log.Info($"SerialStream created.");
+
+            if (!IsValid())
+            {
+                UserSettings.TransferActive = false;
+                UserSettings.ComPort = null;
+            }
         }
 
         private void UserSettings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -51,6 +57,7 @@ namespace adrilight
                 else
                 {
                     UserSettings.TransferActive = false;
+                    UserSettings.ComPort = null;
                 }
             }
             else if (!UserSettings.TransferActive && IsRunning)

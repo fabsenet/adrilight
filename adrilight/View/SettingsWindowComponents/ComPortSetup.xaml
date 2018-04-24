@@ -12,8 +12,12 @@
         FontFamily="{StaticResource MaterialDesignFont}"
              xmlns:local="clr-namespace:adrilight.View.SettingsWindowComponents"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:validationRules="clr-namespace:adrilight.ViewModel.ValidationRules"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="991.636">
+             d:DesignHeight="391.45" d:DesignWidth="991.636">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+    </UserControl.Resources>
     <WrapPanel>
         <materialDesign:Card Margin="4 4 4 4" Width="300">
             <Grid>
@@ -29,8 +33,18 @@
                 
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">COM Port</TextBlock>
-                    <ComboBox SelectedValue="{Binding Settings.ComPort}" ItemsSource="{Binding AvailableComPorts}" />
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                    <ComboBox
+                        materialDesign:HintAssist.Hint="COM Port"
+                        ItemsSource="{Binding AvailableComPorts}">
+                        <ComboBox.SelectedValue>
+                            <Binding Path="Settings.ComPort" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <validationRules:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </ComboBox.SelectedValue>
+                    </ComboBox>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 22 0 0" TextAlignment="Justify">
                         This is the COM-Port used for the communication with the arduino.
                     </TextBlock>
                 </StackPanel>
@@ -92,7 +106,11 @@
                           ToolTip="Enable Sending" IsChecked="{Binding Settings.TransferActive}" />
                         <TextBlock FontWeight="Bold">Enable Sending</TextBlock>
                     </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                    <TextBlock Foreground="{DynamicResource PrimaryHueMidBrush}" Margin="0 8 0 0" TextWrapping="Wrap" TextAlignment="Justify"
+                               Visibility="{Binding TransferCanNotBeStarted, Converter={StaticResource booleanToVisibilityConverter}}">
+                        The sending cannot be enabled because of a validation error. Did you select a valid COM port?
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" Margin="0 8 0 0" TextAlignment="Justify">
                         This switch controls whether adrilight should actually send color information to the arduino via the selected COM port.
                     </TextBlock>
                 </StackPanel>

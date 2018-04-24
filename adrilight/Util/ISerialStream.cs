@@ -6,5 +6,6 @@
 
         void Start();
         void Stop();
+        bool IsValid();
     }
 }

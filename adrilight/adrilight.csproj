@@ -246,6 +246,7 @@
     <Compile Include="Util\StartupManager.cs" />
     <Compile Include="Util\AdrilightUpdater.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Compile Include="ViewModel\ValidationRules\NotEmptyValidationRule.cs" />
     <Compile Include="View\SettingsWindowComponents\ComPortSetup.xaml.cs">
       <DependentUpon>ComPortSetup.xaml</DependentUpon>
     </Compile>
