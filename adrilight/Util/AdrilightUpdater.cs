@@ -31,6 +31,7 @@ namespace adrilight.Util
 
         public void StartThread()
         {
+#if !DEBUG
             var t = new Thread(async () => await StartSquirrel())
             {
                 Name = "adrilight Update Checker",
@@ -38,6 +39,7 @@ namespace adrilight.Util
                 Priority = ThreadPriority.BelowNormal
             };
             t.Start();
+#endif
         }
 
         public IUserSettings Settings { get; }

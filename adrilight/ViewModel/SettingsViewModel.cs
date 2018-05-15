@@ -124,7 +124,7 @@ namespace adrilight.ViewModel
         }
         public IUserSettings Settings { get; }
         public IContext Context { get; }
-        public IList<String> AvailableComPorts { get; } = SerialPort.GetPortNames();
+        public IList<String> AvailableComPorts { get; } = SerialPort.GetPortNames().Concat(new[] { "Fake Port" }).ToList();
 
         public IList<ISelectableViewPart> SelectableViewParts { get; }
 

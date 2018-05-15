@@ -41,7 +41,7 @@ namespace adrilight
             }
         }
 
-        public bool IsValid() => SerialPort.GetPortNames().Contains(UserSettings.ComPort);
+        public bool IsValid() => SerialPort.GetPortNames().Contains(UserSettings.ComPort) || UserSettings.ComPort == "Fake Port";
 
         private void RefreshTransferState()
         {
@@ -164,7 +164,7 @@ namespace adrilight
         private void DoWork(object tokenObject)
         {
             var cancellationToken = (CancellationToken) tokenObject;
-            SerialPort serialPort = null;
+            ISerialPortWrapper serialPort = null;
 
             if (String.IsNullOrEmpty(UserSettings.ComPort))
             {
@@ -190,7 +190,7 @@ namespace adrilight
                         {
                             serialPort?.Close();
                             
-                            serialPort = new SerialPort(UserSettings.ComPort, baudRate);
+                            serialPort = UserSettings.ComPort!= "Fake Port" ? (ISerialPortWrapper) new WrappedSerialPort(new SerialPort(UserSettings.ComPort, baudRate)) : new FakeSerialPort();
                             serialPort.Open();
                             openedComPort = UserSettings.ComPort;
                         }

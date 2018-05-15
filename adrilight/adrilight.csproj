@@ -224,6 +224,8 @@
     <Compile Include="Fakes\UserSettingsFake.cs" />
     <Compile Include="DesktopDuplication\IDesktopDuplicatorReader.cs" />
     <Compile Include="Util\ColorUtil.cs" />
+    <Compile Include="Util\FakeSerialPort.cs" />
+    <Compile Include="Util\ISerialPortWrapper.cs" />
     <Compile Include="Util\ISerialStream.cs" />
     <Compile Include="Spots\ISpot.cs" />
     <Compile Include="Spots\ISpotSet.cs" />
@@ -246,6 +248,7 @@
     <Compile Include="Settings\UserSettingsManager.cs" />
     <Compile Include="Util\StartupManager.cs" />
     <Compile Include="Util\AdrilightUpdater.cs" />
+    <Compile Include="Util\WrappedSerialPort.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\ValidationRules\NotEmptyValidationRule.cs" />
     <Compile Include="View\SettingsWindowComponents\ComPortSetup.xaml.cs">
