@@ -57,7 +57,7 @@
                                 VerticalAlignment="Bottom" 
                                 Text="{Binding Settings.SpotWidth, UpdateSourceTrigger=PropertyChanged}" />
                         <Slider Minimum="10" 
-                                Maximum="200" 
+                                Maximum="400" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                 Value="{Binding Settings.SpotWidth}" />
                     </DockPanel>
@@ -89,7 +89,7 @@
                                 VerticalAlignment="Bottom" 
                                 Text="{Binding Settings.SpotHeight, UpdateSourceTrigger=PropertyChanged}" />
                         <Slider Minimum="10" 
-                                Maximum="200" 
+                                Maximum="400" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                 Value="{Binding Settings.SpotHeight}" />
                     </DockPanel>
