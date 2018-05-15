@@ -109,24 +109,24 @@ namespace adrilight
 
             IsRunning = true;
             _log.Debug("Started Desktop Duplication Reader.");
+            Bitmap image = null;
             try
             {
                 BitmapData bitmapData = new BitmapData();
 
                 while (!token.IsCancellationRequested)
                 {
-
-                    var frame = _retryPolicy.Execute<DesktopFrame>(GetNextFrame);
-                    TraceFrameDetails(frame);
-                    if (frame == null)
+                    var newImage = _retryPolicy.Execute(() => GetNextFrame(image));
+                    TraceFrameDetails(newImage);
+                    if (newImage == null)
                     {
                         //there was a timeout before there was the next frame, simply retry!
                         continue;
                     }
+                    image = newImage;
 
-
-                    var image = frame.DesktopImage;
-                    if (SettingsViewModel.IsSettingsWindowOpen && SettingsViewModel.IsPreviewTabOpen)
+                    bool isPreviewRunning = SettingsViewModel.IsSettingsWindowOpen && SettingsViewModel.IsPreviewTabOpen;
+                    if (isPreviewRunning)
                     {
                         SettingsViewModel.SetPreviewImage(image);
                     }
@@ -158,11 +158,11 @@ namespace adrilight
                                     , out byte finalR, out byte finalG, out byte finalB, useLinearLighting
                                     , UserSettings.SaturationTreshold, spot.Red, spot.Green, spot.Blue);
 
-                                spot.SetColor(finalR, finalG, finalB);
+                                spot.SetColor(finalR, finalG, finalB, isPreviewRunning);
 
                             });
 
-                        if (SettingsViewModel.IsPreviewTabOpen)
+                        if (isPreviewRunning)
                         {
                             //copy all color data to the preview
                             var needsNewArray = SettingsViewModel.PreviewSpots?.Length != SpotSet.Spots.Length;
@@ -171,11 +171,12 @@ namespace adrilight
                         }
                     }
                     image.UnlockBits(bitmapData);
-                    image.Dispose();
                 }
             }
             finally
             {
+                image?.Dispose();
+
                 _desktopDuplicator?.Dispose();
                 _desktopDuplicator = null;
 
@@ -191,10 +192,10 @@ namespace adrilight
         private int? _lastObservedHeight;
         private int? _lastObservedWidth;
 
-        private void TraceFrameDetails(DesktopFrame frame)
+        private void TraceFrameDetails(Bitmap image)
         {
             //there are many frames per second and we need to extract useful information and only log those!
-            if (frame == null)
+            if (image == null)
             {
                 //if the frame is null, this can mean two things. the timeout from the desktop duplication api was reached
                 //before the monitor content changed or there was some other error.
@@ -221,15 +222,15 @@ namespace adrilight
                 }
 
                 if (_lastObservedHeight == null || _lastObservedWidth == null
-                    || _lastObservedHeight != frame.DesktopImage.Height
-                    || _lastObservedWidth != frame.DesktopImage.Width)
+                    || _lastObservedHeight != image.Height
+                    || _lastObservedWidth != image.Width)
                 {
                     _log.Debug("The frame size changed from {0}x{1} to {2}x{3}"
                         , _lastObservedWidth, _lastObservedHeight
-                        , frame.DesktopImage.Width, frame.DesktopImage.Height);
+                        , image.Width, image.Height);
 
-                    _lastObservedWidth = frame.DesktopImage.Width;
-                    _lastObservedHeight = frame.DesktopImage.Height;
+                    _lastObservedWidth = image.Width;
+                    _lastObservedHeight = image.Height;
                 }
             }
 
@@ -289,7 +290,7 @@ namespace adrilight
             return (byte)(256f * ((float)Math.Pow(factor, color / 256f) - 1f) / (factor - 1));
         }
 
-        private DesktopFrame GetNextFrame()
+        private Bitmap GetNextFrame(Bitmap reusableBitmap)
         {
             if (_desktopDuplicator == null)
             {
@@ -298,8 +299,7 @@ namespace adrilight
 
             try
             {
-                var frame = _desktopDuplicator.GetLatestFrame();
-                return frame;
+                return _desktopDuplicator.GetLatestFrame(reusableBitmap);
             }
             catch (Exception ex)
             {

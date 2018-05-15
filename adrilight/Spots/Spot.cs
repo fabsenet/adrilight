@@ -32,15 +32,18 @@ namespace adrilight {
         public byte Green { get; private set; }
         public byte Blue { get; private set; }
 
-        public void SetColor(byte red, byte green, byte blue)
+        public void SetColor(byte red, byte green, byte blue, bool raiseEvents)
         {
             Red = red;
             Green = green;
             Blue = blue;
             _lastMissingValueIndication = null;
 
-            RaisePropertyChanged(() => OnDemandColor);
-            RaisePropertyChanged(() => OnDemandColorTransparent);
+            if (raiseEvents)
+            {
+                RaisePropertyChanged(nameof(OnDemandColor));
+                RaisePropertyChanged(nameof(OnDemandColorTransparent));
+            }
         }
 
         public void Dispose() {
@@ -68,7 +71,7 @@ namespace adrilight {
             var dimFactor =(float) (1 - (DateTime.UtcNow - localCopyLastMissingValueIndication.Value).TotalMilliseconds / _dimToBlackIntervalInMs);
             dimFactor = Math.Max(0, Math.Min(1, dimFactor));
 
-            SetColor((byte)(dimFactor * _dimR), (byte)(dimFactor * _dimG), (byte)(dimFactor * _dimB));
+            SetColor((byte)(dimFactor * _dimR), (byte)(dimFactor * _dimG), (byte)(dimFactor * _dimB), true);
         }
     }
 }

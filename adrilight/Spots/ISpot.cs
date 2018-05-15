@@ -14,6 +14,6 @@ namespace adrilight
         bool IsFirst { get; set; }
 
         void IndicateMissingValue();
-        void SetColor(byte red, byte green, byte blue);
+        void SetColor(byte red, byte green, byte blue, bool raiseEvents);
     }
 }
