@@ -167,10 +167,25 @@ namespace adrilight.DesktopDuplication
             var sourcePtr = mapSource.DataPointer;
             var destPtr = mapDest.Scan0;
 
-            Utilities.CopyMemory(destPtr, sourcePtr, height * width * 4);
+            if (mapSource.RowPitch == mapDest.Stride)
+            {
+                //fast copy
+                Utilities.CopyMemory(destPtr, sourcePtr, height * mapDest.Stride);
+            }
+            else
+            {
+                //safe copy
+                for (int y = 0; y < height; y++)
+                {
+                    // Copy a single line 
+                    Utilities.CopyMemory(destPtr, sourcePtr, width * 4);
 
+                    // Advance pointers
+                    sourcePtr = IntPtr.Add(sourcePtr, mapSource.RowPitch);
+                    destPtr = IntPtr.Add(destPtr, mapDest.Stride);
+                }
+            }
 
-          
             // Release source and dest locks
             image.UnlockBits(mapDest);
             _device.ImmediateContext.UnmapSubresource(_desktopImageTexture, 0);
