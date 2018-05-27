@@ -33,7 +33,7 @@ This should be improved but a quick rundown on what to do:
 * Buy
   * Arduino UNO or compatible (on [Amazon.com](https://amzn.to/2JJddJI) or [Amazon.de](https://amzn.to/2H0VQT2))
   * WS2812b (on [Amazon.com](https://amzn.to/2vczgVN) or [Amazon.de](https://amzn.to/2GUWwxg)) LED strip in the needed length
-  * 12V DC power supply with enough power (on [Amazon.com](https://amzn.to/2GVh7Bo) or [Amazon.de](https://amzn.to/2v88cal)) (you need at least 1A for every 50 LEDs)
+  * ***5V*** DC power supply with enough power (on [Amazon.com](https://amzn.to/2ISVAuk) or [Amazon.de](https://amzn.to/2J8OJfA)) (you need at least 1A for every 50 LEDs)
   * (optionally) dc jack connector (on [Amazon.com](https://amzn.to/2ISFgVX) or [Amazon.de](https://amzn.to/2GXePlq))
   * Affiliate links: if you use these links to buy the hardware, you are directly supporting the development of adrilight!
 * Build
