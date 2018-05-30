@@ -42,9 +42,10 @@ namespace adrilight
         {
             var settings = new UserSettings();
 
-            var legacyFiles = Directory.GetFiles(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "adrilight")
-                , "user.config"
-                , SearchOption.AllDirectories);
+            var legacyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "adrilight");
+            if (!Directory.Exists(legacyPath)) return settings;
+
+            var legacyFiles = Directory.GetFiles(legacyPath, "user.config", SearchOption.AllDirectories);
 
             var file = legacyFiles
                         .Select(f => new FileInfo(f))
