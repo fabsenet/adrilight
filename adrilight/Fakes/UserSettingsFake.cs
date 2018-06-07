@@ -37,7 +37,7 @@ namespace adrilight.Fakes
         public Guid InstallationId { get; set; } = Guid.NewGuid();
 
         public bool SendRandomColors { get; set; }
-
+        public int LimitFps { get; set; } = 60;
 
         public event PropertyChangedEventHandler PropertyChanged;
     }

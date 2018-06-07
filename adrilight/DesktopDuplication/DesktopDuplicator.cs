@@ -11,6 +11,7 @@ using adrilight.Extensions;
 using Device = SharpDX.Direct3D11.Device;
 using MapFlags = SharpDX.Direct3D11.MapFlags;
 using Rectangle = SharpDX.Mathematics.Interop.RawRectangle;
+using adrilight.Util;
 
 namespace adrilight.DesktopDuplication
 {
@@ -69,15 +70,21 @@ namespace adrilight.DesktopDuplication
             }
         }
 
+        private FpsLogger _desktopFrameLogger = new FpsLogger("DesktopDuplication");
+
+        
         /// <summary>
         /// Retrieves the latest desktop image and associated metadata.
         /// </summary>
         public Bitmap GetLatestFrame(Bitmap reusableImage)
         {
-            // Try to get the latest frame; this may timeout
-            bool succeeded = RetrieveFrame();
-            if (!succeeded)
-                return null;
+                // Try to get the latest frame; this may timeout
+                bool succeeded = RetrieveFrame();
+                if (!succeeded)
+                    return null;
+
+                _desktopFrameLogger.TrackSingleFrame();
+
             try
             {
                 return ProcessFrame(reusableImage);

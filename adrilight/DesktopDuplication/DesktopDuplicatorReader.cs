@@ -116,6 +116,7 @@ namespace adrilight
 
                 while (!token.IsCancellationRequested)
                 {
+                    var frameTime = Stopwatch.StartNew();
                     var newImage = _retryPolicy.Execute(() => GetNextFrame(image));
                     TraceFrameDetails(newImage);
                     if (newImage == null)
@@ -171,6 +172,13 @@ namespace adrilight
                         }
                     }
                     image.UnlockBits(bitmapData);
+
+                    int minFrameTimeInMs = 1000 / UserSettings.LimitFps;
+                    var elapsedMs = (int)frameTime.ElapsedMilliseconds;
+                    if(elapsedMs < minFrameTimeInMs)
+                    {
+                        Thread.Sleep(minFrameTimeInMs - elapsedMs);
+                    }
                 }
             }
             finally

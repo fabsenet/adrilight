@@ -70,5 +70,47 @@
                 </StackPanel>
             </Grid>
         </materialDesign:Card>
+
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="Speedometer" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">Limit FPS</TextBlock>
+                    <DockPanel>
+                        <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 8"
+                                VerticalAlignment="Bottom" 
+                                Text="{Binding Settings.LimitFps, UpdateSourceTrigger=PropertyChanged}" />
+                        <Slider Minimum="1" 
+                                Maximum="100" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                Value="{Binding Settings.LimitFps}"/>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                        To save precious CPU cycles, it is possible to limit the FPS. 
+                        <LineBreak />
+                        <LineBreak />
+                        Adrilight will never process more frames than there are. If your screen only changes 24 times per second (=Movie), adrilight only processes 24 frames per second anyway.
+                        <LineBreak />
+                        <LineBreak />
+                        But if you are gaming on a good PC with a high frequency monitor (or with vertical sync disabled) there could be many more frames per second (100+!).
+                        <LineBreak />
+                        <LineBreak />
+                        The microcontroller part of adrilight (and the human eye) cannot nearly process so much frames so it is a good idea to limit the frames. Something between 30 and 60 fps is a good starting point.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
     </WrapPanel>
 </UserControl>

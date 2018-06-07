@@ -208,7 +208,7 @@ namespace adrilight
                         var serialTransferTime = streamLength * 10.0*1000.0/ baudRate;
                         var minTimespan = (int) (fastLedTime + serialTransferTime) + 1;
 
-                        Task.Delay(minTimespan, cancellationToken).Wait(cancellationToken);
+                        Thread.Sleep(minTimespan);
                     }
                 }
                 catch (OperationCanceledException)

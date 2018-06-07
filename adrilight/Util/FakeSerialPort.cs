@@ -22,10 +22,12 @@ namespace adrilight.Util
 
         public void Dispose() {}
 
+        private FpsLogger fpsLogger = new FpsLogger("FakeSerialPort");
 
         public void Write(byte[] outputBuffer, int v, int streamLength)
         {
-            _log.Warn($"Faking writing of {streamLength} bytes to the serial port");
+            //_log.Warn($"Faking writing of {streamLength} bytes to the serial port");
+            fpsLogger.TrackSingleFrame();
         }
     }
 }

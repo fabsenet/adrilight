@@ -36,6 +36,7 @@ namespace adrilight
         private byte _whitebalanceGreen = 100;
         private byte _whitebalanceBlue = 100;
         private bool _sendRandomColors = false;
+        private int _limitFps = 60;
 
         //support future config file migration
         public int ConfigFileVersion { get; set; } = 1;
@@ -56,6 +57,9 @@ namespace adrilight
         public int OffsetX { get => _offsetX; set { Set(() => OffsetX, ref _offsetX, value); } }
         [Obsolete]
         public int OffsetY { get => _offsetY; set { Set(() => OffsetY, ref _offsetY, value); } }
+
+        public int LimitFps { get => _limitFps; set { Set(() => LimitFps, ref _limitFps, value); } }
+
         public bool IsPreviewEnabled { get => _isPreviewEnabled; set { Set(() => IsPreviewEnabled, ref _isPreviewEnabled, value); } }
         public byte SaturationTreshold { get => _saturationTreshold; set { Set(() => SaturationTreshold, ref _saturationTreshold, value); } }
         public int SpotHeight { get => _spotHeight; set { Set(() => SpotHeight, ref _spotHeight, value); } }
