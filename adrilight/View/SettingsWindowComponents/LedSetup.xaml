@@ -85,44 +85,6 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <materialDesign:PackIcon  Kind="Blur"  
-                                          Margin="0 8 0 0" Width="132" Height="132"
-                                         VerticalAlignment="Center"
-                                         HorizontalAlignment="Center">
-                </materialDesign:PackIcon>
-
-                <materialDesign:PackIcon Kind="AlertOctagon" Margin="196,25,36,55" Width="60" Height="60"
-                                         VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                         HorizontalAlignment="Center" ToolTip="This will be removed!"/>
-                
-                <StackPanel Grid.Row="1" Margin="8 24 8 8">
-                    <DockPanel>
-                        <TextBox DockPanel.Dock="Right"
-                                MinWidth="50"
-                                Margin="8 0 0 0"
-                                Text="{Binding Settings.LedsPerSpot, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock FontWeight="Bold">Leds per spot</TextBlock>
-                    </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
-                        This is the number of LEDs you want to act as a single pixel. 
-                        You are strongly encouraged to set this to 1! If your setup requires this to be 
-                        greater than one, please open up an issue on the github page and let us know why! 
-                        
-                    </TextBlock>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0"
-                               Foreground="{DynamicResource PrimaryHueMidBrush}">
-                        This feature is subject for removal!
-                    </TextBlock>
-                </StackPanel>
-            </Grid>
-        </materialDesign:Card>
-        <materialDesign:Card Margin="4 4 4 4" Width="300">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
                 <materialDesign:PackIcon Kind="Calculator" Margin="0 8 0 0" Width="132" Height="132"
                                          VerticalAlignment="Center"
                                          HorizontalAlignment="Center"/>

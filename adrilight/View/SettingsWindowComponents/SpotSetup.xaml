@@ -27,10 +27,6 @@
                     <LineBreak/>
                     <LineBreak/>
                     You can also control the distance of the spots from the screen edges. this can help if you want to "ignore" black bars in movies or your windows taskbar for example.
-                    <LineBreak/>
-                    <LineBreak/>
-                    At last, you can move all spots left/right or up/down using the offset sliders. 
-                    <Span Foreground="{DynamicResource PrimaryHueMidBrush}">There is no real usecase known for this and it will be removed in a future release. If you are using it, please open up an issue on the project page and let us know your usecase!</Span>
                 </TextBlock>
             </StackPanel>
         </materialDesign:Card>
@@ -166,97 +162,7 @@
             </Grid>
         </materialDesign:Card>
 
-        <materialDesign:Card Margin="4 4 4 4" Width="300">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
 
-                <materialDesign:PackIcon Kind="Alert" Margin="0 8 0 0" Width="132" Height="132"
-                                         VerticalAlignment="Center"
-                                         HorizontalAlignment="Center" />
-                    <materialDesign:PackIcon Kind="AlertOctagon" Margin="181,32,51,48" Width="60" Height="60"
-                                         VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                         HorizontalAlignment="Center" ToolTip="This will be removed in a future release!" RenderTransformOrigin="0.5,0.5">
-                        <materialDesign:PackIcon.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform/>
-                                <SkewTransform/>
-                                <RotateTransform Angle="-2.782"/>
-                                <TranslateTransform/>
-                            </TransformGroup>
-                        </materialDesign:PackIcon.RenderTransform>
-                    </materialDesign:PackIcon>
-
-                    <StackPanel Grid.Row="1" Margin="8 24 8 8" >
-                    <TextBlock FontWeight="Bold">Offset X</TextBlock>
-                    <DockPanel>
-                        <TextBox DockPanel.Dock="Right"
-                                MinWidth="50"
-                                Margin="8 0 0 8"
-                                VerticalAlignment="Bottom" 
-                                Text="{Binding Settings.OffsetX, UpdateSourceTrigger=PropertyChanged}" />
-                        <Slider Minimum="-200" 
-                                Maximum="200" 
-                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
-                                Value="{Binding Settings.OffsetX}" />
-                    </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
-                        This value describes a shift of all spots on the vertical axes (up/down). The suggestion is to have this value always on 0. 
-                        <LineBreak/>
-                        <Span Foreground="{DynamicResource PrimaryHueMidBrush}">It is also subject for removal. If you are using this, you are strongly encouraged to open up an issue on the github project page about it.</Span>
-                    </TextBlock>
-                </StackPanel>
-            </Grid>
-        </materialDesign:Card>
-
-        <materialDesign:Card Margin="4 4 4 4" Width="300">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <materialDesign:PackIcon Kind="Alert" Margin="0 8 0 0" Width="132" Height="132"
-                                         VerticalAlignment="Center"
-                                         HorizontalAlignment="Center" />
-                    <materialDesign:PackIcon Kind="AlertOctagon" Margin="175,24,57,56" Width="60" Height="60"
-                                         VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueMidBrush}"
-                                         HorizontalAlignment="Center" ToolTip="This will be removed in a future release!" RenderTransformOrigin="0.5,0.5">
-                        <materialDesign:PackIcon.RenderTransform>
-                            <TransformGroup>
-                                <ScaleTransform/>
-                                <SkewTransform/>
-                                <RotateTransform Angle="6.634"/>
-                                <TranslateTransform/>
-                            </TransformGroup>
-                        </materialDesign:PackIcon.RenderTransform>
-                    </materialDesign:PackIcon>
-
-                    <StackPanel Grid.Row="1" Margin="8 24 8 8" >
-                    <TextBlock FontWeight="Bold">Offset Y</TextBlock>
-                    <DockPanel>
-                        <TextBox DockPanel.Dock="Right"
-                                MinWidth="50"
-                                Margin="8 0 0 8"
-                                VerticalAlignment="Bottom" 
-                                Text="{Binding Settings.OffsetY, UpdateSourceTrigger=PropertyChanged}" />
-                        <Slider Minimum="-200" 
-                                Maximum="200" 
-                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
-                                Value="{Binding Settings.OffsetY}" />
-                    </DockPanel>
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
-                        This value describes a shift of all spots on the horizontal axes (left/right). The suggestion is to have this value always on 0. 
-                        <LineBreak/>
-                        <Span Foreground="{DynamicResource PrimaryHueMidBrush}">It is also subject for removal. If you are using this, you are strongly encouraged to open up an issue on the github project page about it.</Span>
-                    </TextBlock>
-                </StackPanel>
-            </Grid>
-        </materialDesign:Card>
 
     </WrapPanel>
     </StackPanel>
