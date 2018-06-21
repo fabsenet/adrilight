@@ -79,6 +79,8 @@ namespace adrilight
             tc.Context.Session.Id = Guid.NewGuid().ToString();
             tc.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
 
+            GlobalDiagnosticsContext.Set("user_id", tc.Context.User.Id);
+            GlobalDiagnosticsContext.Set("session_id", tc.Context.Session.Id);
             return tc;
         }
 
