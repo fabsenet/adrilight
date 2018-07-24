@@ -111,9 +111,11 @@
                     What you should test here...
                 </TextBlock>
                 <TextBlock Margin="8" TextWrapping="Wrap" TextAlignment="Justify">
-                    You should use this page for testing! If you cannot see your screen content on this page, something might be wrong with screen content reading. Try rebooting or closing of other screen capture apps.
+                    You should use this page for testing! If you cannot see your screen content on this page, something might be wrong with screen content reading. Try rebooting or closing of other screen capturing apps.
                     <LineBreak />
                     The actual rendered LED colors are overlayed so you can see, what color they should have. All color corrections are already applied.
+                    <LineBreak />
+                    The <Span Foreground="#FF3333">RED Rectangle</Span> is the first LED of your strip. If this does not match with the physical location of the beginning of your first LED on your LED strip, you may need to change the offset in the LED setup.
                 </TextBlock>
             </StackPanel>
         </materialDesign:Card>
