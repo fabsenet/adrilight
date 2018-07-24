@@ -22,10 +22,10 @@ namespace adrilight.Util
         //infinite timespan sequence: forever 1s
         private readonly IEnumerable<TimeSpan> _logTimes = MoreEnumerable.Generate(TimeSpan.FromSeconds(1), _ => TimeSpan.FromSeconds(1));
 #else
-        //infinite timespan sequence: 10x 1s, then forever 1min
+        //infinite timespan sequence: 10x 1s, then forever 5min
         private readonly IEnumerable<TimeSpan> _logTimes =
             Enumerable.Repeat(TimeSpan.FromSeconds(1), 10)
-            .Concat(MoreEnumerable.Generate(TimeSpan.FromMinutes(1), _ => TimeSpan.FromMinutes(1)));
+            .Concat(MoreEnumerable.Generate(TimeSpan.FromMinutes(5), _ => TimeSpan.FromMinutes(5)));
 #endif
 
         private readonly IEnumerator<TimeSpan> _enumerator;

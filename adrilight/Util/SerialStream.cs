@@ -8,6 +8,7 @@ using System.Buffers;
 using System.Windows.Media;
 using adrilight.Util;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace adrilight
 {
@@ -198,7 +199,13 @@ namespace adrilight
                         //send frame data
                         var (outputBuffer, streamLength) = GetOutputStream();
                         serialPort.Write(outputBuffer, 0, streamLength);
-                        if (++frameCounter % 256 == 0) _log.Debug($"Sent {frameCounter} frames already. {blackFrameCounter} were completely black.");
+
+                        if (++frameCounter == 1024 && blackFrameCounter > 1000)
+                        {
+                            //there is maybe something wrong here because most frames where black. report it once per run only
+                            var settingsJson = JsonConvert.SerializeObject(UserSettings, Formatting.None);
+                            _log.Info($"Sent {frameCounter} frames already. {blackFrameCounter} were completely black. Settings= {settingsJson}");
+                        }
                         ArrayPool<byte>.Shared.Return(outputBuffer);
 
                         //ws2812b LEDs need 30 µs = 0.030 ms for each led to set its color so there is a lower minimum to the allowed refresh rate

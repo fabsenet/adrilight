@@ -193,10 +193,6 @@ namespace adrilight
             }
         }
         
-
-        private DateTime? _lastNotNullFrameDateTime;
-        private DateTime? _lastNotNullFrameLoggedDateTime;
-        private bool _framesAreNullMessagePrinted;
         private int? _lastObservedHeight;
         private int? _lastObservedWidth;
 
@@ -207,41 +203,20 @@ namespace adrilight
             {
                 //if the frame is null, this can mean two things. the timeout from the desktop duplication api was reached
                 //before the monitor content changed or there was some other error.
-                if (!_lastNotNullFrameDateTime.HasValue) _lastNotNullFrameDateTime = DateTime.UtcNow;
-
-                if (!_lastNotNullFrameLoggedDateTime.HasValue
-                    || DateTime.UtcNow - _lastNotNullFrameLoggedDateTime.Value > TimeSpan.FromSeconds(30))
-                {
-                    _lastNotNullFrameLoggedDateTime = DateTime.UtcNow;
-                    _log.Debug("The frames are null since {0}", _lastNotNullFrameDateTime);
-                    _framesAreNullMessagePrinted = true;
-                }
             }
             else
             {
-                if (_lastNotNullFrameDateTime.HasValue)
-                {
-                    if (_framesAreNullMessagePrinted)
-                    {
-                        _log.Debug("There is again a frame which is not null!");
-                        _framesAreNullMessagePrinted = false;
-                    }
-                    _lastNotNullFrameDateTime = null;
-                }
-
-                if (_lastObservedHeight == null || _lastObservedWidth == null
-                    || _lastObservedHeight != image.Height
-                    || _lastObservedWidth != image.Width)
+                if (_lastObservedHeight != null && _lastObservedWidth != null
+                    && (_lastObservedHeight != image.Height || _lastObservedWidth != image.Width))
                 {
                     _log.Debug("The frame size changed from {0}x{1} to {2}x{3}"
                         , _lastObservedWidth, _lastObservedHeight
                         , image.Width, image.Height);
 
-                    _lastObservedWidth = image.Width;
-                    _lastObservedHeight = image.Height;
                 }
+                _lastObservedWidth = image.Width;
+                _lastObservedHeight = image.Height;
             }
-
         }
 
         private void ApplyColorCorrections(float r, float g, float b, out byte finalR, out byte finalG, out byte finalB, bool useLinearLighting, byte saturationTreshold
@@ -311,7 +286,10 @@ namespace adrilight
             }
             catch (Exception ex)
             {
-                _log.Error(ex, "GetNextFrame() failed.");
+                if (ex.Message != "_outputDuplication is null")
+                {
+                    _log.Error(ex, "GetNextFrame() failed.");
+                }
 
                 _desktopDuplicator?.Dispose();
                 _desktopDuplicator = null;
