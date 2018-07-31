@@ -14,7 +14,7 @@ namespace adrilight
 {
     class UserSettingsManager
     {
-        private string JsonPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "adrilight");
+        private string JsonPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "adrilight\\");
 
         private string JsonFileNameAndPath => Path.Combine(JsonPath, "adrilight-settings.json");
 
@@ -30,8 +30,8 @@ namespace adrilight
             if (!File.Exists(JsonFileNameAndPath)) return null;
 
             var json = File.ReadAllText(JsonFileNameAndPath);
-            var settings = JsonConvert.DeserializeObject<UserSettings>(json);
 
+            var settings = JsonConvert.DeserializeObject<UserSettings>(json);
             settings.PropertyChanged += (_, __) => Save(settings);
 
             HandleAutostart(settings);
@@ -41,6 +41,7 @@ namespace adrilight
         public IUserSettings MigrateOrDefault()
         {
             var settings = new UserSettings();
+            settings.PropertyChanged += (_, __) => Save(settings);
 
             var legacyPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "adrilight");
             if (!Directory.Exists(legacyPath)) return settings;
@@ -78,7 +79,6 @@ namespace adrilight
                 HandleAutostart(settings);
             }
 
-            settings.PropertyChanged += (_, __) => Save(settings);
             return settings;
         }
 
