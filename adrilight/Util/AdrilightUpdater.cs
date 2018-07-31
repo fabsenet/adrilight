@@ -19,14 +19,12 @@ namespace adrilight.Util
     class AdrilightUpdater
     {
         private readonly ILogger _log = LogManager.GetCurrentClassLogger();
-        private readonly TelemetryClient tc;
         private const string ADRILIGHT_RELEASES = "https://fabse.net/adrilight/Releases";
 
-        public AdrilightUpdater(IUserSettings settings, IContext context, TelemetryClient tc)
+        public AdrilightUpdater(IUserSettings settings, IContext context)
         {
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
             Context = context ?? throw new ArgumentNullException(nameof(context));
-            this.tc = tc ?? throw new ArgumentNullException(nameof(tc));
         }
 
         public void StartThread()
@@ -47,28 +45,28 @@ namespace adrilight.Util
 
         private async Task StartSquirrel()
         {
-            try
+            while (true)
             {
+                try
+                {
+                    using (var mgr = new UpdateManager(ADRILIGHT_RELEASES))
+                    {
+                        var releaseEntry = await mgr.UpdateApp();
 
-            using (var mgr = new UpdateManager(ADRILIGHT_RELEASES))
-            {
-                var releaseEntry = await mgr.UpdateApp();
+                        if (releaseEntry != null)
+                        {
+                            //restart adrilight if an update was installed
+                            UpdateManager.RestartApp();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _log.Error(ex, $"error when update checking: {ex.GetType().FullName}: {ex.Message}");
+                }
 
-                    //TODO notify user about update to restart adrilight?!
-
-            //Context.Invoke(() =>
-            //{
-            //    string message = $"New version of adrilight is available! The new version is {latestVersionNumber} (you are running {App.VersionNumber}). Press OK to open the download page!";
-            //    const string title = "New Adrilight Version!";
-            //    var shouldOpenUrl = MessageBox.Show(message, title, MessageBoxButton.OKCancel) == MessageBoxResult.OK;
-            //});
-
-            }
-
-            }
-            catch (Exception ex)
-            {
-                tc.TrackException(ex);
+                //check once a day for updates
+                await Task.Delay(TimeSpan.FromDays(1));
             }
         }
     }
