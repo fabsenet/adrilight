@@ -258,6 +258,7 @@
     <Compile Include="Settings\IUserSettings.cs" />
     <Compile Include="Settings\UserSettings.cs" />
     <Compile Include="Messaging\TraceFrameMessage.cs" />
+    <None Include=".editorconfig" />
     <None Include="adrilightApp.nuspec">
       <SubType>Designer</SubType>
     </None>

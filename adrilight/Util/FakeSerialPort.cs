@@ -20,9 +20,11 @@ namespace adrilight.Util
         public void Open() => IsOpen = true;
         public void Close() => IsOpen = false;
 
-        public void Dispose() {}
+        public void Dispose() {
+            fpsLogger?.Dispose();
+        }
 
-        private FpsLogger fpsLogger = new FpsLogger("FakeSerialPort");
+        private readonly FpsLogger fpsLogger = new FpsLogger("FakeSerialPort");
 
         public void Write(byte[] outputBuffer, int v, int streamLength)
         {

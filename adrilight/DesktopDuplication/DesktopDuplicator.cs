@@ -70,7 +70,7 @@ namespace adrilight.DesktopDuplication
             }
         }
 
-        private FpsLogger _desktopFrameLogger = new FpsLogger("DesktopDuplication");
+        private readonly FpsLogger _desktopFrameLogger = new FpsLogger("DesktopDuplication");
 
         
         /// <summary>
@@ -221,6 +221,7 @@ namespace adrilight.DesktopDuplication
             _desktopImageTexture?.Dispose();
             _outputDuplication?.Dispose();
             _device?.Dispose();
+            _desktopFrameLogger?.Dispose();
         }
     }
 }
