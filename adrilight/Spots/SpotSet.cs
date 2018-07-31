@@ -15,16 +15,35 @@ namespace adrilight
             UserSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
 
 
-            UserSettings.PropertyChanged += (_, __) => Refresh();
+            UserSettings.PropertyChanged += (_, e) => DecideRefresh(e.PropertyName);
             Refresh();
 
             _log.Info($"SpotSet created.");
         }
 
+        private void DecideRefresh(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case nameof(UserSettings.BorderDistanceX):
+                case nameof(UserSettings.BorderDistanceY):
+                case nameof(UserSettings.MirrorX):
+                case nameof(UserSettings.MirrorY):
+                case nameof(UserSettings.OffsetLed):
+                case nameof(UserSettings.OffsetX):
+                case nameof(UserSettings.OffsetY):
+                case nameof(UserSettings.SpotHeight):
+                case nameof(UserSettings.SpotsX):
+                case nameof(UserSettings.SpotsY):
+                case nameof(UserSettings.SpotWidth):
+                    Refresh();
+                    break;
+            }
+        }
+
         public ISpot[] Spots { get; set; }
 
-        public object Lock => _lock;
-        private readonly object _lock = new object();
+        public object Lock { get; } = new object();
 
         /// <summary>
         /// returns the number of leds
