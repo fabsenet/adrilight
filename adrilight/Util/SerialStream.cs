@@ -226,7 +226,11 @@ namespace adrilight
                 }
                 catch (Exception ex)
                 {
-                    _log.Debug(ex, "Exception catched.");
+                    if (ex.GetType() != typeof(AccessViolationException))
+                    {
+                        _log.Debug(ex, "Exception catched.");
+                    }
+
                     //to be safe, we reset the serial port
                     if (serialPort != null && serialPort.IsOpen)
                     {
