@@ -226,7 +226,7 @@ namespace adrilight
                 }
                 catch (Exception ex)
                 {
-                    if (ex.GetType() != typeof(AccessViolationException))
+                    if (ex.GetType() != typeof(AccessViolationException) && ex.GetType() != typeof(UnauthorizedAccessException))
                     {
                         _log.Debug(ex, "Exception catched.");
                     }
