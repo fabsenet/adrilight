@@ -33,10 +33,19 @@ namespace adrilight
     /// </summary>
     public sealed partial class App : Application
     {
+        private static Mutex _adrilightMutex = new Mutex(true, "adrilight2");
+
         private static readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
         protected override void OnStartup(StartupEventArgs startupEvent)
         {
+            if(!_adrilightMutex.WaitOne(TimeSpan.Zero, true))
+            {
+                //another instance is already running!
+                MessageBox.Show("There is already an instance of adrilight running. Please start only a single instance at any given time."
+                    , "Adrilight is already running!");
+                return;
+            }
             SetupDebugLogging();
             SetupLoggingForProcessWideEvents();
 
@@ -62,6 +71,12 @@ namespace adrilight
             kernel.Get<AdrilightUpdater>().StartThread();
 
             SetupTrackingForProcessWideEvents(_telemetryClient);
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            _adrilightMutex.Dispose();
         }
 
         private TelemetryClient _telemetryClient;
