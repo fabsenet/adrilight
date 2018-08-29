@@ -1,4 +1,5 @@
-﻿using adrilight.Resources;
+﻿using adrilight.DesktopDuplication;
+using adrilight.Resources;
 using adrilight.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -248,13 +249,10 @@ namespace adrilight.ViewModel
 
         public int OffsetLedMaximum => Math.Max(Settings.OffsetLed, LedCount);
 
-        //public int ScreenWidth => (int)System.Windows.SystemParameters.PrimaryScreenWidth;
-        //public int ScreenHeight => (int)System.Windows.SystemParameters.PrimaryScreenHeight;
+        public int ScreenWidth => (PreviewImageSource?.PixelWidth ?? 1000);
+        public int ScreenHeight => (PreviewImageSource?.PixelHeight ?? 1000);
 
-        public int ScreenWidth => PreviewImageSource?.PixelWidth ?? 1000;
-        public int ScreenHeight => PreviewImageSource?.PixelHeight ?? 1000;
-
-        public int CanvasPadding => 300;
+        public int CanvasPadding => 300 / DesktopDuplicator.ScalingFactor;
 
         public int CanvasWidth => ScreenWidth + 2 * CanvasPadding;
         public int CanvasHeight => ScreenHeight + 2 * CanvasPadding;

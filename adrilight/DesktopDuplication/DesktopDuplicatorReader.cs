@@ -137,31 +137,35 @@ namespace adrilight
                         var useLinearLighting = UserSettings.UseLinearLighting;
 
                         var imageRectangle = new Rectangle(0, 0, image.Width, image.Height);
-                        Parallel.ForEach(SpotSet.Spots
-                            , spot =>
-                            {
-                                const int numberOfSteps = 15;
-                                int stepx = Math.Max(1, spot.Rectangle.Width / numberOfSteps);
-                                int stepy = Math.Max(1, spot.Rectangle.Height / numberOfSteps);
 
-                                if (imageRectangle.Width != SpotSet.ExpectedScreenBound.Width || imageRectangle.Height != SpotSet.ExpectedScreenBound.Height)
+                        if (imageRectangle.Width != SpotSet.ExpectedScreenWidth || imageRectangle.Height != SpotSet.ExpectedScreenHeight)
+                        {
+                            //the screen was resized or this is some kind of powersaving state
+                            SpotSet.IndicateMissingValues();
+                            return;
+                        }
+                        else
+                        {
+                            Parallel.ForEach(SpotSet.Spots
+                                , spot =>
                                 {
-                                    //the screen was resized or this is some kind of powersaving state
-                                    SpotSet.IndicateMissingValues();
-                                    return;
-                                }
-                                GetAverageColorOfRectangularRegion(spot.Rectangle, stepy, stepx, bitmapData, 
-                                    out int sumR, out int sumG, out int sumB, out int count);
+                                    const int numberOfSteps = 15;
+                                    int stepx = Math.Max(1, spot.Rectangle.Width / numberOfSteps);
+                                    int stepy = Math.Max(1, spot.Rectangle.Height / numberOfSteps);
 
-                                var countInverse = 1f / count;
+                                    GetAverageColorOfRectangularRegion(spot.Rectangle, stepy, stepx, bitmapData,
+                                        out int sumR, out int sumG, out int sumB, out int count);
 
-                                ApplyColorCorrections(sumR * countInverse, sumG * countInverse, sumB * countInverse
-                                    , out byte finalR, out byte finalG, out byte finalB, useLinearLighting
-                                    , UserSettings.SaturationTreshold, spot.Red, spot.Green, spot.Blue);
+                                    var countInverse = 1f / count;
 
-                                spot.SetColor(finalR, finalG, finalB, isPreviewRunning);
+                                    ApplyColorCorrections(sumR * countInverse, sumG * countInverse, sumB * countInverse
+                                        , out byte finalR, out byte finalG, out byte finalB, useLinearLighting
+                                        , UserSettings.SaturationTreshold, spot.Red, spot.Green, spot.Blue);
 
-                            });
+                                    spot.SetColor(finalR, finalG, finalB, isPreviewRunning);
+
+                                });
+                        }
 
                         if (isPreviewRunning)
                         {
@@ -312,9 +316,9 @@ namespace adrilight
                 byte* pointer = (byte*)bitmapData.Scan0 + bitmapData.Stride * y + 4 * spotRectangle.Left;
                 for (int i = 0; i < stepCount; i++)
                 {
-                    sumR += pointer[2];
-                    sumG += pointer[1];
                     sumB += pointer[0];
+                    sumG += pointer[1];
+                    sumR += pointer[2];
 
                     pointer += stepxTimes4;
                 }

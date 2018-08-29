@@ -24,8 +24,9 @@ namespace adrilight.DesktopDuplication
         private OutputDescription _outputDescription;
         private readonly OutputDuplication _outputDuplication;
 
-        private Texture2D _desktopImageTexture;
-        private OutputDuplicateFrameInformation _frameInfo;
+        private Texture2D _stagingTexture;
+        private Texture2D _smallerTexture;
+        private ShaderResourceView _smallerTextureView;
 
         /// <summary>
         /// Duplicates the output of the specified monitor on the specified graphics adapter.
@@ -72,60 +73,53 @@ namespace adrilight.DesktopDuplication
 
         private readonly FpsLogger _desktopFrameLogger = new FpsLogger("DesktopDuplication");
 
-        
+
         /// <summary>
         /// Retrieves the latest desktop image and associated metadata.
         /// </summary>
         public Bitmap GetLatestFrame(Bitmap reusableImage)
         {
-                // Try to get the latest frame; this may timeout
-                bool succeeded = RetrieveFrame();
-                if (!succeeded)
-                    return null;
+            // Try to get the latest frame; this may timeout
+            var succeeded = RetrieveFrame();
+            if (!succeeded)
+                return null;
 
-                _desktopFrameLogger.TrackSingleFrame();
+            _desktopFrameLogger.TrackSingleFrame();
 
-            try
-            {
-                return ProcessFrame(reusableImage);
-            }
-            finally
-            {
-                try
-                {
-                    ReleaseFrame();
-                }
-                catch
-                {
-                   //ignored
-                }
-            }
+            return ProcessFrame(reusableImage);
+
         }
+
+        private const int mipMapLevel = 3;
+        private const int scalingFactor = 1 << mipMapLevel;
 
         private bool RetrieveFrame()
         {
-            if (_desktopImageTexture == null)
+
+            var desktopWidth = _outputDescription.DesktopBounds.GetWidth();
+            var desktopHeight = _outputDescription.DesktopBounds.GetHeight();
+
+            if (_stagingTexture == null)
             {
-                _desktopImageTexture = new Texture2D(_device, new Texture2DDescription()
+                _stagingTexture = new Texture2D(_device, new Texture2DDescription()
                 {
                     CpuAccessFlags = CpuAccessFlags.Read,
                     BindFlags = BindFlags.None,
                     Format = Format.B8G8R8A8_UNorm,
-                    Width = _outputDescription.DesktopBounds.GetWidth(),
-                    Height = _outputDescription.DesktopBounds.GetHeight(),
+                    Width = desktopWidth / scalingFactor,
+                    Height = desktopHeight / scalingFactor,
                     OptionFlags = ResourceOptionFlags.None,
                     MipLevels = 1,
                     ArraySize = 1,
                     SampleDescription = { Count = 1, Quality = 0 },
-                    Usage = ResourceUsage.Staging
+                    Usage = ResourceUsage.Staging // << can be read by CPU
                 });
             }
             SharpDX.DXGI.Resource desktopResource;
-            _frameInfo = new OutputDuplicateFrameInformation();
             try
             {
                 if (_outputDuplication == null) throw new Exception("_outputDuplication is null");
-                _outputDuplication.AcquireNextFrame(500, out _frameInfo, out desktopResource);
+                _outputDuplication.AcquireNextFrame(500, out var frameInformation, out desktopResource);
             }
             catch (SharpDXException ex)
             {
@@ -136,27 +130,53 @@ namespace adrilight.DesktopDuplication
 
                 throw new DesktopDuplicationException("Failed to acquire next frame.", ex);
             }
-
             if (desktopResource == null) throw new Exception("desktopResource is null");
+
+            if (_smallerTexture == null)
+            {
+                _smallerTexture = new Texture2D(_device, new Texture2DDescription {
+                    CpuAccessFlags = CpuAccessFlags.None,
+                    BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
+                    Format = Format.B8G8R8A8_UNorm,
+                    Width = desktopWidth,
+                    Height = desktopHeight,
+                    OptionFlags = ResourceOptionFlags.GenerateMipMaps,
+                    MipLevels = mipMapLevel + 1,
+                    ArraySize = 1,
+                    SampleDescription = { Count = 1, Quality = 0 },
+                    Usage = ResourceUsage.Default
+                });
+                _smallerTextureView = new ShaderResourceView(_device, _smallerTexture);
+            }
+
+
             using (var tempTexture = desktopResource.QueryInterface<Texture2D>())
             {
                 if (_device == null) throw new Exception("_device is null");
                 if (_device.ImmediateContext == null) throw new Exception("_device.ImmediateContext is null");
 
-                _device.ImmediateContext.CopyResource(tempTexture, _desktopImageTexture);
+                _device.ImmediateContext.CopySubresourceRegion(tempTexture, 0, null, _smallerTexture, 0);
             }
-            desktopResource.Dispose();
+            _outputDuplication.ReleaseFrame();
+
+            // Generates the mipmap of the screen
+            _device.ImmediateContext.GenerateMips(_smallerTextureView);
+
+            // Copy the mipmap 1 of smallerTexture (size/2) to the staging texture
+            _device.ImmediateContext.CopySubresourceRegion(_smallerTexture, mipMapLevel, null, _stagingTexture, 0);
+
+            desktopResource.Dispose(); //perf?
             return true;
         }
 
         private Bitmap ProcessFrame(Bitmap reusableImage)
         {
             // Get the desktop capture texture
-            var mapSource = _device.ImmediateContext.MapSubresource(_desktopImageTexture, 0, MapMode.Read, MapFlags.None);
+            var mapSource = _device.ImmediateContext.MapSubresource(_stagingTexture, 0, MapMode.Read, MapFlags.None);
             
             Bitmap image;
-            var width = _outputDescription.DesktopBounds.GetWidth();
-            var height = _outputDescription.DesktopBounds.GetHeight();
+            var width = _outputDescription.DesktopBounds.GetWidth() / scalingFactor;
+            var height = _outputDescription.DesktopBounds.GetHeight() / scalingFactor;
 
             if (reusableImage!=null && reusableImage.Width==width && reusableImage.Height==height)
             {
@@ -195,30 +215,19 @@ namespace adrilight.DesktopDuplication
 
             // Release source and dest locks
             image.UnlockBits(mapDest);
-            _device.ImmediateContext.UnmapSubresource(_desktopImageTexture, 0);
+            _device.ImmediateContext.UnmapSubresource(_stagingTexture, 0);
             return image;
         }
 
-        private void ReleaseFrame()
-        {
-            try
-            {
-                _outputDuplication.ReleaseFrame();
-            }
-            catch (SharpDXException ex)
-            {
-                if (ex.ResultCode.Failure)
-                {
-                    throw new DesktopDuplicationException("Failed to release frame.");
-                }
-            }
-        }
 
         public bool IsDisposed { get; private set; }
+
+        public static int ScalingFactor => scalingFactor;
+
         public void Dispose()
         {
             IsDisposed = true;
-            _desktopImageTexture?.Dispose();
+            _stagingTexture?.Dispose();
             _outputDuplication?.Dispose();
             _device?.Dispose();
             _desktopFrameLogger?.Dispose();

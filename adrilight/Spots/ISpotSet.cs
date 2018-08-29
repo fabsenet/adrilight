@@ -4,7 +4,9 @@ namespace adrilight
 {
     public interface ISpotSet
     {
-        Rectangle ExpectedScreenBound { get; }
+        int ExpectedScreenWidth { get; }
+        int ExpectedScreenHeight { get; }
+
         ISpot[] Spots { get; set; }
         object Lock { get; }
 

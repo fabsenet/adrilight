@@ -18,11 +18,13 @@ namespace adrilight.Fakes
             Spots[0].IsFirst = true;
         }
 
-        public Rectangle ExpectedScreenBound { get; } = new Rectangle(0,0,1920,1080);
-
         public ISpot[] Spots { get; set; }
 
         public object Lock { get; } = new object();
+
+        public int ExpectedScreenWidth => 1920;
+
+        public int ExpectedScreenHeight => 1080;
 
         public int CountLeds(int spotsX, int spotsY)
         {
