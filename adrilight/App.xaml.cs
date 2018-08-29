@@ -44,6 +44,7 @@ namespace adrilight
                 //another instance is already running!
                 MessageBox.Show("There is already an instance of adrilight running. Please start only a single instance at any given time."
                     , "Adrilight is already running!");
+                App.Current.Shutdown();
                 return;
             }
             SetupDebugLogging();
