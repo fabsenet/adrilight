@@ -14,6 +14,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -22,7 +23,7 @@ using System.Windows.Media.Imaging;
 
 namespace adrilight.ViewModel
 {
-    class SettingsViewModel : ViewModelBase
+    public class SettingsViewModel : ViewModelBase
     {
         private static ILogger _log = LogManager.GetCurrentClassLogger();
 
@@ -267,5 +268,7 @@ namespace adrilight.ViewModel
                 RaisePropertyChanged();
             }
         }
+
+        public Uri WhatsNewUrl =>new Uri( $"https://fabse.net/adrilight/{App.VersionNumber}/{Thread.CurrentThread.CurrentUICulture.Name}");
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace adrilight.ViewModel
 {
-    interface ISelectableViewPart
+    public interface ISelectableViewPart
     {
         int Order { get; }
         string ViewPartName { get; }

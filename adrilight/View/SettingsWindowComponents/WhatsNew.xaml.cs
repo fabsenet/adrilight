@@ -21,9 +21,10 @@ namespace adrilight.View.SettingsWindowComponents
     /// </summary>
     public partial class WhatsNew : UserControl
     {
-        public WhatsNew()
+        public WhatsNew(SettingsViewModel settingsViewModel)
         {
             InitializeComponent();
+            browser.Source = settingsViewModel.WhatsNewUrl;
         }
 
 
@@ -37,7 +38,7 @@ namespace adrilight.View.SettingsWindowComponents
                 this.lazyContent = lazyContent ?? throw new ArgumentNullException(nameof(lazyContent));
             }
 
-            public int Order => 50;
+            public int Order => -50;
 
             public string ViewPartName => "Whats New?";
 

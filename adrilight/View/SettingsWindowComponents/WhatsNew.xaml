@@ -20,7 +20,7 @@
     </UserControl.Resources>
     <Grid>
         <materialDesign:Card Margin="4 4 4 4" Width="900" VerticalAlignment="Stretch" Height="auto">
-            <WebBrowser Source="https://fabse.net"></WebBrowser>
+            <WebBrowser x:Name="browser"></WebBrowser>
         </materialDesign:Card>
     </Grid>
 </UserControl>
