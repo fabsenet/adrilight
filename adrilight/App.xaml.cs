@@ -67,7 +67,14 @@ namespace adrilight
 
             SetupNotifyIcon();
 
-            if (!UserSettings.StartMinimized)
+            var isNewVersion = VersionNumber != UserSettings.AdrilightVersion;
+            if (isNewVersion)
+            {
+                //place for upgrades of settings between versions
+                UserSettings.AdrilightVersion = VersionNumber;
+            }
+
+            if (!UserSettings.StartMinimized || isNewVersion)
             {
                 OpenSettingsWindow();
             }
