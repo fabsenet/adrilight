@@ -38,6 +38,7 @@ namespace adrilight.Fakes
 
         public bool SendRandomColors { get; set; }
         public int LimitFps { get; set; } = 60;
+        public string AdrilightVersion { get; set; } = "2.0.6";
 
         public event PropertyChangedEventHandler PropertyChanged;
     }

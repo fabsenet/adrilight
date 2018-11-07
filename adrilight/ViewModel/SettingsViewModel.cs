@@ -81,11 +81,6 @@ namespace adrilight.ViewModel
                         RaisePropertyChanged(() => OffsetLedMaximum);
                         break;
 
-                    case nameof(Settings.LedsPerSpot):
-                        RaisePropertyChanged(() => LedCount);
-                        RaisePropertyChanged(() => OffsetLedMaximum);
-                        break;
-
                     case nameof(Settings.UseLinearLighting):
                         RaisePropertyChanged(() => UseNonLinearLighting);
                         break;
@@ -114,7 +109,7 @@ namespace adrilight.ViewModel
         }
 
         public string Title { get; } = $"adrilight {App.VersionNumber}";
-        public int LedCount => spotSet.CountLeds(Settings.SpotsX, Settings.SpotsY) * Settings.LedsPerSpot;
+        public int LedCount => spotSet.CountLeds(Settings.SpotsX, Settings.SpotsY);
 
         public bool TransferCanBeStarted => serialStream.IsValid();
         public bool TransferCanNotBeStarted => !TransferCanBeStarted;

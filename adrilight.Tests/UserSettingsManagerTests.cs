@@ -13,13 +13,13 @@ namespace adrilight.Tests
 
             var settings = manager.LoadIfExists() ?? manager.MigrateOrDefault();
 
-            var testDate = DateTime.UtcNow;
+            var b = (byte)(new Random().NextDouble()*255);
 
-            settings.LastUpdateCheck = testDate;
+            settings.WhitebalanceBlue = b;
             //save should happen automatically!
 
             var settings2 = manager.LoadIfExists();
-            Assert.AreEqual(testDate, settings.LastUpdateCheck, "settings.LastUpdateCheck");
+            Assert.AreEqual(b, settings.WhitebalanceBlue, "settings.WhitebalanceBlue");
         }
 
         [TestMethod]

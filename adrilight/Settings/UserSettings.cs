@@ -16,13 +16,10 @@ namespace adrilight
         private int _borderDistanceX = 0;
         private int _borderDistanceY = 100;
         private string _comPort = null;
-        private DateTime? _lastUpdateCheck=DateTime.UtcNow;
-        private int _ledsPerSpot = 1;
+        private string _adrilightVersion = "2.0.7";
         private bool _mirrorX = false;
         private bool _mirrorY = false;
         private int _offsetLed = 0;
-        private int _offsetX = 0;
-        private int _offsetY = 0;
         private bool _isPreviewEnabled = false;
         private byte _saturationTreshold = 10;
         private int _spotHeight = 50;
@@ -46,17 +43,12 @@ namespace adrilight
         public int BorderDistanceX { get => _borderDistanceX; set { Set(() => BorderDistanceX, ref _borderDistanceX, value); } }
         public int BorderDistanceY { get => _borderDistanceY; set { Set(() => BorderDistanceY, ref _borderDistanceY, value); } }
         public string ComPort { get => _comPort; set { Set(() => ComPort, ref _comPort, value); } }
-        public DateTime? LastUpdateCheck { get => _lastUpdateCheck; set { Set(() => LastUpdateCheck, ref _lastUpdateCheck, value); } }
 
-        [Obsolete]
-        public int LedsPerSpot { get => _ledsPerSpot; set { Set(() => LedsPerSpot, ref _ledsPerSpot, value); } }
+        public string AdrilightVersion { get => _adrilightVersion; set { Set(() => AdrilightVersion, ref _adrilightVersion, value); } }
+
         public bool MirrorX { get => _mirrorX; set { Set(() => MirrorX, ref _mirrorX, value); } }
         public bool MirrorY { get => _mirrorY; set { Set(() => MirrorY, ref _mirrorY, value); } }
         public int OffsetLed { get => _offsetLed; set { Set(() => OffsetLed, ref _offsetLed, value); } }
-        [Obsolete]
-        public int OffsetX { get => _offsetX; set { Set(() => OffsetX, ref _offsetX, value); } }
-        [Obsolete]
-        public int OffsetY { get => _offsetY; set { Set(() => OffsetY, ref _offsetY, value); } }
 
         public int LimitFps { get => _limitFps; set { Set(() => LimitFps, ref _limitFps, value); } }
 

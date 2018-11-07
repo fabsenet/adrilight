@@ -31,8 +31,6 @@ namespace adrilight
                 case nameof(UserSettings.MirrorX):
                 case nameof(UserSettings.MirrorY):
                 case nameof(UserSettings.OffsetLed):
-                case nameof(UserSettings.OffsetX):
-                case nameof(UserSettings.OffsetY):
                 case nameof(UserSettings.SpotHeight):
                 case nameof(UserSettings.SpotsX):
                 case nameof(UserSettings.SpotsY):
@@ -111,10 +109,10 @@ namespace adrilight
 
                     if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
                     {
-                        var x = (xRemainingOffset + borderDistanceX + userSettings.OffsetX / scalingFactor + i * xResolution)
+                        var x = (xRemainingOffset + borderDistanceX / scalingFactor + i * xResolution)
                                 .Clamp(0, screenWidth);
 
-                        var y = (yRemainingOffset + borderDistanceY + userSettings.OffsetY / scalingFactor + j * yResolution)
+                        var y = (yRemainingOffset + borderDistanceY / scalingFactor + j * yResolution)
                                 .Clamp(0, screenHeight);
 
                         var index = counter++; // in first row index is always counter

@@ -119,7 +119,7 @@ namespace adrilight
             {
                 const int colorsPerLed = 3;
                 int bufferLength = _messagePreamble.Length
-                    + (UserSettings.LedsPerSpot * SpotSet.Spots.Length * colorsPerLed)
+                    + (SpotSet.Spots.Length * colorsPerLed)
                     + _messagePostamble.Length;
 
 
@@ -131,25 +131,22 @@ namespace adrilight
                 var allBlack = true;
                 foreach (Spot spot in SpotSet.Spots)
                 {
-                    for (int i = 0; i < UserSettings.LedsPerSpot; i++)
+                    if (!UserSettings.SendRandomColors)
                     {
-                        if (!UserSettings.SendRandomColors)
-                        {
-                            outputStream[counter++] = spot.Blue; // blue
-                            outputStream[counter++] = spot.Green; // green
-                            outputStream[counter++] = spot.Red; // red
+                        outputStream[counter++] = spot.Blue; // blue
+                        outputStream[counter++] = spot.Green; // green
+                        outputStream[counter++] = spot.Red; // red
 
-                            allBlack = allBlack && spot.Red == 0 && spot.Green == 0 && spot.Blue == 0;
-                        }
-                        else
-                        {
-                            allBlack = false;
-                            var n = frameCounter % 360;
-                            var c = ColorUtil.FromAhsb(255, n, 1, 0.5f);
-                            outputStream[counter++] = c.B; // blue
-                            outputStream[counter++] = c.G; // green
-                            outputStream[counter++] = c.R; // red
-                        }
+                        allBlack = allBlack && spot.Red == 0 && spot.Green == 0 && spot.Blue == 0;
+                    }
+                    else
+                    {
+                        allBlack = false;
+                        var n = frameCounter % 360;
+                        var c = ColorUtil.FromAhsb(255, n, 1, 0.5f);
+                        outputStream[counter++] = c.B; // blue
+                        outputStream[counter++] = c.G; // green
+                        outputStream[counter++] = c.R; // red
                     }
                 }
 

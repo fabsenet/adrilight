@@ -9,16 +9,11 @@ namespace adrilight
         int BorderDistanceX { get; set; }
         int BorderDistanceY { get; set; }
         string ComPort { get; set; }
-        DateTime? LastUpdateCheck { get; set; }
-        [Obsolete]
-        int LedsPerSpot { get; set; }
+
         bool MirrorX { get; set; }
         bool MirrorY { get; set; }
         int OffsetLed { get; set; }
-        [Obsolete]
-        int OffsetX { get; set; }
-        [Obsolete]
-        int OffsetY { get; set; }
+
         bool IsPreviewEnabled { get; set; }
         byte SaturationTreshold { get; set; }
         int SpotHeight { get; set; }
@@ -37,5 +32,7 @@ namespace adrilight
         bool SendRandomColors { get; set; }
 
         int LimitFps { get; set; }
+
+        string AdrilightVersion { get; set; }
     }
 }

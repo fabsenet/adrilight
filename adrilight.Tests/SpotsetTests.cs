@@ -28,8 +28,6 @@ namespace adrilight.Tests
             userSettings
                 .SetupProperty(s => s.SpotsX, 1)
                 .SetupProperty(s => s.SpotsY, 1)
-                .SetupProperty(s => s.OffsetX, 0)
-                .SetupProperty(s => s.OffsetY, 0)
                 .SetupProperty(s => s.BorderDistanceX, 0)
                 .SetupProperty(s => s.BorderDistanceY, 0)
                 .SetupProperty(s => s.OffsetLed, 0)
