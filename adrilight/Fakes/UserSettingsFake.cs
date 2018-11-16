@@ -10,6 +10,7 @@ namespace adrilight.Fakes
     class UserSettingsFake : IUserSettings
     {
         public bool Autostart { get; set; } = true;
+        public int ConfigFileVersion { get; set; } = 2;
         public int BorderDistanceX { get; set; } = 33;
         public int BorderDistanceY { get; set; } = 44;
         public string ComPort { get; set; } = "COM7";

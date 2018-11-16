@@ -136,9 +136,7 @@ namespace adrilight
                     {
                         var useLinearLighting = UserSettings.UseLinearLighting;
 
-                        var imageRectangle = new Rectangle(0, 0, image.Width, image.Height);
-
-                        if (imageRectangle.Width != SpotSet.ExpectedScreenWidth || imageRectangle.Height != SpotSet.ExpectedScreenHeight)
+                        if (image.Width != SpotSet.ExpectedScreenWidth || image.Height != SpotSet.ExpectedScreenHeight)
                         {
                             //the screen was resized or this is some kind of powersaving state
                             SpotSet.IndicateMissingValues();

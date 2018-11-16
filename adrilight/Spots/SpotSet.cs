@@ -2,6 +2,7 @@
 using adrilight.Extensions;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -47,16 +48,9 @@ namespace adrilight
         /// <summary>
         /// returns the number of leds
         /// </summary>
-        public int CountLeds(int spotsX, int spotsY)
+        public static int CountLeds(int spotsX, int spotsY)
         {
-            if (spotsX <= 1 || spotsY <= 1)
-            {
-                //special case because it is not really a rectangle of lights but a single light or a line of lights
-                return spotsX * spotsY;
-            }
-
-            //normal case
-            return 2 * spotsX + 2 * spotsY - 4;
+            return 2 * spotsX + 2 * spotsY;
         }
 
         public int ExpectedScreenWidth => Screen.PrimaryScreen.Bounds.Width / DesktopDuplicator.ScalingFactor;
@@ -73,7 +67,52 @@ namespace adrilight
             }
         }
 
-        internal ISpot[] BuildSpots(int screenWidth, int screenHeight, IUserSettings userSettings)
+        internal static IEnumerable<(int x, int y)> BoundsWalker(int horizontalStripCount, int verticalStripCount)
+        {
+            if (horizontalStripCount < 1) throw new ArgumentOutOfRangeException(nameof(horizontalStripCount));
+            if (verticalStripCount < 1) throw new ArgumentOutOfRangeException(nameof(verticalStripCount));
+
+            /* counting direction is clockwise:
+             * 
+             *    0123
+             *    9  4
+             *    8765
+             * 
+             * number of expected entries = 2*horizontalStripCount + 2*verticalStripCount
+             * 
+             * ranges are 
+             * 1..horizontalStripCount, 0  = top
+             * horizontalStripCount+1, 1..verticalStripCount  = right
+             * horizontalStripCount..1, verticalStripCount+1  = bottom
+             * 0, verticalStripCount..1)  = left
+             */
+
+             //top
+            for (int x = 1; x <= horizontalStripCount; x++)
+            {
+                yield return (x, 0);
+            }
+
+            //right
+            for (int y = 1; y <= verticalStripCount; y++)
+            {
+                yield return (horizontalStripCount + 1, y);
+            }
+
+            //bottom
+            for (int x = horizontalStripCount; x >= 1; x--)
+            {
+                yield return (x, verticalStripCount+1);
+            }
+
+            //left
+            for (int y = verticalStripCount; y >=1; y--)
+            {
+                yield return (0, y);
+            }
+        }
+
+        internal static ISpot[] BuildSpots(int screenWidth, int screenHeight, IUserSettings userSettings)
         {
             var spotsX = userSettings.SpotsX;
             var spotsY = userSettings.SpotsY;
@@ -85,15 +124,6 @@ namespace adrilight
             var borderDistanceY = userSettings.BorderDistanceY / scalingFactor;
             var spotWidth = userSettings.SpotWidth / scalingFactor;
             var spotHeight = userSettings.SpotHeight / scalingFactor;
-
-            var canvasSizeX = screenWidth - 2 * borderDistanceX;
-            var canvasSizeY = screenHeight - 2 * borderDistanceY;
-
-
-            var xResolution = spotsX > 1 ? (canvasSizeX - spotWidth) / (spotsX - 1) : 0;
-            var xRemainingOffset = spotsX > 1 ? ((canvasSizeX - spotWidth) % (spotsX - 1)) / 2 : 0;
-            var yResolution = spotsY > 1 ? (canvasSizeY - spotHeight) / (spotsY - 1) : 0;
-            var yRemainingOffset = spotsY > 1 ? ((canvasSizeY - spotHeight) % (spotsY - 1)) / 2 : 0;
 
             var counter = 0;
             var relationIndex = spotsX - spotsY + 1;
@@ -109,10 +139,10 @@ namespace adrilight
 
                     if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
                     {
-                        var x = (xRemainingOffset + borderDistanceX / scalingFactor + i * xResolution)
+                        var x = ((spotsX > 1 ? ((screenWidth - 2 * borderDistanceX - spotWidth) % (spotsX - 1)) / 2 : 0) + borderDistanceX + i * (spotsX > 1 ? (screenWidth - 2 * borderDistanceX - spotWidth) / (spotsX - 1) : 0))
                                 .Clamp(0, screenWidth);
 
-                        var y = (yRemainingOffset + borderDistanceY / scalingFactor + j * yResolution)
+                        var y = ((spotsY > 1 ? ((screenHeight - 2 * borderDistanceY - spotHeight) % (spotsY - 1)) / 2 : 0) + borderDistanceY  + j * (spotsY > 1 ? (screenHeight - 2 * borderDistanceY - spotHeight) / (spotsY - 1) : 0))
                                 .Clamp(0, screenHeight);
 
                         var index = counter++; // in first row index is always counter

@@ -109,7 +109,7 @@ namespace adrilight.ViewModel
         }
 
         public string Title { get; } = $"adrilight {App.VersionNumber}";
-        public int LedCount => spotSet.CountLeds(Settings.SpotsX, Settings.SpotsY);
+        public int LedCount => SpotSet.CountLeds(Settings.SpotsX, Settings.SpotsY);
 
         public bool TransferCanBeStarted => serialStream.IsValid();
         public bool TransferCanNotBeStarted => !TransferCanBeStarted;

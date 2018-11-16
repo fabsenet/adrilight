@@ -72,6 +72,14 @@ namespace adrilight
             {
                 //place for upgrades of settings between versions
                 UserSettings.AdrilightVersion = VersionNumber;
+                if(UserSettings.ConfigFileVersion == 1)
+                {
+                    UserSettings.ConfigFileVersion = 2;
+
+                    //convert from weird legacy led matrix width and height to simple strip length!
+                    UserSettings.SpotsX = Math.Max(1, UserSettings.SpotsX);
+                    UserSettings.SpotsY = Math.Max(1, UserSettings.SpotsY-2);
+                }
             }
 
             if (!UserSettings.StartMinimized || isNewVersion)

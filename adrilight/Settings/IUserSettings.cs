@@ -5,6 +5,7 @@ namespace adrilight
 {
     public interface IUserSettings : INotifyPropertyChanged
     {
+        int ConfigFileVersion { get; set; }
         bool Autostart { get; set; }
         int BorderDistanceX { get; set; }
         int BorderDistanceY { get; set; }

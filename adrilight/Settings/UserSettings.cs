@@ -34,9 +34,10 @@ namespace adrilight
         private byte _whitebalanceBlue = 100;
         private bool _sendRandomColors = false;
         private int _limitFps = 60;
+        private int _configFileVersion = 2;
 
         //support future config file migration
-        public int ConfigFileVersion { get; set; } = 1;
+        public int ConfigFileVersion { get => _configFileVersion; set { Set(() => ConfigFileVersion, ref _configFileVersion, value); } }
 
 
         public bool Autostart { get => _autostart; set { Set(() => Autostart, ref _autostart, value); } }

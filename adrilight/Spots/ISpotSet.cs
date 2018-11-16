@@ -10,7 +10,6 @@ namespace adrilight
         ISpot[] Spots { get; set; }
         object Lock { get; }
 
-        int CountLeds(int spotsX, int spotsY);
         void IndicateMissingValues();
     }
 }

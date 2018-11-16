@@ -29,7 +29,7 @@
                                          HorizontalAlignment="Center" />
                 
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
-                    <TextBlock FontWeight="Bold">Horizontal LED Count</TextBlock>
+                    <TextBlock FontWeight="Bold">Horizontal LED Strip Length</TextBlock>
                     <DockPanel>
                         <TextBox DockPanel.Dock="Right"
                                 MinWidth="50"
@@ -42,7 +42,7 @@
                                 Value="{Binding Settings.SpotsX}" />
                     </DockPanel>
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
-                        This is the number of LEDs your setup has in a horizontal row.
+                        This is the number of LEDs your horizontal strip actually has.
                     </TextBlock>
                 </StackPanel>
             </Grid>
@@ -60,7 +60,7 @@
                                          HorizontalAlignment="Center" />
                 
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
-                    <TextBlock FontWeight="Bold">Vertical LED Count</TextBlock>
+                    <TextBlock FontWeight="Bold">Vertical LED Strip Length</TextBlock>
                     <DockPanel>
                         <TextBox DockPanel.Dock="Right"
                                 MinWidth="50"
@@ -73,7 +73,7 @@
                                 Value="{Binding Settings.SpotsY}"/>
                     </DockPanel>
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
-                        This is the number of LEDs your setup has in a vertical row.
+                                This is the number of LEDs your vertical strip actually has.
                     </TextBlock>
                 </StackPanel>
             </Grid>
