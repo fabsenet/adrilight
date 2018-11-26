@@ -65,9 +65,8 @@
 
                     <Image Source="{Binding PreviewImageSource}" 
                            Width="{Binding ScreenWidth}" Height="{Binding ScreenHeight}"
-                           Margin="4" 
                            Canvas.Left="{Binding CanvasPadding}" Canvas.Top="{Binding CanvasPadding}" Opacity="0.7" />
-
+                   
                     <ItemsControl ItemsSource="{Binding PreviewSpots}"
                            Canvas.Left="{Binding CanvasPadding}" Canvas.Top="{Binding CanvasPadding}" >
                         <ItemsControl.ItemsPanel>

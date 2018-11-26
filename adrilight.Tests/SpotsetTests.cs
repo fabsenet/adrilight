@@ -36,11 +36,11 @@ namespace adrilight.Tests
                 .SetupProperty(s => s.SpotWidth, 90)
                 .SetupProperty(s => s.SpotHeight, 80)
                 ;
-            var spotset = new SpotSet(userSettings.Object);
+            var spots= SpotSet.BuildSpots(180,120, userSettings.Object);
 
-            Assert.IsNotNull(spotset.Spots, "spotset.Spots");
-            Assert.AreEqual(1, spotset.Spots.Length, "spotset.Spots.Length");
-            Assert.AreEqual(new Rectangle(0, 0, 90, 80), spotset.Spots[0].Rectangle, "spotset.Spots[0].Rectangle");
+            Assert.IsNotNull(spots, "spotset.Spots");
+            Assert.AreEqual(4, spots.Length, "spotset.Spots.Length");
+            Assert.AreEqual(new Rectangle(84, 0, 90/8, 80/8), spots[0].Rectangle, "spots[0].Rectangle");
         }
 
         [TestMethod]
@@ -63,7 +63,7 @@ namespace adrilight.Tests
 
             Assert.IsNotNull(spots, "spotset.Spots");
             Assert.AreEqual(2+2+2+2, spots.Length, "spotset.Spots.Length");
-            Assert.AreEqual(new Rectangle(0, 0, 1, 1), spots[0].Rectangle, "spotset.Spots[0].Rectangle");
+            Assert.AreEqual(new Rectangle(639, 0, 1, 1), spots[0].Rectangle, "spotset.Spots[0].Rectangle");
         }
 
         //https://github.com/fabsenet/adrilight/issues/68
@@ -86,8 +86,8 @@ namespace adrilight.Tests
             var spots = SpotSet.BuildSpots(3840/8, 2160/8, userSettings.Object);
 
             Assert.IsNotNull(spots, "spotset.Spots");
-            Assert.AreEqual(126, spots.Length, "spotset.Spots.Length");
-            Assert.AreEqual(new Rectangle(0, 0, 28/8, 30/8), spots[0].Rectangle, "spotset.Spots[0].Rectangle");
+            Assert.AreEqual(40+40+25+25, spots.Length, "spotset.Spots.Length");
+            Assert.AreEqual(new Rectangle(11, 0, 28/8, 30/8), spots[0].Rectangle, "spotset.Spots[0].Rectangle");
         }
 
         [TestMethod]

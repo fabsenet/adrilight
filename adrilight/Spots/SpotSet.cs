@@ -3,7 +3,9 @@ using adrilight.Extensions;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace adrilight
@@ -116,8 +118,6 @@ namespace adrilight
         {
             var spotsX = userSettings.SpotsX;
             var spotsY = userSettings.SpotsY;
-            ISpot[] spots = new Spot[CountLeds(spotsX, spotsY)];
-
 
             var scalingFactor = DesktopDuplicator.ScalingFactor;
             var borderDistanceX = userSettings.BorderDistanceX / scalingFactor;
@@ -125,52 +125,93 @@ namespace adrilight
             var spotWidth = userSettings.SpotWidth / scalingFactor;
             var spotHeight = userSettings.SpotHeight / scalingFactor;
 
-            var counter = 0;
-            var relationIndex = spotsX - spotsY + 1;
+            //var counter = 0;
+            //var relationIndex = spotsX - spotsY + 1;
 
-            for (var j = 0; j < spotsY; j++)
-            {
-                for (var i = 0; i < spotsX; i++)
+            var interSpotGapX = (screenWidth - 2 * borderDistanceX - (spotsX+2) * spotWidth)*1.0/(spotsX+2-1);
+            var interSpotGapY = (screenHeight- 2 * borderDistanceY - (spotsY+2) * spotHeight)*1.0/(spotsY+2-1);
+
+            ISpot[] spots = BoundsWalker(spotsX, spotsY)
+                .Select(p =>
                 {
-                    var isFirstColumn = i == 0;
-                    var isLastColumn = i == spotsX - 1;
-                    var isFirstRow = j == 0;
-                    var isLastRow = j == spotsY - 1;
-
-                    if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
+                    //left row
+                    var left = 0;
+                    if (p.x == spotsX + 1)
                     {
-                        var x = ((spotsX > 1 ? ((screenWidth - 2 * borderDistanceX - spotWidth) % (spotsX - 1)) / 2 : 0) + borderDistanceX + i * (spotsX > 1 ? (screenWidth - 2 * borderDistanceX - spotWidth) / (spotsX - 1) : 0))
-                                .Clamp(0, screenWidth);
-
-                        var y = ((spotsY > 1 ? ((screenHeight - 2 * borderDistanceY - spotHeight) % (spotsY - 1)) / 2 : 0) + borderDistanceY  + j * (spotsY > 1 ? (screenHeight - 2 * borderDistanceY - spotHeight) / (spotsY - 1) : 0))
-                                .Clamp(0, screenHeight);
-
-                        var index = counter++; // in first row index is always counter
-
-                        if (spotsX > 1 && spotsY > 1)
-                        {
-                            if (!isFirstRow && !isLastRow)
-                            {
-                                if (isFirstColumn)
-                                {
-                                    index += relationIndex + ((spotsY - 1 - j) * 3);
-                                }
-                                else if (isLastColumn)
-                                {
-                                    index -= j;
-                                }
-                            }
-
-                            if (!isFirstRow && isLastRow)
-                            {
-                                index += relationIndex - i * 2;
-                            }
-                        }
-
-                        spots[index] = new Spot(x, y, spotWidth, spotHeight);
+                        //right row
+                        left = screenWidth - borderDistanceX - spotWidth;
                     }
-                }
-            }
+                    else
+                    {
+                        //top/bottom row
+                        left = borderDistanceX + (p.x) * spotWidth + (int)((p.x) * interSpotGapX);
+                    }
+
+                    //top row
+                    var top = 0;
+                    if (p.y == spotsY + 1)
+                    {
+                        //bottom row
+                        top = screenHeight - borderDistanceY - spotHeight;
+                    }
+                    else
+                    {
+                        //left/right row
+                        top = borderDistanceY + (p.y) * spotHeight + (int)((p.y) * interSpotGapY);
+                    }
+
+                    Debug.Assert(top >= 0, "top >= 0");
+                    Debug.Assert(top <= screenHeight - spotHeight, "top <= screenHeight-spotHeight");
+                    Debug.Assert(left >= 0, "left >= 0");
+                    Debug.Assert(left <= screenWidth - spotWidth, "left <= screenWidth - spotWidth");
+
+                    return new Spot(left, top, spotWidth, spotHeight);
+                })
+                .ToArray();
+
+            //for (var j = 0; j < spotsY; j++)
+            //{
+            //    for (var i = 0; i < spotsX; i++)
+            //    {
+            //        var isFirstColumn = i == 0;
+            //        var isLastColumn = i == spotsX - 1;
+            //        var isFirstRow = j == 0;
+            //        var isLastRow = j == spotsY - 1;
+
+            //        if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
+            //        {
+            //            var x = ((spotsX > 1 ? ((screenWidth - 2 * borderDistanceX - spotWidth) % (spotsX - 1)) / 2 : 0) + borderDistanceX + i * (spotsX > 1 ? (screenWidth - 2 * borderDistanceX - spotWidth) / (spotsX - 1) : 0))
+            //                    .Clamp(0, screenWidth);
+
+            //            var y = ((spotsY > 1 ? ((screenHeight - 2 * borderDistanceY - spotHeight) % (spotsY - 1)) / 2 : 0) + borderDistanceY  + j * (spotsY > 1 ? (screenHeight - 2 * borderDistanceY - spotHeight) / (spotsY - 1) : 0))
+            //                    .Clamp(0, screenHeight);
+
+            //            var index = counter++; // in first row index is always counter
+
+            //            if (spotsX > 1 && spotsY > 1)
+            //            {
+            //                if (!isFirstRow && !isLastRow)
+            //                {
+            //                    if (isFirstColumn)
+            //                    {
+            //                        index += relationIndex + ((spotsY - 1 - j) * 3);
+            //                    }
+            //                    else if (isLastColumn)
+            //                    {
+            //                        index -= j;
+            //                    }
+            //                }
+
+            //                if (!isFirstRow && isLastRow)
+            //                {
+            //                    index += relationIndex - i * 2;
+            //                }
+            //            }
+
+            //            spots[index] = new Spot(x, y, spotWidth, spotHeight);
+            //        }
+            //    }
+            //}
 
             //TODO totally broken :(
 
