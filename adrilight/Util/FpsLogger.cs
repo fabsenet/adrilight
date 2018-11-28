@@ -59,6 +59,8 @@ namespace adrilight.Util
 
         private void WriteFpsLog(int fps)
         {
+            if (fps == 0) return;
+
             _log.Debug($"there were {fps} frames for {_name} in the last second.");
         }
 
