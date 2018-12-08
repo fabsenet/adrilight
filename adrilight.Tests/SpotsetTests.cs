@@ -36,7 +36,7 @@ namespace adrilight.Tests
                 .SetupProperty(s => s.SpotWidth, 90)
                 .SetupProperty(s => s.SpotHeight, 80)
                 ;
-            var spots= SpotSet.BuildSpots(180,120, userSettings.Object);
+            var spots = SpotSet.BuildSpots(180, 120, userSettings.Object);
 
             Assert.IsNotNull(spots, "spotset.Spots");
             Assert.AreEqual(4, spots.Length, "spotset.Spots.Length");
