@@ -169,55 +169,11 @@ namespace adrilight
                 })
                 .ToArray();
 
-            //for (var j = 0; j < spotsY; j++)
-            //{
-            //    for (var i = 0; i < spotsX; i++)
-            //    {
-            //        var isFirstColumn = i == 0;
-            //        var isLastColumn = i == spotsX - 1;
-            //        var isFirstRow = j == 0;
-            //        var isLastRow = j == spotsY - 1;
-
-            //        if (isFirstColumn || isLastColumn || isFirstRow || isLastRow) // needing only outer spots
-            //        {
-            //            var x = ((spotsX > 1 ? ((screenWidth - 2 * borderDistanceX - spotWidth) % (spotsX - 1)) / 2 : 0) + borderDistanceX + i * (spotsX > 1 ? (screenWidth - 2 * borderDistanceX - spotWidth) / (spotsX - 1) : 0))
-            //                    .Clamp(0, screenWidth);
-
-            //            var y = ((spotsY > 1 ? ((screenHeight - 2 * borderDistanceY - spotHeight) % (spotsY - 1)) / 2 : 0) + borderDistanceY  + j * (spotsY > 1 ? (screenHeight - 2 * borderDistanceY - spotHeight) / (spotsY - 1) : 0))
-            //                    .Clamp(0, screenHeight);
-
-            //            var index = counter++; // in first row index is always counter
-
-            //            if (spotsX > 1 && spotsY > 1)
-            //            {
-            //                if (!isFirstRow && !isLastRow)
-            //                {
-            //                    if (isFirstColumn)
-            //                    {
-            //                        index += relationIndex + ((spotsY - 1 - j) * 3);
-            //                    }
-            //                    else if (isLastColumn)
-            //                    {
-            //                        index -= j;
-            //                    }
-            //                }
-
-            //                if (!isFirstRow && isLastRow)
-            //                {
-            //                    index += relationIndex - i * 2;
-            //                }
-            //            }
-
-            //            spots[index] = new Spot(x, y, spotWidth, spotHeight);
-            //        }
-            //    }
-            //}
-
             //TODO totally broken :(
 
             if (userSettings.OffsetLed != 0) Offset(ref spots, userSettings.OffsetLed);
-            if (spotsY > 1 && userSettings.MirrorX) MirrorX(spots, spotsX, spotsY);
-            if (spotsX > 1 && userSettings.MirrorY) MirrorY(spots, spotsX, spotsY);
+            if (spotsY > 1 && userSettings.MirrorX) MirrorX(spots, spotsX, spotsY+2);
+            if (spotsX > 1 && userSettings.MirrorY) MirrorY(spots, spotsX, spotsY+2);
 
             spots[0].IsFirst = true;
             return spots;
