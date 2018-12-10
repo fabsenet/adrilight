@@ -65,7 +65,6 @@ namespace adrilight
             UserSettings = kernel.Get<IUserSettings>();
             _telemetryClient = kernel.Get<TelemetryClient>();
 
-            SetupNotifyIcon();
 
             var isNewVersion = VersionNumber != UserSettings.AdrilightVersion;
             if (isNewVersion)
@@ -81,6 +80,8 @@ namespace adrilight
                     UserSettings.SpotsY = Math.Max(1, UserSettings.SpotsY-2);
                 }
             }
+
+            SetupNotifyIcon();
 
             if (!UserSettings.StartMinimized || isNewVersion)
             {
@@ -232,6 +233,8 @@ namespace adrilight
         {
             var icon = new System.Drawing.Icon(Assembly.GetExecutingAssembly().GetManifestResourceStream("adrilight.adrilight_icon.ico"));
             var contextMenu = new System.Windows.Forms.ContextMenu();
+            contextMenu.MenuItems.Add(CreateSendingMenuItem());
+            
             contextMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Settings...", (s, e) => OpenSettingsWindow()));
             contextMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Exit", (s, e) => Shutdown(0)));
 
@@ -247,6 +250,25 @@ namespace adrilight
             Exit += (s, e) => notifyIcon.Dispose();
         }
 
+        private new System.Windows.Forms.MenuItem CreateSendingMenuItem()
+        {
+            var menuItem = new System.Windows.Forms.MenuItem();
+            menuItem.Click += (_, __) => UserSettings.TransferActive = !UserSettings.TransferActive;
+
+            void UpdateMenuItem()
+            {
+                menuItem.Text = UserSettings.TransferActive ? "Sending Active" : "Sending Disabled";
+                menuItem.Checked = UserSettings.TransferActive;
+            }
+
+            //initial update
+            UpdateMenuItem();
+
+            //update on changed setting
+            UserSettings.PropertyChanged += (s, e) => { if (e.PropertyName == nameof(UserSettings.TransferActive)) { UpdateMenuItem(); } };
+
+            return menuItem;
+        }
 
         public static string VersionNumber { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
         private IUserSettings UserSettings { get; set; }
