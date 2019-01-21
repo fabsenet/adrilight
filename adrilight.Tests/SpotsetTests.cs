@@ -66,6 +66,51 @@ namespace adrilight.Tests
             Assert.AreEqual(new Rectangle(639, 0, 1, 1), spots[0].Rectangle, "spotset.Spots[0].Rectangle");
         }
 
+        [TestMethod]
+        public void BuildSpotset_2x2_Offset1_works()
+        {
+            var userSettings = new Mock<IUserSettings>(MockBehavior.Strict);
+            userSettings
+                .SetupProperty(s => s.SpotsX, 2)
+                .SetupProperty(s => s.SpotsY, 2)
+                .SetupProperty(s => s.BorderDistanceX, 1)
+                .SetupProperty(s => s.BorderDistanceY, 1)
+                .SetupProperty(s => s.OffsetLed, 1)
+                .SetupProperty(s => s.SpotWidth, 10)
+                .SetupProperty(s => s.SpotHeight, 10)
+                .SetupProperty(s => s.MirrorX, false)
+                .SetupProperty(s => s.MirrorY, false)
+                ;
+
+            var spots = SpotSet.BuildSpots(1920, 1080, userSettings.Object);
+
+            Assert.IsNotNull(spots, "spotset.Spots");
+            Assert.AreEqual(2 + 2 + 2 + 2, spots.Length, "spotset.Spots.Length");
+            Assert.AreEqual(new Rectangle(0, 359, 1, 1), spots[0].Rectangle, "spotset.Spots[0].Rectangle");
+        }
+        [TestMethod]
+        public void BuildSpotset_2x2_Offset2_works()
+        {
+            var userSettings = new Mock<IUserSettings>(MockBehavior.Strict);
+            userSettings
+                .SetupProperty(s => s.SpotsX, 2)
+                .SetupProperty(s => s.SpotsY, 2)
+                .SetupProperty(s => s.BorderDistanceX, 1)
+                .SetupProperty(s => s.BorderDistanceY, 1)
+                .SetupProperty(s => s.OffsetLed, 2)
+                .SetupProperty(s => s.SpotWidth, 10)
+                .SetupProperty(s => s.SpotHeight, 10)
+                .SetupProperty(s => s.MirrorX, false)
+                .SetupProperty(s => s.MirrorY, false)
+                ;
+
+            var spots = SpotSet.BuildSpots(1920, 1080, userSettings.Object);
+
+            Assert.IsNotNull(spots, "spotset.Spots");
+            Assert.AreEqual(2 + 2 + 2 + 2, spots.Length, "spotset.Spots.Length");
+            Assert.AreEqual(new Rectangle(0, 719, 1, 1), spots[0].Rectangle, "spotset.Spots[0].Rectangle");
+        }
+
         //https://github.com/fabsenet/adrilight/issues/68
         [TestMethod]
         public void BuildSpotset_4k_BorderDistance_1()

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:adriValidation="clr-namespace:adrilight.ValidationRules"
              mc:Ignorable="d" 
              
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -90,8 +91,16 @@
                         <TextBox DockPanel.Dock="Right"
                                 MinWidth="50"
                                 Margin="8 0 0 8"
-                                VerticalAlignment="Bottom" 
-                                Text="{Binding Settings.LimitFps, UpdateSourceTrigger=PropertyChanged}" />
+                                VerticalAlignment="Bottom">
+
+                            <TextBox.Text>
+                                <Binding Path="Settings.LimitFps" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <adriValidation:NumberRangeValidationRule Minimum="1" Maximum="100" ValidatesOnTargetUpdated="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                         <Slider Minimum="1" 
                                 Maximum="100" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 

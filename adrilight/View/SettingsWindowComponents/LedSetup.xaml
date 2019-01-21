@@ -12,6 +12,7 @@
         FontFamily="{StaticResource MaterialDesignFont}"
              xmlns:local="clr-namespace:adrilight.View.SettingsWindowComponents"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:adriValidation="clr-namespace:adrilight.ValidationRules"
              mc:Ignorable="d" 
                 DataContext="{Binding Source={StaticResource Locator}, Path=SettingsViewModel}"
             d:DesignWidth="1273.6" d:DesignHeight="2468.91">
@@ -34,8 +35,15 @@
                         <TextBox DockPanel.Dock="Right"
                                 MinWidth="50"
                                 Margin="8 0 0 8"
-                                VerticalAlignment="Bottom" 
-                                Text="{Binding Settings.SpotsX, UpdateSourceTrigger=PropertyChanged}" />
+                                VerticalAlignment="Bottom">
+                            <TextBox.Text>
+                                <Binding Path="Settings.SpotsX" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <adriValidation:NumberRangeValidationRule Minimum="1" Maximum="1000" ValidatesOnTargetUpdated="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                         <Slider Minimum="1" 
                                 Maximum="{Binding SpotsXMaximum}" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
@@ -65,8 +73,15 @@
                         <TextBox DockPanel.Dock="Right"
                                 MinWidth="50"
                                 Margin="8 0 0 8"
-                                VerticalAlignment="Bottom" 
-                                Text="{Binding Settings.SpotsY, UpdateSourceTrigger=PropertyChanged}" />
+                                VerticalAlignment="Bottom">
+                            <TextBox.Text>
+                                <Binding Path="Settings.SpotsY" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <adriValidation:NumberRangeValidationRule Minimum="1" Maximum="1000" ValidatesOnTargetUpdated="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                         <Slider Minimum="1" 
                                 Maximum="{Binding SpotsYMaximum}" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
@@ -162,8 +177,15 @@
                         <TextBox DockPanel.Dock="Right"
                                 MinWidth="50"
                                 Margin="8 0 0 8"
-                                VerticalAlignment="Bottom" 
-                                Text="{Binding Settings.OffsetLed, UpdateSourceTrigger=PropertyChanged}" />
+                                VerticalAlignment="Bottom">
+                            <TextBox.Text>
+                                <Binding Path="Settings.OffsetLed" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <adriValidation:NumberRangeValidationRule Minimum="0" Maximum="4000" ValidatesOnTargetUpdated="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                         <Slider Minimum="0" 
                                 Maximum="{Binding OffsetLedMaximum}" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 

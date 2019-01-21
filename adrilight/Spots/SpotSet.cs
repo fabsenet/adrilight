@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using MoreLinq;
 
 namespace adrilight
 {
@@ -169,9 +170,14 @@ namespace adrilight
                 })
                 .ToArray();
 
-            //TODO totally broken :(
-
-            if (userSettings.OffsetLed != 0) Offset(ref spots, userSettings.OffsetLed);
+            if (userSettings.OffsetLed != 0)
+            {
+                spots = Enumerable.Concat(
+                        spots.TakeLast(userSettings.OffsetLed),
+                        spots.Take(spots.Length - userSettings.OffsetLed)
+                    )
+                    .ToArray();
+            }
             if (spotsY > 1 && userSettings.MirrorX) MirrorX(spots, spotsX, spotsY+2);
             if (spotsX > 1 && userSettings.MirrorY) MirrorY(spots, spotsX, spotsY+2);
 
@@ -228,12 +234,7 @@ namespace adrilight
 
         private static void Offset(ref ISpot[] spots, int offset)
         {
-            ISpot[] temp = new Spot[spots.Length];
-            for (var i = 0; i < spots.Length; i++)
-            {
-                temp[(i + temp.Length + offset)%temp.Length] = spots[i];
-            }
-            spots = temp;
+           spots = Enumerable.Concat(spots.TakeLast(offset), spots.Take(spots.Length - offset)).ToArray();
         }
 
         public void IndicateMissingValues()

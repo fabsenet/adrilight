@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+              xmlns:adriValidation="clr-namespace:adrilight.ValidationRules"
              mc:Ignorable="d"        
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
@@ -46,12 +47,19 @@
 
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Spot Width</TextBlock>
-                    <DockPanel>
-                        <TextBox DockPanel.Dock="Right"
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
                                 MinWidth="50"
                                 Margin="8 0 0 8"
-                                VerticalAlignment="Bottom" 
-                                Text="{Binding Settings.SpotWidth, UpdateSourceTrigger=PropertyChanged}" />
+                                VerticalAlignment="Bottom">
+                                <TextBox.Text>
+                                    <Binding Path="Settings.SpotWidth" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <adriValidation:NumberRangeValidationRule Minimum="10" Maximum="400" ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         <Slider Minimum="10" 
                                 Maximum="400" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
@@ -78,12 +86,19 @@
 
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Spot Height</TextBlock>
-                    <DockPanel>
-                        <TextBox DockPanel.Dock="Right"
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
                                 MinWidth="50"
                                 Margin="8 0 0 8"
-                                VerticalAlignment="Bottom" 
-                                Text="{Binding Settings.SpotHeight, UpdateSourceTrigger=PropertyChanged}" />
+                                VerticalAlignment="Bottom">
+                                <TextBox.Text>
+                                    <Binding Path="Settings.SpotHeight" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <adriValidation:NumberRangeValidationRule Minimum="10" Maximum="400" ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         <Slider Minimum="10" 
                                 Maximum="400" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
@@ -111,11 +126,18 @@
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Border Distance X</TextBlock>
                     <DockPanel>
-                        <TextBox DockPanel.Dock="Right"
+                            <TextBox DockPanel.Dock="Right"
                                 MinWidth="50"
                                 Margin="8 0 0 8"
-                                VerticalAlignment="Bottom" 
-                                Text="{Binding Settings.BorderDistanceX, UpdateSourceTrigger=PropertyChanged}" />
+                                VerticalAlignment="Bottom">
+                                <TextBox.Text>
+                                    <Binding Path="Settings.BorderDistanceX" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <adriValidation:NumberRangeValidationRule Minimum="0" Maximum="4000" ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         <Slider Minimum="0" 
                                 Maximum="400" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
@@ -142,12 +164,19 @@
 
                 <StackPanel Grid.Row="1" Margin="8 24 8 8" >
                     <TextBlock FontWeight="Bold">Border Distance Y</TextBlock>
-                    <DockPanel>
-                        <TextBox DockPanel.Dock="Right"
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
                                 MinWidth="50"
                                 Margin="8 0 0 8"
-                                VerticalAlignment="Bottom" 
-                                Text="{Binding Settings.BorderDistanceY, UpdateSourceTrigger=PropertyChanged}" />
+                                VerticalAlignment="Bottom">
+                                <TextBox.Text>
+                                    <Binding Path="Settings.BorderDistanceY" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <adriValidation:NumberRangeValidationRule Minimum="0" Maximum="4000" ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         <Slider Minimum="0" 
                                 Maximum="400" 
                                 Style="{StaticResource MaterialDesignDiscreteSlider}" 
