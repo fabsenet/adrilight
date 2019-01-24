@@ -3,7 +3,6 @@ using adrilight.Resources;
 using adrilight.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
-using Microsoft.ApplicationInsights;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -32,7 +31,7 @@ namespace adrilight.ViewModel
         private const string LatestReleasePage = "https://github.com/fabsenet/adrilight/releases/latest";
 
         public SettingsViewModel(IUserSettings userSettings, IList<ISelectableViewPart> selectableViewParts
-            , ISpotSet spotSet, IContext context, TelemetryClient tc, ISerialStream serialStream)
+            , ISpotSet spotSet, IContext context, ISerialStream serialStream)
         {
             if (selectableViewParts == null)
             {
@@ -60,7 +59,6 @@ namespace adrilight.ViewModel
                 {
                     case nameof(SelectedViewPart):
                         var name = SelectedViewPart?.ViewPartName ?? "nothing";
-                        tc.TrackPageView(name);
                         break;
                 }
             };

@@ -1,5 +1,4 @@
 ﻿using adrilight.Resources;
-using Microsoft.ApplicationInsights;
 using Newtonsoft.Json;
 using NLog;
 using Semver;
@@ -29,6 +28,8 @@ namespace adrilight.Util
 
         public void StartThread()
         {
+            if (App.IsPrivateBuild) return;
+
 #if !DEBUG
             var t = new Thread(async () => await StartSquirrel())
             {

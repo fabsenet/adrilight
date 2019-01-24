@@ -23,8 +23,6 @@ using System.Windows.Threading;
 using Ninject.Extensions.Conventions;
 using adrilight.Resources;
 using adrilight.Util;
-using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.ApplicationInsights;
 
 namespace adrilight
 {   
@@ -39,6 +37,8 @@ namespace adrilight
 
         protected override void OnStartup(StartupEventArgs startupEvent)
         {
+            ReadVersionDetails();
+
             if (!ViewModelBase.IsInDesignModeStatic)
             {
                 _adrilightMutex = new Mutex(true, "adrilight2");
@@ -63,11 +63,9 @@ namespace adrilight
 
 
             UserSettings = kernel.Get<IUserSettings>();
-            _telemetryClient = kernel.Get<TelemetryClient>();
-
 
             var isNewVersion = VersionNumber != UserSettings.AdrilightVersion;
-            if (isNewVersion)
+            if (!IsPrivateBuild && isNewVersion)
             {
                 //place for upgrades of settings between versions
                 UserSettings.AdrilightVersion = VersionNumber;
@@ -88,36 +86,13 @@ namespace adrilight
                 OpenSettingsWindow();
             }
 
-
             kernel.Get<AdrilightUpdater>().StartThread();
-
-            SetupTrackingForProcessWideEvents(_telemetryClient);
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
             base.OnExit(e);
             _adrilightMutex?.Dispose();
-        }
-
-        private TelemetryClient _telemetryClient;
-
-        private static TelemetryClient SetupApplicationInsights(IUserSettings settings)
-        {
-            const string ik = "65086b50-8c52-4b13-9b05-92fbe69c7a52";
-            TelemetryConfiguration.Active.InstrumentationKey = ik;
-            var tc = new TelemetryClient
-            {
-                InstrumentationKey = ik
-            };
-
-            tc.Context.User.Id = settings.InstallationId.ToString();
-            tc.Context.Session.Id = Guid.NewGuid().ToString();
-            tc.Context.Device.OperatingSystem = Environment.OSVersion.ToString();
-
-            GlobalDiagnosticsContext.Set("user_id", tc.Context.User.Id);
-            GlobalDiagnosticsContext.Set("session_id", tc.Context.Session.Id);
-            return tc;
         }
 
         internal static IKernel SetupDependencyInjection(bool isInDesignMode)
@@ -145,7 +120,6 @@ namespace adrilight
                 kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReader>().InSingletonScope();
             }
             kernel.Bind<SettingsViewModel>().ToSelf().InSingletonScope();
-            kernel.Bind<TelemetryClient>().ToConstant(SetupApplicationInsights(kernel.Get<IUserSettings>()));
             kernel.Bind(x => x.FromThisAssembly()
             .SelectAllClasses()
             .InheritedFrom<ISelectableViewPart>()
@@ -168,23 +142,6 @@ namespace adrilight
             Exit += (s, e) => _log.Debug("Application exit!");
 
             SystemEvents.PowerModeChanged += (s, e) => _log.Debug("Changing Powermode to {0}", e.Mode);
-        }
-
-        private void SetupTrackingForProcessWideEvents(TelemetryClient tc)
-        {
-            if (tc == null)
-            {
-                throw new ArgumentNullException(nameof(tc));
-            }
-
-            AppDomain.CurrentDomain.UnhandledException += (sender, args) => tc.TrackException(args.ExceptionObject as Exception);
-
-            DispatcherUnhandledException += (sender, args) => tc.TrackException(args.Exception);
-
-            Exit += (s, e) => { tc.TrackEvent("AppExit"); tc.Flush(); };
-
-            SystemEvents.PowerModeChanged += (s, e) => tc.TrackEvent("PowerModeChanged", new Dictionary<string, string> { { "Mode", e.Mode.ToString() } });
-            tc.TrackEvent("AppStart");
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
@@ -210,7 +167,6 @@ namespace adrilight
                 _mainForm = new SettingsWindow();
                 _mainForm.Closed += MainForm_FormClosed;
                 _mainForm.Show();
-                _telemetryClient.TrackEvent("SettingsWindow opened");
             }
             else
             {
@@ -226,7 +182,6 @@ namespace adrilight
             //deregister to avoid memory leak
             _mainForm.Closed -= MainForm_FormClosed;
             _mainForm = null;
-            _telemetryClient.TrackEvent("SettingsWindow closed");
         }
 
         private void SetupNotifyIcon()
@@ -270,7 +225,22 @@ namespace adrilight
             return menuItem;
         }
 
-        public static string VersionNumber { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+        public static bool IsPrivateBuild { get; private set; }
+        public static string VersionNumber { get; private set; }
+
+        private static void ReadVersionDetails()
+        {
+            if (VersionNumber == null)
+            {
+                VersionNumber = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+                IsPrivateBuild = VersionNumber == "0.0.0";
+                if (IsPrivateBuild)
+                {
+                    VersionNumber = "Private build";
+                }
+            }
+        }
+
         private IUserSettings UserSettings { get; set; }
 
         private void ApplicationWideException(object sender, Exception ex, string eventSource)
