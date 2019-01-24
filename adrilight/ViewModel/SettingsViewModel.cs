@@ -262,6 +262,18 @@ namespace adrilight.ViewModel
             }
         }
 
-        public Uri WhatsNewUrl =>new Uri( $"https://fabse.net/adrilight/{App.VersionNumber}/{Thread.CurrentThread.CurrentUICulture.Name}");
+        public Uri WhatsNewUrl {
+            get
+            {
+                if (App.IsPrivateBuild)
+                {
+                    return new Uri($"https://fabse.net/adrilight/privateBuild/{Thread.CurrentThread.CurrentUICulture.Name}");
+                }
+                else
+                {
+                    return new Uri($"https://fabse.net/adrilight/{App.VersionNumber}/{Thread.CurrentThread.CurrentUICulture.Name}");
+                }
+            }
+        }
     }
 }

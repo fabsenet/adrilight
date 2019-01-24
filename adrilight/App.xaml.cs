@@ -236,7 +236,8 @@ namespace adrilight
                 IsPrivateBuild = VersionNumber == "0.0.0";
                 if (IsPrivateBuild)
                 {
-                    VersionNumber = "Private build";
+                    var assembly = Assembly.GetExecutingAssembly();
+                    VersionNumber = "*private build*";
                 }
             }
         }
