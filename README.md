@@ -93,7 +93,3 @@ You have another idea for a feature? Please create an issue.
 
 See the [releases page](https://github.com/fabsenet/adrilight/releases) for some hints on the changes.
 
-## History and Thanks
-
-* Converted screen capturing to use the Desktop Duplication API (heavily based on the [sample code from jasonpang](https://github.com/jasonpang/desktop-duplication-net)) 
-* initally forked from [bambilight by MrBoe](https://github.com/MrBoe/Bambilight) because of missing Windows 10 support
