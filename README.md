@@ -39,7 +39,7 @@ This should be improved but a quick rundown on what to do:
 * Build
   * Attach LED strip on the back of the television. The arrows must build a circle!
     * The strip can be devided in 4 pieces: Left/Right/Top/Bottom
-    * Left and right as well as top and bottom should have the same number of LEDs each.
+    * Left and right as well as top and bottom must have the same number of LEDs each.
   * solder the edges together, but DO NOT make a complete circle. The data line should still have an electrical start and end point
   * depending on the length of the strip, solder more power wires in between
   * connect power with the strip
@@ -54,14 +54,11 @@ This should be improved but a quick rundown on what to do:
     * configure the settings at the top of the script `adrilight.ino` (included in adrilight release)
     * compile and upload the program to the arduino
   * Adrilight setup on the HTPC
-    * start `adrilight.exe` (included in adrilight release) and setup the same config
-    * Number of LEDs in arduino code differs from the number of spots in the app!!
-      * the arduino code has the actual number of LEDs you have.
-      * the windows program asks for the width and height of a "fictional" matrix of LEDs. The counter should tell you the expected number of LEDs which should be the same as your hardware actually has.
-      * Example:
-        * Your hardware has top/bottom LED rows with 10 LEDs as well as 7 for left/right. This yields `10+10+7+7 = 34 LEDs` total.
-        * Arduino code has these 34 LEDs
-        * adrilight on Windows: You set it up as `Spots X = 11` and `Spots Y = 7`. The calculator should show 34 LEDs.
+    * setup and start adrilight
+    * Number of LEDs in arduino code **no longer differs** from the number of spots in the app! So simply enter the lengths of the horizontal and vertical strips
+    * change offset value until screen and the real LEDs align
+    * change com port and start sending. it should work now
+    * if it works, play around with the lighting mode, white balance and spot sizes as you wish
 * *enjoy ambient lighting!*
 
 ## Possible future features
@@ -94,28 +91,9 @@ You have another idea for a feature? Please create an issue.
 
 ## Changelog
 
-in order of newest changes first:
+See the [releases page](https://github.com/fabsenet/adrilight/releases) for some hints on the changes.
 
-### Release 2.0.0
+## History and Thanks
 
-**Huge changes!**
-
-* completely new UI
-* adjustable white balance
-* new preview window
-* high res icon for shortcuts
-* reduced tendency to flicker on near black values or on flaky connection to arduino
-* soft dimming the LEDs in case of turning adrilight on/off
-* logging limited 10*1mb
-
-### Release v0.1.1
-
-* added a proper icon for the window and the notification tray
-
-### Release v0.1
-
-* Upped the serial connection speed to allow a more fluent experience
-* the ambilight goes dark (instead of back to the animation mode) after the connection to the pc is lost (for example when in goes into standby)
-* Performance work in how the color of each spot is detected
 * Converted screen capturing to use the Desktop Duplication API (heavily based on the [sample code from jasonpang](https://github.com/jasonpang/desktop-duplication-net)) 
 * initally forked from [bambilight by MrBoe](https://github.com/MrBoe/Bambilight) because of missing Windows 10 support
