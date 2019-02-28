@@ -1,5 +1,6 @@
 ﻿using adrilight.DesktopDuplication;
 using adrilight.Resources;
+using adrilight.Settings;
 using adrilight.View;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -275,5 +276,24 @@ namespace adrilight.ViewModel
                 }
             }
         }
+
+        public bool _isInNightLightMode = false;
+        public bool IsInNightLightMode {
+            get => _isInNightLightMode;
+            set
+            {
+                Set(ref _isInNightLightMode, value);
+                RaisePropertyChanged(nameof(IsInDaylightLightMode));
+            }
+        }
+
+        public bool IsInDaylightLightMode { get { return !_isInNightLightMode; } }
+
+        public IDictionary<AlternateWhiteBalanceModeEnum, string> AlternateWhiteBalanceModes { get; } =
+            new SortedDictionary<AlternateWhiteBalanceModeEnum, string>() {
+                {AlternateWhiteBalanceModeEnum.On, "Forced On" },
+                {AlternateWhiteBalanceModeEnum.Auto, "Auto detect" },
+                {AlternateWhiteBalanceModeEnum.Off, "Forced Off" },
+            };
     }
 }

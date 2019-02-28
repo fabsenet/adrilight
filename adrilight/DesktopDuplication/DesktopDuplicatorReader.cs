@@ -11,6 +11,7 @@ using System.Linq;
 using System.Windows.Media.Imaging;
 using adrilight.ViewModel;
 using System.Runtime.InteropServices;
+using adrilight.Settings;
 
 namespace adrilight
 {
@@ -236,12 +237,20 @@ namespace adrilight
                 return;
             }
 
-            //"white" on wall was 66,68,77 without white balance
-            //white balance
-            //todo: introduce settings for white balance adjustments
-            r *= UserSettings.WhitebalanceRed / 100f;
-            g *= UserSettings.WhitebalanceGreen / 100f;
-            b *= UserSettings.WhitebalanceBlue /100f;
+            var useAlternateWhiteBalance = UserSettings.AlternateWhiteBalanceMode == AlternateWhiteBalanceModeEnum.On
+                || UserSettings.AlternateWhiteBalanceMode == AlternateWhiteBalanceModeEnum.Auto && SettingsViewModel.IsInNightLightMode;
+            if (!useAlternateWhiteBalance)
+            {
+                r *= UserSettings.WhitebalanceRed / 100f;
+                g *= UserSettings.WhitebalanceGreen / 100f;
+                b *= UserSettings.WhitebalanceBlue / 100f;
+            }
+            else
+            {
+                r *= UserSettings.AltWhitebalanceRed / 100f;
+                g *= UserSettings.AltWhitebalanceGreen / 100f;
+                b *= UserSettings.AltWhitebalanceBlue / 100f;
+            }
 
             if (!useLinearLighting)
             {

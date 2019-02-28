@@ -1,4 +1,5 @@
-﻿using GalaSoft.MvvmLight;
+﻿using adrilight.Settings;
+using GalaSoft.MvvmLight;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -29,12 +30,19 @@ namespace adrilight
         private bool _startMinimized = false;
         private bool _transferActive = false;
         private bool _useLinearLighting = false;
+
         private byte _whitebalanceRed = 100;
         private byte _whitebalanceGreen = 100;
         private byte _whitebalanceBlue = 100;
+
+        private byte _altWhitebalanceRed = 100;
+        private byte _altWhitebalanceGreen = 100;
+        private byte _altWhitebalanceBlue = 80;
+
         private bool _sendRandomColors = false;
         private int _limitFps = 60;
         private int _configFileVersion = 2;
+        private AlternateWhiteBalanceModeEnum _alternateWhiteBalanceMode = AlternateWhiteBalanceModeEnum.Off;
 
         //support future config file migration
         public int ConfigFileVersion { get => _configFileVersion; set { Set(() => ConfigFileVersion, ref _configFileVersion, value); } }
@@ -62,13 +70,18 @@ namespace adrilight
         public bool StartMinimized { get => _startMinimized; set { Set(() => StartMinimized, ref _startMinimized, value); } }
         public bool TransferActive { get => _transferActive; set { Set(() => TransferActive, ref _transferActive, value); } }
         public bool UseLinearLighting { get => _useLinearLighting; set { Set(() => UseLinearLighting, ref _useLinearLighting, value); } }
+
         public byte WhitebalanceRed { get => _whitebalanceRed; set { Set(() => WhitebalanceRed, ref _whitebalanceRed, value); } }
         public byte WhitebalanceGreen { get => _whitebalanceGreen; set { Set(() => WhitebalanceGreen, ref _whitebalanceGreen, value); } }
         public byte WhitebalanceBlue { get => _whitebalanceBlue; set { Set(() => WhitebalanceBlue, ref _whitebalanceBlue, value); } }
 
+        public byte AltWhitebalanceRed { get => _altWhitebalanceRed; set { Set(() => AltWhitebalanceRed, ref _altWhitebalanceRed, value); } }
+        public byte AltWhitebalanceGreen { get => _altWhitebalanceGreen; set { Set(() => AltWhitebalanceGreen, ref _altWhitebalanceGreen, value); } }
+        public byte AltWhitebalanceBlue { get => _altWhitebalanceBlue; set { Set(() => AltWhitebalanceBlue, ref _altWhitebalanceBlue, value); } }
+
         public bool SendRandomColors { get => _sendRandomColors; set { Set(() => SendRandomColors, ref _sendRandomColors, value); } }
 
         public Guid InstallationId { get; set; } = Guid.NewGuid();
-
+        public AlternateWhiteBalanceModeEnum AlternateWhiteBalanceMode { get => _alternateWhiteBalanceMode; set { Set(() => AlternateWhiteBalanceMode, ref _alternateWhiteBalanceMode, value); } }
     }
 }

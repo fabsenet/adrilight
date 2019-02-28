@@ -86,11 +86,16 @@ namespace adrilight
                 OpenSettingsWindow();
             }
 
+            _nightLightDetection = kernel.Get<NightLightDetection>();
+            _nightLightDetection.Start();
+
             kernel.Get<AdrilightUpdater>().StartThread();
         }
 
         protected override void OnExit(ExitEventArgs e)
         {
+            _nightLightDetection.Stop();
+
             base.OnExit(e);
             _adrilightMutex?.Dispose();
         }
@@ -124,6 +129,7 @@ namespace adrilight
             .SelectAllClasses()
             .InheritedFrom<ISelectableViewPart>()
             .BindAllInterfaces());
+            kernel.Bind<NightLightDetection>().ToSelf().InSingletonScope();
 
             //eagerly create required singletons [could be replaced with actual pipeline]
             var desktopDuplicationReader = kernel.Get<IDesktopDuplicatorReader>();
@@ -159,6 +165,7 @@ namespace adrilight
 
         SettingsWindow _mainForm;
         private IKernel kernel;
+        private NightLightDetection _nightLightDetection;
 
         private void OpenSettingsWindow()
         {

@@ -19,10 +19,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
         <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
@@ -53,8 +54,8 @@
 
         <materialDesign:PackIcon Kind="PollBox" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" />
 
-        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
-            <Grid Margin="38 8 8 38">
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" VerticalAlignment="Stretch">
+            <Grid Margin="38 28 8 38">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
@@ -64,29 +65,160 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" VerticalAlignment="Bottom">Red</TextBlock>
-                <TextBlock Grid.Row="1" VerticalAlignment="Bottom">Green</TextBlock>
-                <TextBlock Grid.Row="2" VerticalAlignment="Bottom">Blue</TextBlock>
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom" FontWeight="Bold">
+                    Normal Day Light Whitebalance
+                </TextBlock>
 
-                <Slider Grid.Row="0" Grid.Column="1" Width="200"
+                <TextBlock Grid.Row="1" VerticalAlignment="Bottom">Red</TextBlock>
+                <TextBlock Grid.Row="2" VerticalAlignment="Bottom">Green</TextBlock>
+                <TextBlock Grid.Row="3" VerticalAlignment="Bottom">Blue</TextBlock>
+
+                <Slider Grid.Row="1" Grid.Column="1" Width="200" IsEnabled="{Binding IsInDaylightLightMode}"
                     Minimum="1" Maximum="100" Value="{Binding Settings.WhitebalanceRed}" 
                     Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                  />
-                <Slider Grid.Row="1" Grid.Column="1" Width="200"
+                <Slider Grid.Row="2" Grid.Column="1" Width="200" IsEnabled="{Binding IsInDaylightLightMode}"
                     Minimum="1" Maximum="100" Value="{Binding Settings.WhitebalanceGreen}" 
                     Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                  />
-                <Slider Grid.Row="2" Grid.Column="1" Width="200"
+                <Slider Grid.Row="3" Grid.Column="1" Width="200" IsEnabled="{Binding IsInDaylightLightMode}"
                     Minimum="1" Maximum="100" Value="{Binding Settings.WhitebalanceBlue}" 
                     Style="{StaticResource MaterialDesignDiscreteSlider}" 
                                  />
 
-                <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Settings.WhitebalanceRed}" VerticalAlignment="Bottom" />
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Settings.WhitebalanceGreen}" VerticalAlignment="Bottom" />
-                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Settings.WhitebalanceBlue}" VerticalAlignment="Bottom" />
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Settings.WhitebalanceRed}" VerticalAlignment="Bottom" />
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Settings.WhitebalanceGreen}" VerticalAlignment="Bottom" />
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Settings.WhitebalanceBlue}" VerticalAlignment="Bottom" />
             </Grid>
+        </materialDesign:Card>
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" VerticalAlignment="Stretch">
+            <Grid Margin="38 28 8 38">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom" FontWeight="Bold">
+                    Alternative Night Light Whitebalance
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" VerticalAlignment="Bottom">Red</TextBlock>
+                <TextBlock Grid.Row="2" VerticalAlignment="Bottom">Green</TextBlock>
+                <TextBlock Grid.Row="3" VerticalAlignment="Bottom">Blue</TextBlock>
+
+                <Slider Grid.Row="1" Grid.Column="1" Width="200" IsEnabled="{Binding IsInNightLightMode}"
+                    Minimum="1" Maximum="100" Value="{Binding Settings.AltWhitebalanceRed}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                 />
+                <Slider Grid.Row="2" Grid.Column="1" Width="200" IsEnabled="{Binding IsInNightLightMode}"
+                    Minimum="1" Maximum="100" Value="{Binding Settings.AltWhitebalanceGreen}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                 />
+                <Slider Grid.Row="3" Grid.Column="1" Width="200" IsEnabled="{Binding IsInNightLightMode}"
+                    Minimum="1" Maximum="100" Value="{Binding Settings.AltWhitebalanceBlue}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                 />
+
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Settings.AltWhitebalanceRed}" VerticalAlignment="Bottom" />
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Settings.AltWhitebalanceGreen}" VerticalAlignment="Bottom" />
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Settings.AltWhitebalanceBlue}" VerticalAlignment="Bottom" />
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
+            <StackPanel Margin="38 28 38 18">
+                <TextBlock FontWeight="bold">Controling alternate night light mode detection/usage:</TextBlock>
+
+                <TextBlock Margin="58 18 38 8" FontWeight="bold">Selected mode:</TextBlock>
+                <ComboBox Margin="58 0 0 40" 
+                          Width="150" 
+                          HorizontalAlignment="Left" 
+                          ItemsSource="{Binding AlternateWhiteBalanceModes}"
+                          DisplayMemberPath="Value"
+                          SelectedValuePath="Key"
+                          SelectedValue="{Binding Settings.AlternateWhiteBalanceMode, Mode=TwoWay}"/>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <materialDesign:PackIcon Grid.Row="0" Grid.Column="0" Kind="NightSky" Width="31" Height="31" Foreground="#FF95C2FF" Margin="6,6,0,0" RenderTransformOrigin="0.5,0.5" >
+                        <materialDesign:PackIcon.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="13.231"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </materialDesign:PackIcon.RenderTransform>
+                    </materialDesign:PackIcon>
+                    <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="Brain" Width="36" Height="36" Foreground="#FFEAAA00" Margin="1,18.667,0,0" RenderTransformOrigin="0.5,0.5" >
+                        <materialDesign:PackIcon.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="8.401"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </materialDesign:PackIcon.RenderTransform>
+                    </materialDesign:PackIcon>
+                    <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="AutoAwesome" Width="22" Height="23" Foreground="#FF95C2FF" Margin="30,10.667,0,0" RenderTransformOrigin="0.5,0.5" >
+                        <materialDesign:PackIcon.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="223.406"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </materialDesign:PackIcon.RenderTransform>
+                    </materialDesign:PackIcon>
+                    <materialDesign:PackIcon Grid.Row="2" Grid.Column="0" Kind="WhiteBalanceSunny" Width="38" Height="37" Foreground="#FFEAAA00" Margin="5,17.333,0,0" RenderTransformOrigin="0.5,0.5" >
+                        <materialDesign:PackIcon.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="13.096"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </materialDesign:PackIcon.RenderTransform>
+                    </materialDesign:PackIcon>
+
+                    <TextBlock Margin="58 8 18 38" FontWeight="Bold" Grid.Row="0" Grid.Column="0">Forced On</TextBlock>
+                    <TextBlock Margin="58 8 18 38" FontWeight="Bold" Grid.Row="1" Grid.Column="0">Auto detect</TextBlock>
+                    <TextBlock Margin="58 8 18 38" FontWeight="Bold" Grid.Row="2" Grid.Column="0">Forced Off</TextBlock>
+
+                    <TextBlock Margin="8 0 50 0" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">
+                        This mode <Italic>enables</Italic> the alternate whitebalance without any other external source 
+                        of information. You basically have to decide on your own when to use this or not
+                    </TextBlock>
+                    <TextBlock Margin="8 0 50 0" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">
+                        This mode tries to detect the actual night light mode of windows to switch automatically 
+                        as well. Please consider this mode as experimental. If it does not work for you,
+                        please open up an issue on the adrilight github page so this feature may be improved 
+                        for all users.
+                    </TextBlock>
+                    <TextBlock Margin="8 0 50 0" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">
+                        This mode <Italic>disables</Italic> the alternate whitebalance without any other external source 
+                        of information. You basically have to decide on your own when to use this or not.
+                    </TextBlock>
+                </Grid>
+            </StackPanel>
         </materialDesign:Card>
     </Grid>
 </UserControl>

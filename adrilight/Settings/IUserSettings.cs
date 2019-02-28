@@ -1,4 +1,5 @@
-﻿using System;
+﻿using adrilight.Settings;
+using System;
 using System.ComponentModel;
 
 namespace adrilight
@@ -30,10 +31,16 @@ namespace adrilight
         byte WhitebalanceRed { get; set; }
         byte WhitebalanceGreen { get; set; }
         byte WhitebalanceBlue { get; set; }
+
+        byte AltWhitebalanceRed { get; set; }
+        byte AltWhitebalanceGreen { get; set; }
+        byte AltWhitebalanceBlue { get; set; }
+
         bool SendRandomColors { get; set; }
 
         int LimitFps { get; set; }
 
         string AdrilightVersion { get; set; }
+        AlternateWhiteBalanceModeEnum AlternateWhiteBalanceMode { get; set; }
     }
 }

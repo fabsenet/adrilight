@@ -265,6 +265,7 @@
     <Compile Include="Extensions\RawRectangleExtensions.cs" />
     <Compile Include="Resources\IContext.cs" />
     <Compile Include="Resources\WpfContext.cs" />
+    <Compile Include="Util\NightLightDetection.cs" />
     <Compile Include="Util\SerialStream.cs" />
     <Compile Include="Spots\Spot.cs" />
     <Compile Include="Spots\SpotSet.cs" />

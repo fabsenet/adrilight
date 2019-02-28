@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using adrilight.Settings;
 
 namespace adrilight.Fakes
 {
@@ -31,15 +32,21 @@ namespace adrilight.Fakes
         public bool TransferActive { get; set; } = false;
         public bool UseLinearLighting { get; set; } = false;
 
-        public byte WhitebalanceRed { get; set; } = 100;
-        public byte WhitebalanceGreen { get; set; } = 100;
+        public byte WhitebalanceRed { get; set; } = 70;
+        public byte WhitebalanceGreen { get; set; } = 85;
         public byte WhitebalanceBlue { get; set; } = 100;
+
+        public byte AltWhitebalanceRed { get; set; } = 100;
+        public byte AltWhitebalanceGreen { get; set; } = 85;
+        public byte AltWhitebalanceBlue { get; set; } = 50;
 
         public Guid InstallationId { get; set; } = Guid.NewGuid();
 
         public bool SendRandomColors { get; set; }
         public int LimitFps { get; set; } = 60;
         public string AdrilightVersion { get; set; } = "2.0.6";
+
+        public AlternateWhiteBalanceModeEnum AlternateWhiteBalanceMode { get; set; } = AlternateWhiteBalanceModeEnum.Off;
 #pragma warning disable CS0067
         public event PropertyChangedEventHandler PropertyChanged;
 #pragma warning restore CS0067
