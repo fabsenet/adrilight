@@ -227,6 +227,8 @@ namespace adrilight.DesktopDuplication
         public void Dispose()
         {
             IsDisposed = true;
+            _smallerTexture?.Dispose();
+            _smallerTextureView?.Dispose();
             _stagingTexture?.Dispose();
             _outputDuplication?.Dispose();
             _device?.Dispose();
