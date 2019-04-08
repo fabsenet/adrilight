@@ -111,7 +111,6 @@ namespace adrilight.Util
             try
             {
                 var data = (byte[])(_stateKeyInsider ?? _stateKeyWin10).GetValue("Data");
-                if(_log.IsDebugEnabled) _log.Debug("read regval: "+data.Select(b => b.ToString()).Aggregate((s1,s2) => s1+","+s2));
 
                 if(data == null)
                 {
@@ -124,6 +123,7 @@ namespace adrilight.Util
                 {
                     return _lastResult;
                 }
+                if (_log.IsDebugEnabled) _log.Debug("read regval: " + data.Select(b => b.ToString()).Aggregate((s1, s2) => s1 + "," + s2));
 
                 var stateString = data.Select(b => b.ToString()).Aggregate((s1, s2) => s1 + "," + s2);
 
@@ -174,7 +174,7 @@ namespace adrilight.Util
         public NightLightDataRow(byte[] data, bool isActive)
         {
             Data = data;
-            Data2 = Data.Select(d => (float)d).Take(35).ToArray();
+            Data2 = data.Concat(Enumerable.Repeat((byte)0, Math.Max(0, 35 - data.Length))).Select(d => (float)d).Take(35).ToArray();
             IsActive = isActive;
         }
     }
