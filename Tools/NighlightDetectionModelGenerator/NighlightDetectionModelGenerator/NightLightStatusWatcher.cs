@@ -62,7 +62,7 @@ BitConverter.ToString(onBytes)
           //  [Microsoft.ML.Data.VectorType(43)]
             public byte[] Data { get; }
 
-            [Microsoft.ML.Data.VectorType(38)]
+            [Microsoft.ML.Data.VectorType(35)]
             public float[] Data2
             {get;
             }
@@ -75,7 +75,7 @@ BitConverter.ToString(onBytes)
             public NightLightDataRow(byte[] data, bool isActive)
             {
                 Data = data;
-                Data2 = Data.Select(d => (float)d).Take(38).ToArray();
+                Data2 = Data.Select(d => (float)d).Take(35).ToArray();
                 IsActive = isActive;
             }
         }
@@ -156,6 +156,11 @@ BitConverter.ToString(onBytes)
                 return;
             }
 
+            if(_lastData == null)
+            {
+                Console.WriteLine("There are no last data to predict anything!");
+                return;
+            }
             Console.WriteLine("=============== Predictions for below data===============");
 
             var predicted = _predictor.Predict(new NightLightDataRow(this._lastData, true));
@@ -246,7 +251,8 @@ BitConverter.ToString(onBytes)
             Console.WriteLine($"{indicator} {bytes.Length}");
         }
 
-        private RegistryKey _stateKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.bluelightreductionstate\windows.data.bluelightreduction.bluelightreductionstate", false);
+        private RegistryKey _stateKeyInsider = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.bluelightreductionstate\windows.data.bluelightreduction.bluelightreductionstate", false);
+        private RegistryKey _stateKeyWin10 = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount\$$windows.data.bluelightreduction.bluelightreductionstate\Current", false);
 
         private TimeSpan _waitDelay = TimeSpan.FromSeconds(1);
 
@@ -263,7 +269,7 @@ BitConverter.ToString(onBytes)
 
         private void WatchOnce()
         {
-            var data = (byte[])_stateKey.GetValue("Data");
+            var data = (byte[])(_stateKeyInsider ?? _stateKeyWin10).GetValue("Data");
 
             if (_lastData != null && _lastData.SequenceEqual(data)) return;
             _lastData = data;
