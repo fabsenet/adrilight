@@ -212,7 +212,7 @@ namespace adrilight
             Exit += (s, e) => notifyIcon.Dispose();
         }
 
-        private new System.Windows.Forms.MenuItem CreateSendingMenuItem()
+        private System.Windows.Forms.MenuItem CreateSendingMenuItem()
         {
             var menuItem = new System.Windows.Forms.MenuItem();
             menuItem.Click += (_, __) => UserSettings.TransferActive = !UserSettings.TransferActive;
