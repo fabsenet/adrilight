@@ -39,6 +39,18 @@ namespace adrilight
         {
             ReadVersionDetails();
 
+            if (!IsSupported())
+            {
+                var os = Environment.OSVersion;
+                MessageBox.Show($"Your Windows version is not supported by adrilight, sorry!\n\n"
+                    +$"Platform={os.Platform}\nVersion={os.Version}\nService Pack={os.ServicePack}\n\n\n"
+                    +"You should consider upgrading to Windows 10. Adrilight should run on Windows 8 and later but is only actively tested and developed for Windows 10."
+                    , "Your Windows version is too old!", MessageBoxButton.OK);
+
+                Shutdown();
+                return;
+            }
+
             if (!ViewModelBase.IsInDesignModeStatic)
             {
                 _adrilightMutex = new Mutex(true, "adrilight2");
@@ -92,9 +104,18 @@ namespace adrilight
             kernel.Get<AdrilightUpdater>().StartThread();
         }
 
+        private bool IsSupported()
+        {
+            var os = Environment.OSVersion;
+            //src https://stackoverflow.com/questions/2819934/detect-windows-version-in-net/2819974#2819974
+
+            //adrilight supports Win8, Win8.1 and Win10
+            return os.Platform == PlatformID.Win32NT && (os.Version.Major > 6 || os.Version.Major == 6 && os.Version.Minor >= 2);
+        }
+
         protected override void OnExit(ExitEventArgs e)
         {
-            _nightLightDetection.Stop();
+            _nightLightDetection?.Stop();
 
             base.OnExit(e);
             _adrilightMutex?.Dispose();
