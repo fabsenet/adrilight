@@ -11,20 +11,20 @@ namespace adrilight.Fakes
 {
     class DesktopDuplicatorReaderFake : IDesktopDuplicatorReader
     {
-        public bool IsRunning { get; set; }= false;
+        public RunStateEnum RunState { get; set; } = RunStateEnum.Stopped;
 
         public void Run(CancellationToken token)
         {
             Task.Factory.StartNew(() =>
             {
-                IsRunning = true;
+                RunState = RunStateEnum.Running;
                 try
                 {
                     token.WaitHandle.WaitOne();
                 }
                 finally
                 {
-                    IsRunning = false;
+                    RunState = RunStateEnum.Stopped;
                 }
             });
         }

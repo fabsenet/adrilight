@@ -47,13 +47,13 @@ namespace adrilight
             }
         }
 
-        public bool IsRunning { get; private set; } = false;
+        public RunStateEnum RunState { get; private set; } = RunStateEnum.Stopped;
         private CancellationTokenSource _cancellationTokenSource;
 
 
         private void RefreshCapturingState()
         {
-            var isRunning = _cancellationTokenSource != null && IsRunning;
+            var isRunning = _cancellationTokenSource != null && RunState==RunStateEnum.Running;
             var shouldBeRunning = UserSettings.TransferActive
                     || SettingsViewModel.IsSettingsWindowOpen && SettingsViewModel.IsPreviewTabOpen;
 
@@ -61,6 +61,7 @@ namespace adrilight
             {
                 //stop it!
                 _log.Debug("stopping the capturing");
+                RunState = RunStateEnum.Stopping;
                 _cancellationTokenSource.Cancel();
                 _cancellationTokenSource = null;
             }
@@ -104,11 +105,16 @@ namespace adrilight
 
         private DesktopDuplicator _desktopDuplicator;
 
-        public void Run(CancellationToken token)
+        public async void Run(CancellationToken token)
         {
-            if (IsRunning) throw new Exception(nameof(DesktopDuplicatorReader) + " is already running!");
+            while(RunState == RunStateEnum.Stopping)
+            {
+                await Task.Yield();
+            }
 
-            IsRunning = true;
+            if (RunState != RunStateEnum.Stopped) throw new Exception(nameof(DesktopDuplicatorReader) + " is already running!");
+
+            RunState = RunStateEnum.Running;
             _log.Debug("Started Desktop Duplication Reader.");
             Bitmap image = null;
             try
@@ -194,7 +200,7 @@ namespace adrilight
                 _desktopDuplicator = null;
 
                 _log.Debug("Stopped Desktop Duplication Reader.");
-                IsRunning = false;
+                RunState = RunStateEnum.Stopped;
             }
         }
         

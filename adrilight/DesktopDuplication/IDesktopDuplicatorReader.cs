@@ -6,8 +6,14 @@ namespace adrilight
 {
     public interface IDesktopDuplicatorReader
     {
-        bool IsRunning { get; }
+        RunStateEnum RunState { get; }
 
         void Run(CancellationToken token);
     }
+    public enum RunStateEnum
+    {
+        Stopped,
+        Running,
+        Stopping
+    };
 }
