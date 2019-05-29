@@ -118,7 +118,9 @@ namespace adrilight
                 while (!token.IsCancellationRequested)
                 {
                     var frameTime = Stopwatch.StartNew();
-                    var newImage = _retryPolicy.Execute(() => GetNextFrame(image));
+                    var context = new Context();
+                    context.Add("image", image);
+                    var newImage = _retryPolicy.Execute(c => GetNextFrame(c["image"] as Bitmap), context);
                     TraceFrameDetails(newImage);
                     if (newImage == null)
                     {
