@@ -13,7 +13,7 @@ namespace adrilight.Util
 {
     sealed class FpsLogger : IDisposable
     {
-        private ILogger _log = LogManager.GetCurrentClassLogger();
+        private static ILogger _log = LogManager.GetCurrentClassLogger();
 
         private readonly string _name;
         private readonly Subject<Unit> _frames = new Subject<Unit>();

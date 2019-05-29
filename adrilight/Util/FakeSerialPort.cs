@@ -24,7 +24,7 @@ namespace adrilight.Util
             fpsLogger?.Dispose();
         }
 
-        private readonly FpsLogger fpsLogger = new FpsLogger("FakeSerialPort");
+        private static readonly FpsLogger fpsLogger = new FpsLogger("FakeSerialPort");
 
         public void Write(byte[] outputBuffer, int v, int streamLength)
         {
