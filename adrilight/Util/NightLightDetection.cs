@@ -132,8 +132,8 @@ namespace adrilight.Util
                     _context = new Microsoft.ML.MLContext();
                     using (var zipStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("adrilight.Resources.NightLightDetectionModel.zip"))
                     {
-                        _model = _context.Model.Load(zipStream) as Microsoft.ML.Data.TransformerChain<Microsoft.ML.ITransformer>;
-                        _predictor = _model.CreatePredictionEngine<NightLightDataRow, NightLightState>(_context);
+                        _model = _context.Model.Load(zipStream, out var inputSchema) as Microsoft.ML.Data.TransformerChain<Microsoft.ML.ITransformer>;
+                        _predictor = _context.Model.CreatePredictionEngine<NightLightDataRow, NightLightState>(_model);
                     }
                 }
 
