@@ -138,7 +138,15 @@ namespace adrilight.Util
                 }
 
                 var predicted = _predictor.Predict(new NightLightDataRow(data, true));
-                Console.WriteLine($"predicted: {predicted.PredictedLabel}, {predicted.Probability:0.00000}");
+                var isUnclearResult = predicted.Probability <= 0.9f && predicted.Probability >= 0.1f;
+                if (isUnclearResult)
+                {
+                    _log.Warn($"predicted: {predicted.PredictedLabel}, {predicted.Probability:0.00000}");
+                }
+                else
+                {
+                    _log.Debug($"predicted: {predicted.PredictedLabel}, {predicted.Probability:0.00000}");
+                }
 
                 _lastData = data;
                 _lastResult = predicted.PredictedLabel;
