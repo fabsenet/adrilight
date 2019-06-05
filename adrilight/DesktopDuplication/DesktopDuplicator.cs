@@ -232,6 +232,8 @@ namespace adrilight.DesktopDuplication
             _stagingTexture?.Dispose();
             _outputDuplication?.Dispose();
             _device?.Dispose();
+
+            GC.Collect();
         }
     }
 }

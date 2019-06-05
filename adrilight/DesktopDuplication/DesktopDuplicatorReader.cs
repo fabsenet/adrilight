@@ -201,6 +201,8 @@ namespace adrilight
 
                 _log.Debug("Stopped Desktop Duplication Reader.");
                 RunState = RunStateEnum.Stopped;
+
+                GC.Collect();
             }
         }
         
@@ -312,6 +314,9 @@ namespace adrilight
 
                 _desktopDuplicator?.Dispose();
                 _desktopDuplicator = null;
+
+                GC.Collect();
+
                 throw;
             }
         }

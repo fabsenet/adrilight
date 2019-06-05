@@ -170,7 +170,14 @@ namespace adrilight
 
             Exit += (s, e) => _log.Debug("Application exit!");
 
-            SystemEvents.PowerModeChanged += (s, e) => _log.Debug("Changing Powermode to {0}", e.Mode);
+            SystemEvents.PowerModeChanged += (s, e) =>
+            {
+                _log.Debug("Changing Powermode to {0}", e.Mode);
+                if(e.Mode == PowerModes.Resume)
+                {
+                    GC.Collect();
+                }
+            };
         }
 
         [System.Diagnostics.Conditional("DEBUG")]
