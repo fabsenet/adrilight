@@ -29,6 +29,7 @@ namespace adrilight.ViewModel
 
         private const string ProjectPage = "https://github.com/fabsenet/adrilight";
         private const string IssuesPage = "https://github.com/fabsenet/adrilight/issues";
+        private const string NightlightMdPage = "https://github.com/fabsenet/adrilight/blob/master/NightlightDetection.md";
         private const string LatestReleasePage = "https://github.com/fabsenet/adrilight/releases/latest";
 
         public SettingsViewModel(IUserSettings userSettings, IList<ISelectableViewPart> selectableViewParts
@@ -216,6 +217,7 @@ namespace adrilight.ViewModel
 
         public ICommand OpenUrlProjectPageCommand { get; } = new RelayCommand(() => OpenUrl(ProjectPage));
         public ICommand OpenUrlIssuesPageCommand { get; } = new RelayCommand(() => OpenUrl(IssuesPage));
+        public ICommand OpenNightlightMdPageCommand { get; } = new RelayCommand(() => OpenUrl(NightlightMdPage));
         public ICommand OpenUrlLatestReleaseCommand { get; } = new RelayCommand(() => OpenUrl(LatestReleasePage));
         private static void OpenUrl(string url) => Process.Start(url);
 

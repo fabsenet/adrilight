@@ -200,7 +200,19 @@
                     </materialDesign:PackIcon>
 
                     <TextBlock Margin="58 8 18 38" FontWeight="Bold" Grid.Row="0" Grid.Column="0">Forced On</TextBlock>
+
                     <TextBlock Margin="58 8 18 38" FontWeight="Bold" Grid.Row="1" Grid.Column="0">Auto detect</TextBlock>
+                    <TextBlock Margin="2,59,72.4,49.4" FontWeight="Bold" Grid.Column="0"
+                               RenderTransformOrigin="0.5,0.5" Foreground="#FFFD7474" TextDecorations="{x:Null}" Grid.RowSpan="2">
+                        <TextBlock.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform Angle="-7.268"/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </TextBlock.RenderTransform>EXPERIMENTAL!</TextBlock>
+
                     <TextBlock Margin="58 8 18 38" FontWeight="Bold" Grid.Row="2" Grid.Column="0">Forced Off</TextBlock>
 
                     <TextBlock Margin="8 0 50 0" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">
@@ -208,10 +220,12 @@
                         of information. You basically have to decide on your own when to use this or not
                     </TextBlock>
                     <TextBlock Margin="8 0 50 0" Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">
-                        This mode tries to detect the actual night light mode of windows to switch automatically 
-                        as well. Please consider this mode as experimental. If it does not work for you,
-                        please open up an issue on the adrilight github page so this feature may be improved 
-                        for all users.
+                        This mode tries to detect the actual night light mode of Windows to switch automatically 
+                        the mode at the same time. Consider this mode as <Span Foreground="#FFFD7474">experimental</Span>. 
+                        <LineBreak/>
+                        <Hyperlink Command="{Binding OpenNightlightMdPageCommand}" Foreground="#FF84C1FF">
+                            Learn how it works and how to report errors
+                        </Hyperlink>
                     </TextBlock>
                     <TextBlock Margin="8 0 50 0" Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">
                         This mode <Italic>disables</Italic> the alternate whitebalance without any other external source 
