@@ -119,6 +119,8 @@ namespace adrilight
 
             base.OnExit(e);
             _adrilightMutex?.Dispose();
+
+            LogManager.Shutdown();
         }
 
         internal static IKernel SetupDependencyInjection(bool isInDesignMode)
