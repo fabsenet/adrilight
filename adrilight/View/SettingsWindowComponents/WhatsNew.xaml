@@ -20,7 +20,7 @@
     </UserControl.Resources>
     <Grid>
         <materialDesign:Card Margin="4 4 4 4" Width="900" VerticalAlignment="Stretch" Height="auto">
-            <WebBrowser x:Name="browser"></WebBrowser>
+            <WebBrowser x:Name="browser" Navigating="Browser_Navigating"></WebBrowser>
         </materialDesign:Card>
     </Grid>
 </UserControl>

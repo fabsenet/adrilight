@@ -1,6 +1,7 @@
 ﻿using adrilight.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,10 +22,13 @@ namespace adrilight.View.SettingsWindowComponents
     /// </summary>
     public partial class WhatsNew : UserControl
     {
+        public SettingsViewModel SettingsViewModel { get; }
+
         public WhatsNew(SettingsViewModel settingsViewModel)
         {
             InitializeComponent();
-            browser.Source = settingsViewModel.WhatsNewUrl;
+            SettingsViewModel = settingsViewModel ?? throw new ArgumentNullException(nameof(settingsViewModel));
+            browser.Source = SettingsViewModel.WhatsNewUrl;
         }
 
 
@@ -43,6 +47,17 @@ namespace adrilight.View.SettingsWindowComponents
             public string ViewPartName => "Whats New?";
 
             public object Content => lazyContent.Value;
+        }
+
+        private void Browser_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            var isWhatsNewUrl = e.Uri == SettingsViewModel.WhatsNewUrl;
+
+            if (!isWhatsNewUrl)
+            {
+                e.Cancel = true;
+                Process.Start(e.Uri.AbsoluteUri);
+            }
         }
     }
 }
