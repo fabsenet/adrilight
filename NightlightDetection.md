@@ -32,6 +32,6 @@ To let adrilight improve over time, more data is needed. If you observe adriligh
 
 What you need to do:
 
-1. Find the `adrilight.log.nightlight.yyyyMMdd.txt` log file(s). Look in the folder `%localappdata%\adrilightApp\app-2.0.9\logs` or the highest version number you have. The real path may look like `c\Users\fancyUsername\AppData\Local\adrilightApp\app-2.0.9\logs`.
+1. Find the `adrilight.log.nightlight.yyyyMMdd.txt` log file(s). Look in the folder `%localappdata%\adrilightApp\app-2.0.9\logs` or the highest version number you have. The real path may look like `c:\Users\fancyUsername\AppData\Local\adrilightApp\app-2.0.9\logs`.
 1. [Open up an issue on adrilight](https://github.com/fabsenet/adrilight/issues/new) and upload this file as well (drag and drop on the text field works!)
 1. **It is essential** that you provide information whether the night light was **ON or OFF** when the detection failed.
