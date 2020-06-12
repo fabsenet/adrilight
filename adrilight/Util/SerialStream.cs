@@ -119,7 +119,13 @@ namespace adrilight
             int counter = _messagePreamble.Length;
             lock (SpotSet.Lock)
             {
-                const int colorsPerLed = 4;
+                if (UserSettings.StripType) {
+                    const int colorsPerLed = 4;
+                }
+                else
+                {
+                    const int colorsPerLed = 3;
+                }
                 int bufferLength = _messagePreamble.Length
                     + (SpotSet.Spots.Length * colorsPerLed)
                     + _messagePostamble.Length;
