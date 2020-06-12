@@ -9,11 +9,13 @@ using System.Windows.Media;
 using adrilight.Util;
 using System.Linq;
 using Newtonsoft.Json;
+using MoreLinq.Extensions;
 
 namespace adrilight
 {
     internal sealed class SerialStream : IDisposable, ISerialStream
     {
+        private const ushort V = 255;
         private ILogger _log = LogManager.GetCurrentClassLogger();
 
         public SerialStream(IUserSettings userSettings, ISpotSet spotSet)
@@ -117,7 +119,7 @@ namespace adrilight
             int counter = _messagePreamble.Length;
             lock (SpotSet.Lock)
             {
-                const int colorsPerLed = 3;
+                const int colorsPerLed = 4;
                 int bufferLength = _messagePreamble.Length
                     + (SpotSet.Spots.Length * colorsPerLed)
                     + _messagePostamble.Length;
@@ -133,9 +135,46 @@ namespace adrilight
                 {
                     if (!UserSettings.SendRandomColors)
                     {
-                        outputStream[counter++] = spot.Blue; // blue
-                        outputStream[counter++] = spot.Green; // green
-                        outputStream[counter++] = spot.Red; // red
+
+                        if (UserSettings.StripType)
+                        {
+                            //Calibrated values
+                            float RC = UserSettings.RedtoWhite;
+                            float GC = UserSettings.GreentoWhite;
+                            float BC = UserSettings.BluetoWhite;
+                            float WC = UserSettings.WhitetoColors;
+
+                            ushort r;
+                            ushort g;
+                            ushort b;
+                            ushort w;
+
+                            //Normalized red, green, and blue
+                            float rn = spot.Red * WC / RC;
+                            float gn = spot.Green * WC / GC;
+                            float bn = spot.Blue * WC / BC;
+                            //Find maximum white value that won’t desaturate
+                            float wn = Math.Min(rn, gn);
+                            wn = Math.Min(wn, bn);
+                            //Remove red, green, and blue contributions to be supplied by the white LED
+                            r = (ushort)(spot.Red - wn * RC / WC);
+                            g = (ushort)(spot.Green - wn * GC / WC);
+                            b = (ushort)(spot.Blue - wn * BC / WC);
+                            w = (ushort)wn;
+                            r = Math.Min(r, V);
+                            g = Math.Min(g, V);
+                            b = Math.Min(b, V);
+                            outputStream[counter++] = (byte)b; // blue
+                            outputStream[counter++] = (byte)g; // green
+                            outputStream[counter++] = (byte)r; // red
+                            outputStream[counter++] = (byte)w; // white
+                        }
+                        else
+                        {
+                            outputStream[counter++] = spot.Blue; // blue
+                            outputStream[counter++] = spot.Green; // green
+                            outputStream[counter++] = spot.Red; // red
+                        }
 
                         allBlack = allBlack && spot.Red == 0 && spot.Green == 0 && spot.Blue == 0;
                     }
