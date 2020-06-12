@@ -40,6 +40,13 @@ namespace adrilight.Fakes
         public byte AltWhitebalanceGreen { get; set; } = 85;
         public byte AltWhitebalanceBlue { get; set; } = 50;
 
+        public byte RedtoWhite { get; set; } = 100;
+        public byte GreentoWhite { get; set; } = 100;
+        public byte BluetoWhite { get; set; } = 100;
+        public byte WhitetoColors { get; set; } = 100;
+
+        public bool StripType { get; set; } = false;
+
         public Guid InstallationId { get; set; } = Guid.NewGuid();
 
         public bool SendRandomColors { get; set; }
