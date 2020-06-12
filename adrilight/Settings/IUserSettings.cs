@@ -36,6 +36,13 @@ namespace adrilight
         byte AltWhitebalanceGreen { get; set; }
         byte AltWhitebalanceBlue { get; set; }
 
+        byte RedtoWhite { get; set; }
+        byte GreentoWhite { get; set; }
+        byte BluetoWhite { get; set; }
+        byte WhitetoColors { get; set; }
+
+        bool StripType { get; set; }
+
         bool SendRandomColors { get; set; }
 
         int LimitFps { get; set; }

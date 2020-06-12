@@ -39,6 +39,13 @@ namespace adrilight
         private byte _altWhitebalanceGreen = 100;
         private byte _altWhitebalanceBlue = 80;
 
+        private byte _RedtoWhite = 100;
+        private byte _GreentoWhite = 100;
+        private byte _BluetoWhite = 100;
+        private byte _WhitetoColors = 100;
+
+        private bool _StripType = false;
+
         private bool _sendRandomColors = false;
         private int _limitFps = 60;
         private int _configFileVersion = 2;
@@ -74,6 +81,13 @@ namespace adrilight
         public byte WhitebalanceRed { get => _whitebalanceRed; set { Set(() => WhitebalanceRed, ref _whitebalanceRed, value); } }
         public byte WhitebalanceGreen { get => _whitebalanceGreen; set { Set(() => WhitebalanceGreen, ref _whitebalanceGreen, value); } }
         public byte WhitebalanceBlue { get => _whitebalanceBlue; set { Set(() => WhitebalanceBlue, ref _whitebalanceBlue, value); } }
+
+        public byte RedtoWhite { get => _RedtoWhite; set { Set(() => RedtoWhite, ref _RedtoWhite, value); } }
+        public byte GreentoWhite { get => _GreentoWhite; set { Set(() => GreentoWhite, ref _GreentoWhite, value); } }
+        public byte BluetoWhite { get => _BluetoWhite; set { Set(() => BluetoWhite, ref _BluetoWhite, value); } }
+        public byte WhitetoColors { get => _WhitetoColors; set { Set(() => WhitetoColors, ref _WhitetoColors, value); } }
+
+        public bool StripType { get => _StripType; set { Set(() => StripType, ref _StripType, value); } }
 
         public byte AltWhitebalanceRed { get => _altWhitebalanceRed; set { Set(() => AltWhitebalanceRed, ref _altWhitebalanceRed, value); } }
         public byte AltWhitebalanceGreen { get => _altWhitebalanceGreen; set { Set(() => AltWhitebalanceGreen, ref _altWhitebalanceGreen, value); } }
