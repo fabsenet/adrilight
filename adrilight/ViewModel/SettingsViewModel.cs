@@ -288,8 +288,11 @@ namespace adrilight.ViewModel
                 RaisePropertyChanged(nameof(IsInDaylightLightMode));
             }
         }
-
         public bool IsInDaylightLightMode { get { return !_isInNightLightMode; } }
+
+        public bool _stripType = false;
+        public bool StripType { get { return !_stripType; } }
+
 
         public IDictionary<AlternateWhiteBalanceModeEnum, string> AlternateWhiteBalanceModes { get; } =
             new SortedDictionary<AlternateWhiteBalanceModeEnum, string>() {
