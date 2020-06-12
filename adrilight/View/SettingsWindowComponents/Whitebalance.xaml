@@ -12,11 +12,10 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{StaticResource MaterialDesignFont}"
-             
-             d:DesignHeight="900" d:DesignWidth="900">
-    <Grid Width="900">
+        FontFamily="{StaticResource MaterialDesignFont}" d:DesignWidth="900" Height="1145">
+    <Grid Width="900" Height="1066.519" VerticalAlignment="Top" Margin="0,0,0,-166.519">
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -54,7 +53,7 @@
 
         <materialDesign:PackIcon Kind="PollBox" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" />
 
-        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" VerticalAlignment="Stretch">
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" VerticalAlignment="Top">
             <Grid Margin="38 28 8 38">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
@@ -95,7 +94,7 @@
             </Grid>
         </materialDesign:Card>
         <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" VerticalAlignment="Stretch">
-            <Grid Margin="38 28 8 38">
+            <Grid Margin="38 28 8 8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="auto" />
@@ -135,20 +134,21 @@
             </Grid>
         </materialDesign:Card>
 
-        <materialDesign:Card Margin="4 4 2 4" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
-            <StackPanel Margin="38 28 38 18">
+        <materialDesign:Card Margin="0,10,6,1" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
+            <StackPanel Margin="38,8,38,8
+                        " Height="305.203">
                 <TextBlock FontWeight="bold">Controling alternate night light mode detection/usage:</TextBlock>
 
-                <TextBlock Margin="58 18 38 8" FontWeight="bold">Selected mode:</TextBlock>
+                <TextBlock Margin="58 8 38 8" FontWeight="bold">Selected mode:</TextBlock>
                 <ComboBox Margin="58 0 0 40" 
                           Width="150" 
                           HorizontalAlignment="Left" 
                           ItemsSource="{Binding AlternateWhiteBalanceModes}"
                           DisplayMemberPath="Value"
                           SelectedValuePath="Key"
-                          SelectedValue="{Binding Settings.AlternateWhiteBalanceMode, Mode=TwoWay}"/>
+                          SelectedValue="{Binding Settings.AlternateWhiteBalanceMode, Mode=TwoWay}" IsSynchronizedWithCurrentItem="True"/>
 
-                <Grid>
+                <Grid Height="179.203">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1*" />
                         <RowDefinition Height="1*" />
@@ -158,7 +158,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <materialDesign:PackIcon Grid.Row="0" Grid.Column="0" Kind="NightSky" Width="31" Height="31" Foreground="#FF95C2FF" Margin="6,6,0,0" RenderTransformOrigin="0.5,0.5" >
+                    <materialDesign:PackIcon Grid.Row="0" Grid.Column="0" Kind="NightSky" Width="31" Height="31" Foreground="#FF95C2FF" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" >
                         <materialDesign:PackIcon.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>
@@ -168,7 +168,7 @@
                             </TransformGroup>
                         </materialDesign:PackIcon.RenderTransform>
                     </materialDesign:PackIcon>
-                    <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="Brain" Width="36" Height="36" Foreground="#FFEAAA00" Margin="1,18.667,0,0" RenderTransformOrigin="0.5,0.5" >
+                    <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="Brain" Width="36" Height="36" Foreground="#FFEAAA00" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" >
                         <materialDesign:PackIcon.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>
@@ -178,7 +178,7 @@
                             </TransformGroup>
                         </materialDesign:PackIcon.RenderTransform>
                     </materialDesign:PackIcon>
-                    <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="AutoAwesome" Width="22" Height="23" Foreground="#FF95C2FF" Margin="30,10.667,0,0" RenderTransformOrigin="0.5,0.5" >
+                    <materialDesign:PackIcon Grid.Row="1" Grid.Column="0" Kind="AutoAwesome" Width="22" Height="23" Foreground="#FF95C2FF" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5" >
                         <materialDesign:PackIcon.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>
@@ -199,10 +199,10 @@
                         </materialDesign:PackIcon.RenderTransform>
                     </materialDesign:PackIcon>
 
-                    <TextBlock Margin="58 8 18 38" FontWeight="Bold" Grid.Row="0" Grid.Column="0">Forced On</TextBlock>
+                    <TextBlock Margin="58,8,8,32" FontWeight="Bold" Grid.Row="0" Grid.Column="0">Forced On</TextBlock>
 
-                    <TextBlock Margin="58 8 18 38" FontWeight="Bold" Grid.Row="1" Grid.Column="0">Auto detect</TextBlock>
-                    <TextBlock Margin="2,59,72.4,49.4" FontWeight="Bold" Grid.Column="0"
+                    <TextBlock Margin="58,8,8,32" FontWeight="Bold" Grid.Row="1" Grid.Column="0">Auto detect</TextBlock>
+                    <TextBlock Margin="2.432,58.973,71.968,42.6" FontWeight="Bold" Grid.Column="0"
                                RenderTransformOrigin="0.5,0.5" Foreground="#FFFD7474" TextDecorations="{x:Null}" Grid.RowSpan="2">
                         <TextBlock.RenderTransform>
                             <TransformGroup>
@@ -213,7 +213,7 @@
                             </TransformGroup>
                         </TextBlock.RenderTransform>EXPERIMENTAL!</TextBlock>
 
-                    <TextBlock Margin="58 8 18 38" FontWeight="Bold" Grid.Row="2" Grid.Column="0">Forced Off</TextBlock>
+                    <TextBlock Margin="58 8 8 38" FontWeight="Bold" Grid.Row="2" Grid.Column="0">Forced Off</TextBlock>
 
                     <TextBlock Margin="8 0 50 0" Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" TextAlignment="Justify">
                         This mode <Italic>enables</Italic> the alternate whitebalance without any other external source 
@@ -234,5 +234,68 @@
                 </Grid>
             </StackPanel>
         </materialDesign:Card>
+
+        <materialDesign:Card Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" Width="896" Margin="0,0,0,-128.5">
+
+            <Grid Margin="95.5,10,10,10" Height="auto" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="6" />
+                    <ColumnDefinition Width="38"/>
+                    <ColumnDefinition Width="57.333" />
+                    <ColumnDefinition Width="133.064"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" MinHeight="20" />
+                    <RowDefinition Height="auto" MinHeight="18" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="5" VerticalAlignment="Bottom" FontWeight="Bold" Height="17.29" Margin="0,-2.29,0,5"><Run Text="Color to White calibration"/><Run Text=" For RGBW"/></TextBlock>
+                <ToggleButton DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
+                          ToolTip="Set if using RGBW strip" IsChecked="{Binding Settings.StripType}" Grid.Column="4"/>
+                <TextBlock Grid.Row="1" VerticalAlignment="Bottom" Height="17.29" Grid.ColumnSpan="2"><Run Text="Red"/></TextBlock>
+                <TextBlock Grid.Row="2" VerticalAlignment="Bottom" Height="17.29" Grid.ColumnSpan="2"><Run Text="Green"/></TextBlock>
+                <TextBlock Grid.Row="3" VerticalAlignment="Bottom" Height="17.29" Grid.ColumnSpan="2"><Run Text="Blue"/></TextBlock>
+                <TextBlock Grid.Row="4" VerticalAlignment="Bottom" Height="17.29" Grid.ColumnSpan="2"><Run Text="White"/></TextBlock>
+
+
+                <Slider Grid.Row="1" Grid.Column="2" IsEnabled="{Binding StripType}"
+                    Minimum="0" Maximum="255" Value="{Binding Settings.RedtoWhite}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" Grid.ColumnSpan="2" 
+                                 />
+                <Slider Grid.Row="2" Grid.Column="2" IsEnabled="{Binding StripType}"
+                    Minimum="0" Maximum="255" Value="{Binding Settings.GreentoWhite}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" Grid.ColumnSpan="2" 
+                                 />
+                <Slider Grid.Row="3" Grid.Column="2" IsEnabled="{Binding StripType}"
+                    Minimum="0" Maximum="255" Value="{Binding Settings.BluetoWhite}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" Grid.ColumnSpan="2" 
+                                 />
+                <Slider Grid.Row="4" Grid.Column="2" IsEnabled="{Binding StripType}"
+                    Minimum="0" Maximum="255" Value="{Binding Settings.WhitetoColors}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" Grid.ColumnSpan="2" 
+                                 />
+
+                <TextBlock Grid.Row="1" Grid.Column="4" Text="{Binding Settings.RedtoWhite}" VerticalAlignment="Bottom" Height="17.29" />
+                <TextBlock Grid.Row="2" Grid.Column="4" Text="{Binding Settings.GreentoWhite}" VerticalAlignment="Bottom" Height="17.29" />
+                <TextBlock Grid.Row="3" Grid.Column="4" Text="{Binding Settings.BluetoWhite}" VerticalAlignment="Bottom" Height="17.29" />
+                <TextBlock Grid.Row="4" Grid.Column="4" Text="{Binding Settings.WhitetoColors}" VerticalAlignment="Bottom" Height="17.29" />
+            </Grid>
+
+        </materialDesign:Card>
+        <TextBlock Margin="15.371,6.889,323.103,15.594" FontWeight="Bold" Grid.Column="0"
+                               RenderTransformOrigin="0.5,0.5" Foreground="#FFFD7474" TextDecorations="{x:Null}" Grid.Row="3">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-5.324"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBlock.RenderTransform>EXPERIMENTAL!</TextBlock>
     </Grid>
 </UserControl>
