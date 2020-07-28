@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -47,6 +49,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BenchmarkDotNet, Version=0.11.1.0, Culture=neutral, PublicKeyToken=aa0ca2f9092cefc4, processorArchitecture=MSIL">

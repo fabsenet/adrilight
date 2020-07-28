@@ -126,6 +126,7 @@ namespace adrilight
         internal static IKernel SetupDependencyInjection(bool isInDesignMode)
         {
             var kernel = new StandardKernel();
+            
             if(isInDesignMode)
             {
                 //setup fakes
@@ -133,6 +134,7 @@ namespace adrilight
                 kernel.Bind<IContext>().To<ContextFake>().InSingletonScope();
                 kernel.Bind<ISpotSet>().To<SpotSetFake>().InSingletonScope();
                 kernel.Bind<ISerialStream>().To<SerialStreamFake>().InSingletonScope();
+                kernel.Bind<ISmarthome>().To<SmarthomeFake>().InSingletonScope();
                 kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReaderFake>().InSingletonScope();
             }
             else
@@ -145,7 +147,12 @@ namespace adrilight
                 kernel.Bind<IContext>().To<WpfContext>().InSingletonScope();
                 kernel.Bind<ISpotSet>().To<SpotSet>().InSingletonScope();
                 kernel.Bind<ISerialStream>().To<SerialStream>().InSingletonScope();
+                kernel.Bind<ISmarthome>().To<Smarthome>().InSingletonScope();
                 kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReader>().InSingletonScope();
+
+                var cts = new CancellationTokenSource();
+                kernel.Bind<CancellationTokenSource>().ToConstant(cts);
+                kernel.Bind<CancellationToken>().ToConstant(cts.Token);
             }
             kernel.Bind<SettingsViewModel>().ToSelf().InSingletonScope();
             kernel.Bind(x => x.FromThisAssembly()
@@ -157,6 +164,9 @@ namespace adrilight
             //eagerly create required singletons [could be replaced with actual pipeline]
             var desktopDuplicationReader = kernel.Get<IDesktopDuplicatorReader>();
             var serialStream = kernel.Get<ISerialStream>();
+
+            var smarthome = kernel.Get<ISmarthome>();
+            Task.Run(() => smarthome.DoWorkAsync());
 
             return kernel;
         }

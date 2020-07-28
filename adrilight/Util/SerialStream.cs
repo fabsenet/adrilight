@@ -69,13 +69,12 @@ namespace adrilight
             }
         }
 
-        private readonly byte[] _messagePreamble = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09};
+        private readonly byte[] _messagePreamble = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
         private readonly byte[] _messagePostamble = { 85, 204, 165 };
 
 
         private Thread _workerThread;
         private CancellationTokenSource _cancellationTokenSource;
-        private readonly Stopwatch _stopwatch = new Stopwatch();
 
         private int frameCounter;
         private int blackFrameCounter;
@@ -86,8 +85,7 @@ namespace adrilight
             if (_workerThread != null) return;
 
             _cancellationTokenSource = new CancellationTokenSource();
-            _workerThread = new Thread(DoWork)
-            {
+            _workerThread = new Thread(DoWork) {
                 Name = "Serial sending",
                 IsBackground = true
             };
@@ -161,7 +159,7 @@ namespace adrilight
 
         private void DoWork(object tokenObject)
         {
-            var cancellationToken = (CancellationToken) tokenObject;
+            var cancellationToken = (CancellationToken)tokenObject;
             ISerialPortWrapper serialPort = null;
 
             if (String.IsNullOrEmpty(UserSettings.ComPort))
@@ -187,16 +185,17 @@ namespace adrilight
                         if (openedComPort != UserSettings.ComPort)
                         {
                             serialPort?.Close();
-                            
-                            serialPort = UserSettings.ComPort!= "Fake Port" 
-                                ? (ISerialPortWrapper) new WrappedSerialPort(new SerialPort(UserSettings.ComPort, baudRate)) 
+
+                            serialPort = UserSettings.ComPort != "Fake Port"
+                                ? (ISerialPortWrapper)new WrappedSerialPort(new SerialPort(UserSettings.ComPort, baudRate))
                                 : new FakeSerialPort();
 
                             try
                             {
                                 serialPort.Open();
                             }
-                            catch {
+                            catch
+                            {
                                 // useless UnauthorizedAccessException 
                             }
 
@@ -226,9 +225,9 @@ namespace adrilight
                         //ws2812b LEDs need 30 µs = 0.030 ms for each led to set its color so there is a lower minimum to the allowed refresh rate
                         //receiving over serial takes it time as well and the arduino does both tasks in sequence
                         //+1 ms extra safe zone
-                        var fastLedTime = (streamLength - _messagePreamble.Length - _messagePostamble.Length) /3.0*0.030d;
-                        var serialTransferTime = streamLength * 10.0*1000.0/ baudRate;
-                        var minTimespan = (int) (fastLedTime + serialTransferTime) + 1;
+                        var fastLedTime = (streamLength - _messagePreamble.Length - _messagePostamble.Length) / 3.0 * 0.030d;
+                        var serialTransferTime = streamLength * 10.0 * 1000.0 / baudRate;
+                        var minTimespan = (int)(fastLedTime + serialTransferTime) + 1;
 
                         Thread.Sleep(minTimespan);
                     }

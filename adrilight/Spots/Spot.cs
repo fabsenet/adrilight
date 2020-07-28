@@ -17,7 +17,7 @@ namespace adrilight {
             Rectangle = new Rectangle(top, left, width, height);
         }
 
-        public Rectangle Rectangle { get; private set; }
+        public Rectangle Rectangle { get; }
 
         private bool _isFirst;
         public bool IsFirst {

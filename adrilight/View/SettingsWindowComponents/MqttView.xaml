@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="adrilight.View.SettingsWindowComponents.SmartHomeIntegration"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+              xmlns:adriValidation="clr-namespace:adrilight.ValidationRules"
+             mc:Ignorable="d"        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{StaticResource MaterialDesignFont}"
+             d:DesignHeight="1711.2" d:DesignWidth="1004.8">
+    <StackPanel>
+        <WrapPanel Margin="0 0 8 8">
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="BorderHorizontal" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">Mqtt</TextBlock>
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 8"
+                                VerticalAlignment="Bottom">
+                                <TextBox.Text>
+                                    <Binding Path="Settings.IsMqttEnabled" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <adriValidation:NumberRangeValidationRule Minimum="10" Maximum="400" ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        <Slider Minimum="10" 
+                                Maximum="400" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                Value="{Binding Settings.SpotWidth}" />
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                        This is the width in pixels of a single spot used to detect the color for a single LED pixel. A smaller number will yield sharper image reproduction behind your screen. A larger number will yield a feeling for the base color of a movie scene. Try to start with a value of 30.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+
+    </WrapPanel>
+    </StackPanel>
+</UserControl>
