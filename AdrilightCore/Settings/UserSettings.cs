@@ -16,7 +16,7 @@ namespace adrilight
         private bool _autostart = false;
         private int _borderDistanceX = 0;
         private int _borderDistanceY = 100;
-        private string _comPort = null;
+        private string? _comPort = null;
         private string _adrilightVersion = "2.0.7";
         private bool _mirrorX = false;
         private bool _mirrorY = false;
@@ -51,7 +51,7 @@ namespace adrilight
         public bool Autostart { get => _autostart; set { Set(() => Autostart, ref _autostart, value); } }
         public int BorderDistanceX { get => _borderDistanceX; set { Set(() => BorderDistanceX, ref _borderDistanceX, value); } }
         public int BorderDistanceY { get => _borderDistanceY; set { Set(() => BorderDistanceY, ref _borderDistanceY, value); } }
-        public string ComPort { get => _comPort; set { Set(() => ComPort, ref _comPort, value); } }
+        public string? ComPort { get => _comPort; set { Set(() => ComPort, ref _comPort, value); } }
 
         public string AdrilightVersion { get => _adrilightVersion; set { Set(() => AdrilightVersion, ref _adrilightVersion, value); } }
 

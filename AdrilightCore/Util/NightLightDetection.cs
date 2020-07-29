@@ -19,6 +19,20 @@ namespace adrilight.Util
 
         private readonly SettingsViewModel _settingsViewModel;
 
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private Task? _actingTask;
+        private readonly object _actOnceLock = new object();
+
+
+        private RegistryKey _stateKeyWin10 = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount\$$windows.data.bluelightreduction.bluelightreductionstate\Current", false);
+        private RegistryKey _stateKeyInsider = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.bluelightreductionstate\windows.data.bluelightreduction.bluelightreductionstate", false);
+
+        private byte[]? _lastData;
+        private bool _lastResult;
+        Microsoft.ML.MLContext? _context;
+        Microsoft.ML.Data.TransformerChain<Microsoft.ML.ITransformer>? _model;
+        private PredictionEngine<NightLightDataRow, NightLightState>? _predictor;
+
         public NightLightDetection(SettingsViewModel settingsViewModel)
         {
             _settingsViewModel = settingsViewModel ?? throw new ArgumentNullException(nameof(settingsViewModel));
@@ -32,9 +46,6 @@ namespace adrilight.Util
             };
             ActOnce();
         }
-
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private Task _actingTask;
 
         public void Start()
         {
@@ -67,7 +78,6 @@ namespace adrilight.Util
             }
         }
 
-        private readonly object _actOnceLock = new object();
         private void ActOnce()
         {
             lock (_actOnceLock)
@@ -96,15 +106,6 @@ namespace adrilight.Util
             }
         }
 
-
-        private RegistryKey _stateKeyWin10 = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount\$$windows.data.bluelightreduction.bluelightreductionstate\Current", false);
-        private RegistryKey _stateKeyInsider = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.bluelightreductionstate\windows.data.bluelightreduction.bluelightreductionstate", false);
-
-        private byte[] _lastData;
-        private bool _lastResult;
-        Microsoft.ML.MLContext _context;
-        Microsoft.ML.Data.TransformerChain<Microsoft.ML.ITransformer> _model;
-        private PredictionEngine<NightLightDataRow, NightLightState> _predictor;
 
         private bool IsWindowsInNightLightMode()
         {
@@ -167,10 +168,10 @@ namespace adrilight.Util
         public bool IsActive { get; }
 
         //  [Microsoft.ML.Data.VectorType(43)]
-        public byte[] Data { get; }
+        public byte[]? Data { get; }
 
         [Microsoft.ML.Data.VectorType(35)]
-        public float[] Data2 {
+        public float[]? Data2 {
             get;
         }
 

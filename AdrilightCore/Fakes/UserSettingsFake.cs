@@ -14,7 +14,7 @@ namespace adrilight.Fakes
         public int ConfigFileVersion { get; set; } = 2;
         public int BorderDistanceX { get; set; } = 33;
         public int BorderDistanceY { get; set; } = 44;
-        public string ComPort { get; set; } = "COM7";
+        public string? ComPort { get; set; } = "COM7";
         public DateTime? LastUpdateCheck { get; set; } = DateTime.Now;
         public int LedsPerSpot { get; set; } = 1;
         public bool MirrorX { get; set; } = true;
@@ -48,7 +48,7 @@ namespace adrilight.Fakes
 
         public AlternateWhiteBalanceModeEnum AlternateWhiteBalanceMode { get; set; } = AlternateWhiteBalanceModeEnum.Off;
 #pragma warning disable CS0067
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 #pragma warning restore CS0067
     }
 }

@@ -16,6 +16,16 @@ namespace adrilight
     {
         private ILogger _log = LogManager.GetCurrentClassLogger();
 
+        private readonly byte[] _messagePreamble = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
+        private readonly byte[] _messagePostamble = { 85, 204, 165 };
+
+
+        private Thread? _workerThread;
+        private CancellationTokenSource? _cancellationTokenSource;
+
+        private int frameCounter;
+        private int blackFrameCounter;
+
         public SerialStream(IUserSettings userSettings, ISpotSet spotSet)
         {
             UserSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
@@ -68,16 +78,6 @@ namespace adrilight
                 Stop();
             }
         }
-
-        private readonly byte[] _messagePreamble = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
-        private readonly byte[] _messagePostamble = { 85, 204, 165 };
-
-
-        private Thread _workerThread;
-        private CancellationTokenSource _cancellationTokenSource;
-
-        private int frameCounter;
-        private int blackFrameCounter;
 
         public void Start()
         {
@@ -157,10 +157,11 @@ namespace adrilight
             }
         }
 
-        private void DoWork(object tokenObject)
+        private void DoWork(object? tokenObject)
         {
+            if (tokenObject == null) throw new ArgumentNullException(nameof(tokenObject));
             var cancellationToken = (CancellationToken)tokenObject;
-            ISerialPortWrapper serialPort = null;
+            ISerialPortWrapper? serialPort = null;
 
             if (String.IsNullOrEmpty(UserSettings.ComPort))
             {
@@ -177,7 +178,7 @@ namespace adrilight
                 try
                 {
                     const int baudRate = 1000000;
-                    string openedComPort = null;
+                    string? openedComPort = null;
 
                     while (!cancellationToken.IsCancellationRequested)
                     {
@@ -212,7 +213,7 @@ namespace adrilight
 
                         //send frame data
                         var (outputBuffer, streamLength) = GetOutputStream();
-                        serialPort.Write(outputBuffer, 0, streamLength);
+                        serialPort?.Write(outputBuffer, 0, streamLength);
 
                         if (++frameCounter == 1024 && blackFrameCounter > 1000)
                         {

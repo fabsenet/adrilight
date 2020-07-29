@@ -3,7 +3,7 @@ using adrilight.Resources;
 using adrilight.Settings;
 using adrilight.View;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Command;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -51,7 +51,6 @@ namespace adrilight.ViewModel
 #else
             SelectedViewPart = SelectableViewParts.First();
 #endif
-
             PossibleLedCountsVertical = Enumerable.Range(10, 190).ToList();
             PossibleLedCountsHorizontal = Enumerable.Range(10, 290).ToList();
 
@@ -128,8 +127,8 @@ namespace adrilight.ViewModel
         public IList<int> PossibleLedCountsHorizontal { get; }
         public IList<int> PossibleLedCountsVertical { get; }
 
-        public ISelectableViewPart _selectedViewPart;
-        public ISelectableViewPart SelectedViewPart
+        public ISelectableViewPart? _selectedViewPart;
+        public ISelectableViewPart? SelectedViewPart
         {
             get => _selectedViewPart;
             set
@@ -198,8 +197,8 @@ namespace adrilight.ViewModel
                 }
             });
         }
-        public WriteableBitmap _previewImageSource;
-        public WriteableBitmap PreviewImageSource
+        public WriteableBitmap? _previewImageSource;
+        public WriteableBitmap? PreviewImageSource
         {
             get => _previewImageSource;
             set
@@ -255,8 +254,8 @@ namespace adrilight.ViewModel
         public int CanvasHeight => ScreenHeight + 2 * CanvasPadding;
 
 
-        public ISpot[] _previewSpots;
-        public ISpot[] PreviewSpots
+        public ISpot[]? _previewSpots;
+        public ISpot[]? PreviewSpots
         {
             get => _previewSpots;
             set {

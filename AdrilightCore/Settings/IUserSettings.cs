@@ -10,7 +10,7 @@ namespace adrilight
         bool Autostart { get; set; }
         int BorderDistanceX { get; set; }
         int BorderDistanceY { get; set; }
-        string ComPort { get; set; }
+        string? ComPort { get; set; }
 
         bool MirrorX { get; set; }
         bool MirrorY { get; set; }

@@ -25,7 +25,7 @@ namespace adrilight
             File.WriteAllText(JsonFileNameAndPath, json);
         }
 
-        public IUserSettings LoadIfExists()
+        public IUserSettings? LoadIfExists()
         {
             if (!File.Exists(JsonFileNameAndPath)) return null;
 

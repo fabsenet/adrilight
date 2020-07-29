@@ -19,6 +19,8 @@ namespace adrilight
     {
         private readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
+        public RunStateEnum RunState { get; private set; } = RunStateEnum.Stopped;
+        private CancellationTokenSource? _cancellationTokenSource;
         public DesktopDuplicatorReader(IUserSettings userSettings, ISpotSet spotSet, SettingsViewModel settingsViewModel)
         {
             UserSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
@@ -47,10 +49,6 @@ namespace adrilight
             }
         }
 
-        public RunStateEnum RunState { get; private set; } = RunStateEnum.Stopped;
-        private CancellationTokenSource _cancellationTokenSource;
-
-
         private void RefreshCapturingState()
         {
             var isRunning = _cancellationTokenSource != null && RunState==RunStateEnum.Running;
@@ -62,7 +60,7 @@ namespace adrilight
                 //stop it!
                 _log.Debug("stopping the capturing");
                 RunState = RunStateEnum.Stopping;
-                _cancellationTokenSource.Cancel();
+                _cancellationTokenSource?.Cancel();
                 _cancellationTokenSource = null;
             }
             else if (!isRunning && shouldBeRunning)
@@ -103,7 +101,7 @@ namespace adrilight
             return TimeSpan.FromMilliseconds(1000);
         }
 
-        private DesktopDuplicator _desktopDuplicator;
+        private DesktopDuplicator? _desktopDuplicator;
 
         public async void Run(CancellationToken token)
         {
@@ -116,7 +114,7 @@ namespace adrilight
 
             RunState = RunStateEnum.Running;
             _log.Debug("Started Desktop Duplication Reader.");
-            Bitmap image = null;
+            Bitmap? image = null;
             try
             {
                 BitmapData bitmapData = new BitmapData();
@@ -209,7 +207,7 @@ namespace adrilight
         private int? _lastObservedHeight;
         private int? _lastObservedWidth;
 
-        private void TraceFrameDetails(Bitmap image)
+        private void TraceFrameDetails(Bitmap? image)
         {
             //there are many frames per second and we need to extract useful information and only log those!
             if (image == null)
@@ -294,7 +292,7 @@ namespace adrilight
             return (byte)(256f * ((float)Math.Pow(factor, color / 256f) - 1f) / (factor - 1));
         }
 
-        private Bitmap GetNextFrame(Bitmap reusableBitmap)
+        private Bitmap? GetNextFrame(Bitmap? reusableBitmap)
         {
             if (_desktopDuplicator == null)
             {

@@ -10,7 +10,6 @@ using adrilight.Extensions;
 
 using Device = SharpDX.Direct3D11.Device;
 using MapFlags = SharpDX.Direct3D11.MapFlags;
-using Rectangle = SharpDX.Mathematics.Interop.RawRectangle;
 using adrilight.Util;
 
 namespace adrilight.DesktopDuplication
@@ -24,9 +23,9 @@ namespace adrilight.DesktopDuplication
         private OutputDescription _outputDescription;
         private readonly OutputDuplication _outputDuplication;
 
-        private Texture2D _stagingTexture;
-        private Texture2D _smallerTexture;
-        private ShaderResourceView _smallerTextureView;
+        private Texture2D? _stagingTexture;
+        private Texture2D? _smallerTexture;
+        private ShaderResourceView? _smallerTextureView;
 
         /// <summary>
         /// Duplicates the output of the specified monitor on the specified graphics adapter.
@@ -68,6 +67,10 @@ namespace adrilight.DesktopDuplication
                     throw new DesktopDuplicationException(
                         "There is already the maximum number of applications using the Desktop Duplication API running, please close one of the applications and try again.");
                 }
+                else
+                {
+                    throw;
+                }
             }
         }
 
@@ -77,7 +80,7 @@ namespace adrilight.DesktopDuplication
         /// <summary>
         /// Retrieves the latest desktop image and associated metadata.
         /// </summary>
-        public Bitmap GetLatestFrame(Bitmap reusableImage)
+        public Bitmap? GetLatestFrame(Bitmap? reusableImage)
         {
             // Try to get the latest frame; this may timeout
             var succeeded = RetrieveFrame();
@@ -169,7 +172,7 @@ namespace adrilight.DesktopDuplication
             return true;
         }
 
-        private Bitmap ProcessFrame(Bitmap reusableImage)
+        private Bitmap ProcessFrame(Bitmap? reusableImage)
         {
             // Get the desktop capture texture
             var mapSource = _device.ImmediateContext.MapSubresource(_stagingTexture, 0, MapMode.Read, MapFlags.None);
@@ -187,7 +190,7 @@ namespace adrilight.DesktopDuplication
                 image = new Bitmap(width, height, PixelFormat.Format32bppRgb);
             }
 
-            var boundsRect = new System.Drawing.Rectangle(0, 0, width, height);
+            var boundsRect = new Rectangle(0, 0, width, height);
 
             // Copy pixels from screen capture Texture to GDI bitmap
             var mapDest = image.LockBits(boundsRect, ImageLockMode.WriteOnly, image.PixelFormat);

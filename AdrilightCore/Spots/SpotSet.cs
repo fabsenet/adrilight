@@ -20,7 +20,7 @@ namespace adrilight
 
 
             UserSettings.PropertyChanged += (_, e) => DecideRefresh(e.PropertyName);
-            Refresh();
+            Spots = BuildSpots(ExpectedScreenWidth, ExpectedScreenHeight, UserSettings);
 
             _log.Info($"SpotSet created.");
         }
