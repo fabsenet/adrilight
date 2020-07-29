@@ -1,0 +1,120 @@
+﻿<UserControl x:Class="adrilight.View.SettingsWindowComponents.ComPortSetup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{StaticResource MaterialDesignFont}"
+             xmlns:local="clr-namespace:adrilight.View.SettingsWindowComponents"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:validationRules="clr-namespace:adrilight.ViewModel.ValidationRules"
+             mc:Ignorable="d" 
+             d:DesignHeight="391.45" d:DesignWidth="991.636">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <WrapPanel>
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="Settings" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"/>
+                
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">COM Port</TextBlock>
+                    <ComboBox
+                        materialDesign:HintAssist.Hint="COM Port"
+                        ItemsSource="{Binding AvailableComPorts}">
+                        <ComboBox.SelectedValue>
+                            <Binding Path="Settings.ComPort" UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <validationRules:NotEmptyValidationRule ValidatesOnTargetUpdated="True"/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </ComboBox.SelectedValue>
+                    </ComboBox>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 22 0 0" TextAlignment="Justify">
+                        This is the COM-Port used for the communication with the arduino.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="Bug" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                    <materialDesign:PackIcon.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="68.588"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </materialDesign:PackIcon.RenderTransform>
+                </materialDesign:PackIcon>
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8">
+                    <DockPanel>
+                        <ToggleButton DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
+                          ToolTip="Send Random Colors" IsChecked="{Binding Settings.SendRandomColors}" />
+                        <TextBlock FontWeight="Bold">Send Random Colors</TextBlock>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                        This is a test feature to find errors in the setup. If you turn this on, it will send random colors 
+                        to the arduino instead of the actual detected colors. Number of LEDs is still respected and it only 
+                        works, if you enable sending in the next card.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="PlayPause" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"/>
+                
+                <StackPanel Grid.Row="1" Margin="8 24 8 8">
+                    <DockPanel>
+                        <ToggleButton DockPanel.Dock="Right" IsEnabled="{Binding TransferCanBeStarted}"
+                        Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
+                          ToolTip="Enable Sending" IsChecked="{Binding Settings.TransferActive}" />
+                        <TextBlock FontWeight="Bold">Enable Sending</TextBlock>
+                    </DockPanel>
+                    <TextBlock Foreground="{DynamicResource PrimaryHueMidBrush}" Margin="0 8 0 0" TextWrapping="Wrap" TextAlignment="Justify"
+                               Visibility="{Binding TransferCanNotBeStarted, Converter={StaticResource booleanToVisibilityConverter}}">
+                        The sending cannot be enabled because of a validation error. Did you select a valid COM port?
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" Margin="0 8 0 0" TextAlignment="Justify">
+                        This switch controls whether adrilight should actually send color information to the arduino via the selected COM port.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+    </WrapPanel>
+</UserControl>

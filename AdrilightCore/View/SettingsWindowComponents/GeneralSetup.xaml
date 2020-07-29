@@ -1,0 +1,125 @@
+﻿<UserControl x:Class="adrilight.View.SettingsWindowComponents.GeneralSetup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:adriValidation="clr-namespace:adrilight.ValidationRules"
+             mc:Ignorable="d" 
+             
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{StaticResource MaterialDesignFont}"
+             
+             d:DesignHeight="900" d:DesignWidth="980.759">
+    <WrapPanel Margin="0 0 8 8">
+
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="AutoFix" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"/>
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8">
+                    <DockPanel Margin="0 8 0 0">
+                        <ToggleButton DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
+                          ToolTip="Mirror Y" IsChecked="{Binding Settings.Autostart}" />
+                        <TextBlock FontWeight="Bold">Autostart with Windows</TextBlock>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Justify" Margin="0 8 0 0">
+                        Enable this to setup adrilight to automatically start with Windows to enjoy adrilight from the first second.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+        
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="ArrangeSendBackward" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center"/>
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8">
+                    <DockPanel Margin="0 8 0 0">
+                        <ToggleButton DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignSwitchAccentToggleButton}" VerticalAlignment="Center" Margin="8 0 0 0"
+                          ToolTip="Mirror Y" IsChecked="{Binding Settings.StartMinimized}" />
+                        <TextBlock FontWeight="Bold">Start minimized</TextBlock>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Justify" Margin="0 8 0 0">
+                        If you enable this setting, adrilight will not open the Settings-Window on its startup. 
+                        You can still open the settings via a doubleclick on the notifiy icon in the lower right corner next to your clock.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="Speedometer" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">Limit FPS</TextBlock>
+                    <DockPanel>
+                        <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 8"
+                                VerticalAlignment="Bottom">
+
+                            <TextBox.Text>
+                                <Binding Path="Settings.LimitFps" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <adriValidation:NumberRangeValidationRule Minimum="1" Maximum="100" ValidatesOnTargetUpdated="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+                        <Slider Minimum="1" 
+                                Maximum="100" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                Value="{Binding Settings.LimitFps}"/>
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                        To save precious CPU cycles, it is possible to limit the FPS. 
+                        <LineBreak />
+                        <LineBreak />
+                        Adrilight will never process more frames than there are. If your screen only changes 24 times per second (=Movie), adrilight only processes 24 frames per second anyway.
+                        <LineBreak />
+                        <LineBreak />
+                        But if you are gaming on a good PC with a high frequency monitor (or with vertical sync disabled) there could be many more frames per second (100+!).
+                        <LineBreak />
+                        <LineBreak />
+                        The microcontroller part of adrilight (and the human eye) cannot nearly process so much frames so it is a good idea to limit the frames. Something between 30 and 60 fps is a good starting point.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+    </WrapPanel>
+</UserControl>

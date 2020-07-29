@@ -1,0 +1,133 @@
+﻿<UserControl x:Class="adrilight.View.SettingsWindowComponents.Preview"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+              xmlns:fakes="clr-namespace:adrilight.Fakes"
+              xmlns:vm="clr-namespace:adrilight.ViewModel"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{StaticResource MaterialDesignFont}"
+             mc:Ignorable="d" 
+              d:DataContext="{Binding Source={d:DesignInstance {x:Type vm:ViewModelLocator}, IsDesignTimeCreatable=True}, Path=SettingsViewModel}"
+             d:DesignHeight="900" d:DesignWidth="900">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid Width="900">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
+            <StackPanel Margin="38 8 8 8">
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Left" FontWeight="Bold">
+                    Performance Warning!
+                </TextBlock>
+                <TextBlock Margin="8" TextWrapping="Wrap">
+                    This preview uses more system resources than adrilight normally does. If you leave the preview page or close the settings window, the preview is no longer created.
+                </TextBlock>
+            </StackPanel>
+        </materialDesign:Card>
+        
+        <materialDesign:PackIcon Kind="BatteryAlert" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
+            <materialDesign:PackIcon.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="3.376"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </materialDesign:PackIcon.RenderTransform>
+        </materialDesign:PackIcon>
+
+
+        <materialDesign:Card Margin="4 4 4 0" Grid.Row="1" Grid.ColumnSpan="2">
+            <Viewbox Margin="8 8 8 8" Width="auto" Height="500">
+                <Canvas Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}">
+                    <Canvas.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF686868"/>
+                            <GradientStop Color="#FFC2C2C2" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Canvas.Background>
+
+                    <Image Source="{Binding PreviewImageSource}" 
+                           Width="{Binding ScreenWidth}" Height="{Binding ScreenHeight}"
+                           Canvas.Left="{Binding CanvasPadding}" Canvas.Top="{Binding CanvasPadding}" Opacity="0.7" />
+                   
+                    <ItemsControl ItemsSource="{Binding PreviewSpots}"
+                           Canvas.Left="{Binding CanvasPadding}" Canvas.Top="{Binding CanvasPadding}" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas Width="{Binding CanvasWidth}" Height="{Binding CanvasHeight}" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Left" Value="{Binding Rectangle.X}"/>
+                                <Setter Property="Canvas.Top" Value="{Binding Rectangle.Y}"/>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                <Rectangle Width="{Binding Rectangle.Width}" Height="{Binding Rectangle.Height}">
+                                    <Rectangle.Fill>
+                                        <RadialGradientBrush>
+                                            <GradientStop Color="{Binding OnDemandColor}"  Offset="0"/>
+                                            <GradientStop Color="{Binding OnDemandColorTransparent}" Offset="1"/>
+                                        </RadialGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                                    <Rectangle Visibility="{Binding IsFirst, Converter={StaticResource booleanToVisibilityConverter}}" Fill="Red"
+                                               Width="{Binding Rectangle.Width}" 
+                                               Height="{Binding Rectangle.Height}" />
+
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Canvas>
+            </Viewbox>
+        </materialDesign:Card>
+
+
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
+            <StackPanel Margin="38 8 8 8">
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Left" FontWeight="Bold">
+                    What you should test here...
+                </TextBlock>
+                <TextBlock Margin="8" TextWrapping="Wrap" TextAlignment="Justify">
+                    You should use this page for testing! If you cannot see your screen content on this page, something might be wrong with screen content reading. Try rebooting or closing of other screen capturing apps.
+                    <LineBreak />
+                    The actual rendered LED colors are overlayed so you can see, what color they should have. All color corrections are already applied.
+                    <LineBreak />
+                    The <Span Foreground="#FF3333">RED Rectangle</Span> is the first LED of your strip. If this does not match with the physical location of the beginning of your first LED on your LED strip, you may need to change the offset in the LED setup.
+                </TextBlock>
+            </StackPanel>
+        </materialDesign:Card>
+
+        <materialDesign:PackIcon Kind="CommentAlert" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
+            <materialDesign:PackIcon.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-3.376"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </materialDesign:PackIcon.RenderTransform>
+        </materialDesign:PackIcon>
+    </Grid>
+</UserControl>

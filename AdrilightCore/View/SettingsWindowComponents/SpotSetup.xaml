@@ -1,0 +1,198 @@
+﻿<UserControl x:Class="adrilight.View.SettingsWindowComponents.SpotSetup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+              xmlns:adriValidation="clr-namespace:adrilight.ValidationRules"
+             mc:Ignorable="d"        
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{StaticResource MaterialDesignFont}"
+             d:DesignHeight="1711.2" d:DesignWidth="1004.8">
+    <StackPanel>
+        <materialDesign:Card Margin="4 4 4 0">
+            <StackPanel Margin="8 8 8 8">
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 0 0 0" TextAlignment="Justify" FontWeight="Bold">
+                    What is a spot?
+                </TextBlock>
+                <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                    A spot is a screen region. Adrilight fetches the screen content and computes the average color in this region. It will then transmit this color to the corresponding LED. There is a spot for each LED.
+                    <LineBreak/>
+                    <LineBreak/>
+                    You can control the size of each spot. A small spot will more accurately reproduce the scene details but tends to flicker. A larger spot will reproduce the feeling of a scene like dark, blueish, warm, ...
+                    <LineBreak/>
+                    <LineBreak/>
+                    You can also control the distance of the spots from the screen edges. this can help if you want to "ignore" black bars in movies or your windows taskbar for example.
+                </TextBlock>
+            </StackPanel>
+        </materialDesign:Card>
+        <WrapPanel Margin="0 0 8 8">
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="BorderHorizontal" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">Spot Width</TextBlock>
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 8"
+                                VerticalAlignment="Bottom">
+                                <TextBox.Text>
+                                    <Binding Path="Settings.SpotWidth" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <adriValidation:NumberRangeValidationRule Minimum="10" Maximum="400" ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        <Slider Minimum="10" 
+                                Maximum="400" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                Value="{Binding Settings.SpotWidth}" />
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                        This is the width in pixels of a single spot used to detect the color for a single LED pixel. A smaller number will yield sharper image reproduction behind your screen. A larger number will yield a feeling for the base color of a movie scene. Try to start with a value of 30.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="BorderVertical"  Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">Spot Height</TextBlock>
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 8"
+                                VerticalAlignment="Bottom">
+                                <TextBox.Text>
+                                    <Binding Path="Settings.SpotHeight" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <adriValidation:NumberRangeValidationRule Minimum="10" Maximum="400" ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        <Slider Minimum="10" 
+                                Maximum="400" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                Value="{Binding Settings.SpotHeight}" />
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                        This is the height of a single spot in pixels. Start with keeping this value the same as the spot width and try around from there.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="FormatHorizontalAlignLeft" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">Border Distance X</TextBlock>
+                    <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 8"
+                                VerticalAlignment="Bottom">
+                                <TextBox.Text>
+                                    <Binding Path="Settings.BorderDistanceX" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <adriValidation:NumberRangeValidationRule Minimum="0" Maximum="4000" ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        <Slider Minimum="0" 
+                                Maximum="400" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                Value="{Binding Settings.BorderDistanceX}" />
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                        The horizontal distance between the screen edge and the start of each spot in pixels. Start with a value of 0.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+        <materialDesign:Card Margin="4 4 4 4" Width="300">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <materialDesign:PackIcon Kind="FormatVerticalAlignTop" Margin="0 8 0 0" Width="132" Height="132"
+                                         VerticalAlignment="Center"
+                                         HorizontalAlignment="Center" />
+
+                <StackPanel Grid.Row="1" Margin="8 24 8 8" >
+                    <TextBlock FontWeight="Bold">Border Distance Y</TextBlock>
+                        <DockPanel>
+                            <TextBox DockPanel.Dock="Right"
+                                MinWidth="50"
+                                Margin="8 0 0 8"
+                                VerticalAlignment="Bottom">
+                                <TextBox.Text>
+                                    <Binding Path="Settings.BorderDistanceY" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <adriValidation:NumberRangeValidationRule Minimum="0" Maximum="4000" ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        <Slider Minimum="0" 
+                                Maximum="400" 
+                                Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                Value="{Binding Settings.BorderDistanceY}" />
+                    </DockPanel>
+                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify">
+                        The vertical distance betweend the screen edge and the start of each spot in pixels. 
+                        If you want adrilight to ignore your windows taskbar or the common black bars in movies, 
+                        you should start with a value of maybe 100. Otherwise use 0.
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </materialDesign:Card>
+
+
+
+    </WrapPanel>
+    </StackPanel>
+</UserControl>
