@@ -6,12 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using adrilight.DesktopDuplication;
 using NLog;
-using Polly;
 using System.Linq;
 using System.Windows.Media.Imaging;
 using adrilight.ViewModel;
 using System.Runtime.InteropServices;
 using adrilight.Settings;
+using System.Collections.Concurrent;
 
 namespace adrilight
 {
@@ -26,8 +26,6 @@ namespace adrilight
             UserSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
             SpotSet = spotSet ?? throw new ArgumentNullException(nameof(spotSet));
             SettingsViewModel = settingsViewModel ?? throw new ArgumentNullException(nameof(settingsViewModel));
-            _retryPolicy = Policy.Handle<Exception>()
-                .WaitAndRetryForever(ProvideDelayDuration);
 
             UserSettings.PropertyChanged += PropertyChanged;
             SettingsViewModel.PropertyChanged += PropertyChanged;
@@ -82,8 +80,6 @@ namespace adrilight
         private ISpotSet SpotSet { get; }
         private SettingsViewModel SettingsViewModel { get; }
 
-        private readonly Policy _retryPolicy;
-
         private TimeSpan ProvideDelayDuration(int index)
         {
             if (index < 10)
@@ -122,10 +118,28 @@ namespace adrilight
                 while (!token.IsCancellationRequested)
                 {
                     var frameTime = Stopwatch.StartNew();
-                    var context = new Context();
-                    context.Add("image", image);
-                    var newImage = _retryPolicy.Execute(c => GetNextFrame(c["image"] as Bitmap), context);
+
+                    bool good = false;
+                    int tryCounter = 0;
+                    Bitmap? newImage = null;
+                    do 
+                    {
+                        try
+                        {
+                            tryCounter++;
+                            newImage = GetNextFrame(image);
+                            good = true;
+                        }
+                        catch (Exception)
+                        {
+                            var waitTime = this.ProvideDelayDuration(tryCounter);
+                            await Task.Delay(waitTime);
+                        }
+                    }
+                    while (!good || newImage==null);
+
                     TraceFrameDetails(newImage);
+                    
                     if (newImage == null)
                     {
                         //there was a timeout before there was the next frame, simply retry!
@@ -151,9 +165,13 @@ namespace adrilight
                         }
                         else
                         {
-                            Parallel.ForEach(SpotSet.Spots
-                                , spot =>
-                                {
+                            var spots = SpotSet.Spots;
+                            for (int i = 0; i < spots.Length; i++)
+                            {
+                                var spot = SpotSet.Spots[i];
+                            //Parallel.ForEach( SpotSet.Spots
+                            //    , spot =>
+                            //    {
                                     const int numberOfSteps = 15;
                                     int stepx = Math.Max(1, spot.Rectangle.Width / numberOfSteps);
                                     int stepy = Math.Max(1, spot.Rectangle.Height / numberOfSteps);
@@ -169,7 +187,9 @@ namespace adrilight
 
                                     spot.SetColor(finalR, finalG, finalB, isPreviewRunning);
 
-                                });
+                                //});
+                            }
+
                         }
 
                         if (isPreviewRunning)

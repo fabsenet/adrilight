@@ -122,15 +122,18 @@ namespace adrilight.DesktopDuplication
             try
             {
                 if (_outputDuplication == null) throw new Exception("_outputDuplication is null");
-                _outputDuplication.TryAcquireNextFrame(500, out var frameInformation, out desktopResource); //todo TRY semantic!!
+                var result = _outputDuplication.TryAcquireNextFrame(500, out var frameInformation, out desktopResource);
+
+                if (!result.Success)
+                {
+                    if (ResultDescriptor.Find(result).ApiCode == Result.WaitTimeout.ApiCode) return false;
+
+                    //will throw:
+                    result.CheckError();
+                }
             }
             catch (SharpDXException ex)
             {
-                if (ex.ResultCode.Code == SharpDX.DXGI.ResultCode.WaitTimeout.Result.Code)
-                {
-                    return false;
-                }
-
                 throw new DesktopDuplicationException("Failed to acquire next frame.", ex);
             }
             if (desktopResource == null) throw new Exception("desktopResource is null");
@@ -194,6 +197,7 @@ namespace adrilight.DesktopDuplication
 
             // Copy pixels from screen capture Texture to GDI bitmap
             var mapDest = image.LockBits(boundsRect, ImageLockMode.WriteOnly, image.PixelFormat);
+            
             var sourcePtr = mapSource.DataPointer;
             var destPtr = mapDest.Scan0;
 

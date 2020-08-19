@@ -23,6 +23,7 @@ using System.Windows.Threading;
 using Ninject.Extensions.Conventions;
 using adrilight.Resources;
 using adrilight.Util;
+using System.Diagnostics;
 
 namespace adrilight
 {
@@ -61,7 +62,7 @@ namespace adrilight
                     return;
                 }
             }
-            SetupDebugLogging();
+            SetupLogging();
             SetupLoggingForProcessWideEvents();
 
             base.OnStartup(startupEvent);
@@ -188,10 +189,11 @@ namespace adrilight
             };
         }
 
-        [System.Diagnostics.Conditional("DEBUG")]
-        private void SetupDebugLogging()
+        [Conditional("DEBUG")]
+        private void SetupLogging()
         {
             var config = new LoggingConfiguration();
+            
             var debuggerTarget = new DebuggerTarget() { Layout = "${processtime} ${message:exceptionSeparator=\n\t:withException=true}" };
             config.AddTarget("debugger", debuggerTarget);
             config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, debuggerTarget));
