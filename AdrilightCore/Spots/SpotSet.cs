@@ -25,7 +25,7 @@ namespace adrilight
             _log.Info($"SpotSet created.");
         }
 
-        private void DecideRefresh(string propertyName)
+        private void DecideRefresh(string? propertyName)
         {
             switch (propertyName)
             {

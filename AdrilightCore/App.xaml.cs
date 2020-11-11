@@ -234,7 +234,9 @@ namespace adrilight
 
         private void SetupNotifyIcon()
         {
-            var icon = new System.Drawing.Icon(Assembly.GetExecutingAssembly().GetManifestResourceStream("AdrilightCore.adrilight_icon.ico"));
+            Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("AdrilightCore.adrilight_icon.ico");
+            Debug.Assert(stream != null, "The icon stream is null!!!");
+            var icon = new System.Drawing.Icon(stream);
             var contextMenu = new System.Windows.Forms.ContextMenuStrip();
             contextMenu.Items.Add(CreateSendingMenuItem());
 

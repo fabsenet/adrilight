@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.IO;
 using System.Security.Principal;
 
 public class StartUpManager
@@ -8,34 +9,41 @@ public class StartUpManager
 
     public static void AddApplicationToCurrentUserStartup()
     {
-        using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+        using var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        key?.SetValue(ApplicationName, $"\"{GetExePath()}\"");
+    }
+
+    private static string GetExePath()
+    {
+        //via the current process
+        var adrilightExe = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+        if(adrilightExe != null) return adrilightExe;
+
+        //alternative
+        adrilightExe = System.Reflection.Assembly.GetExecutingAssembly().Location;
+        if (adrilightExe.EndsWith(".dll", StringComparison.OrdinalIgnoreCase))
         {
-            key.SetValue(ApplicationName, "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"");
+            adrilightExe = Path.ChangeExtension(adrilightExe, ".exe");
         }
+        return adrilightExe;
     }
 
     public static void AddApplicationToAllUserStartup()
     {
-        using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
-        {
-            key.SetValue(ApplicationName, "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"");
-        }
+        using var key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        key?.SetValue(ApplicationName, $"\"{GetExePath()}\"");
     }
 
     public static void RemoveApplicationFromCurrentUserStartup()
     {
-        using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
-        {
-            key.DeleteValue(ApplicationName, false);
-        }
+        using var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        key?.DeleteValue(ApplicationName, false);
     }
 
     public static void RemoveApplicationFromAllUserStartup()
     {
-        using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
-        {
-            key.DeleteValue(ApplicationName, false);
-        }
+        using var key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        key?.DeleteValue(ApplicationName, false);
     }
 
     public static bool IsUserAdministrator()

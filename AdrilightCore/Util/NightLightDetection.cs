@@ -24,8 +24,8 @@ namespace adrilight.Util
         private readonly object _actOnceLock = new object();
 
 
-        private RegistryKey _stateKeyWin10 = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount\$$windows.data.bluelightreduction.bluelightreductionstate\Current", false);
-        private RegistryKey _stateKeyInsider = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.bluelightreductionstate\windows.data.bluelightreduction.bluelightreductionstate", false);
+        private RegistryKey? _stateKeyWin10 = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount\$$windows.data.bluelightreduction.bluelightreductionstate\Current", false);
+        private RegistryKey? _stateKeyInsider = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\DefaultAccount\Current\default$windows.data.bluelightreduction.bluelightreductionstate\windows.data.bluelightreduction.bluelightreductionstate", false);
 
         private byte[]? _lastData;
         private bool _lastResult;
@@ -111,7 +111,7 @@ namespace adrilight.Util
         {
             try
             {
-                var data = (byte[])(_stateKeyInsider ?? _stateKeyWin10).GetValue("Data");
+                var data = (byte[]?)(_stateKeyInsider ?? _stateKeyWin10)?.GetValue("Data");
 
                 if(data == null)
                 {

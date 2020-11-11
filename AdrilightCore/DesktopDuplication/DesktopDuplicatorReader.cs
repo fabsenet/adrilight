@@ -34,7 +34,7 @@ namespace adrilight
             _log.Info($"DesktopDuplicatorReader created.");
         }
 
-        private void PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
