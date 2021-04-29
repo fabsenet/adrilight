@@ -247,11 +247,18 @@ namespace adrilight
                     }
 
                     //to be safe, we reset the serial port
-                    if (serialPort != null && serialPort.IsOpen)
+                    try
                     {
-                        serialPort.Close();
+                        if (serialPort != null && serialPort.IsOpen)
+                        {
+                            serialPort.Close();
+                        }
+                        serialPort?.Dispose();
                     }
-                    serialPort?.Dispose();
+                    catch (Exception)
+                    {
+                        // possible IoException when device is unplugged
+                    }
                     serialPort = null;
 
                     //allow the system some time to recover
