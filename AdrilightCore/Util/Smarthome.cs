@@ -19,7 +19,7 @@ namespace adrilight
 {
     internal sealed class Smarthome : ISmarthome
     {
-        private ILogger _log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
         private IUserSettings UserSettings { get; }
         private CancellationToken _cancellationToken;

@@ -12,35 +12,20 @@ namespace adrilight
 {
     internal sealed class SpotSet : ISpotSet
     {
-        private ILogger _log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
         public SpotSet(IUserSettings userSettings)
         {
             UserSettings = userSettings ?? throw new ArgumentNullException(nameof(userSettings));
 
 
-            UserSettings.PropertyChanged += (_, e) => DecideRefresh(e.PropertyName);
+            UserSettings.PropertyChanged += (_, e) => Refresh();
+
+            Microsoft.Win32.SystemEvents.PowerModeChanged += (s, e) => Refresh();
+
             Spots = BuildSpots(ExpectedScreenWidth, ExpectedScreenHeight, UserSettings);
 
             _log.Info($"SpotSet created.");
-        }
-
-        private void DecideRefresh(string? propertyName)
-        {
-            switch (propertyName)
-            {
-                case nameof(UserSettings.BorderDistanceX):
-                case nameof(UserSettings.BorderDistanceY):
-                case nameof(UserSettings.MirrorX):
-                case nameof(UserSettings.MirrorY):
-                case nameof(UserSettings.OffsetLed):
-                case nameof(UserSettings.SpotHeight):
-                case nameof(UserSettings.SpotsX):
-                case nameof(UserSettings.SpotsY):
-                case nameof(UserSettings.SpotWidth):
-                    Refresh();
-                    break;
-            }
         }
 
         public ISpot[] Spots { get; set; }

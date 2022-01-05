@@ -107,7 +107,7 @@
                     <DockPanel>
                         <TextBlock FontWeight="Bold">Complete LED Count</TextBlock>
                         <TextBlock FontWeight="Bold" Text="{Binding LedCount}" 
-                               Foreground="{DynamicResource SecondaryAccentBrush}"
+                               Foreground="{DynamicResource SecondaryHueMidForegroundBrush}"
                                DockPanel.Dock="Right"
                                TextWrapping="Wrap" HorizontalAlignment="Right" />
                     </DockPanel>

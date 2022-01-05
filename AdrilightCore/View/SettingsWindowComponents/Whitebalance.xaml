@@ -52,7 +52,7 @@
             </StackPanel>
         </materialDesign:Card>
 
-        <materialDesign:PackIcon Kind="PollBox" Width="29" Height="29" Foreground="{StaticResource SecondaryAccentBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" />
+        <materialDesign:PackIcon Kind="PollBox" Width="29" Height="29" Foreground="{StaticResource SecondaryHueMidForegroundBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" />
 
         <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" VerticalAlignment="Stretch">
             <Grid Margin="38 28 8 38">

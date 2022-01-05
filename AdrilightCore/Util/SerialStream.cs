@@ -14,7 +14,7 @@ namespace adrilight
 {
     internal sealed class SerialStream : IDisposable, ISerialStream
     {
-        private ILogger _log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
         private readonly byte[] _messagePreamble = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09 };
         private readonly byte[] _messagePostamble = { 85, 204, 165 };
@@ -246,13 +246,20 @@ namespace adrilight
                         _log.Debug(ex, "Exception catched.");
                     }
 
-                    //to be safe, we reset the serial port
-                    if (serialPort != null && serialPort.IsOpen)
+                    try
                     {
-                        serialPort.Close();
+                        //to be safe, we reset the serial port
+                        if (serialPort != null && serialPort.IsOpen)
+                        {
+                            serialPort.Close();
+                        }
+                        serialPort?.Dispose();
+                        serialPort = null;
                     }
-                    serialPort?.Dispose();
-                    serialPort = null;
+                    catch
+                    {
+                        //the com port might be gone and even close() can throw! just ignore it here!
+                    }
 
                     //allow the system some time to recover
                     Thread.Sleep(500);

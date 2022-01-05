@@ -11,7 +11,7 @@ namespace adrilight.Util
 {
     class FakeSerialPort : ISerialPortWrapper
     {
-        private ILogger _log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger _log = LogManager.GetCurrentClassLogger();
 
         public FakeSerialPort() => _log.Warn("FakeSerialPort created!");
 

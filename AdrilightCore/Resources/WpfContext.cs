@@ -36,7 +36,14 @@ namespace adrilight.Resources
         {
             Debug.Assert(action != null);
 
-            this._dispatcher.Invoke(action);
+            try
+            {
+                this._dispatcher.Invoke(action);
+            }
+            catch (TaskCanceledException)
+            {
+                //intentionally empty
+            }
         }
 
         public void BeginInvoke(Action action)
