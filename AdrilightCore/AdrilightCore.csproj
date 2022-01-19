@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net5.0-windows10.0.20348.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
@@ -30,8 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MaterialDesignColors" Version="2.0.2-ci2657" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.2.0-ci2657" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.5-ci57" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.4.0-ci57" />
     <PackageReference Include="Microsoft.ML" Version="1.6.0" />
     <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="3.0.16" />
@@ -39,11 +39,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="ninject.extensions.conventions" Version="3.3.0" />
     <PackageReference Include="Ninject.Extensions.Factory" Version="3.3.3" />
-    <PackageReference Include="NLog" Version="4.7.10" />
-    <PackageReference Include="Polly" Version="7.2.2" />
+    <PackageReference Include="NLog" Version="5.0.0-rc1" />
+    <PackageReference Include="Polly" Version="7.2.3" />
     <PackageReference Include="semver" Version="2.0.6" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-    <PackageReference Include="System.IO.Ports" Version="6.0.0-preview.6.21352.12" />
+    <PackageReference Include="System.IO.Ports" Version="6.0.2-mauipre.1.22054.8" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>
 
