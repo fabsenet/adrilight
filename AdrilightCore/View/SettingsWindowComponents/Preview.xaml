@@ -40,7 +40,7 @@
                 </TextBlock>
             </StackPanel>
         </materialDesign:Card>
-        
+
         <materialDesign:PackIcon Kind="BatteryAlert" Width="29" Height="29" Foreground="{StaticResource SecondaryHueMidBrush}"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" RenderTransformOrigin="0.5,0.5" Margin="12.2,20.2,0,0" >
             <materialDesign:PackIcon.RenderTransform>
                 <TransformGroup>
@@ -66,7 +66,7 @@
                     <Image Source="{Binding PreviewImageSource}" 
                            Width="{Binding ScreenWidth}" Height="{Binding ScreenHeight}"
                            Canvas.Left="{Binding CanvasPadding}" Canvas.Top="{Binding CanvasPadding}" Opacity="0.7" />
-                   
+
                     <ItemsControl ItemsSource="{Binding PreviewSpots}"
                            Canvas.Left="{Binding CanvasPadding}" Canvas.Top="{Binding CanvasPadding}" >
                         <ItemsControl.ItemsPanel>
@@ -83,14 +83,16 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
-                                <Rectangle Width="{Binding Rectangle.Width}" Height="{Binding Rectangle.Height}">
-                                    <Rectangle.Fill>
-                                        <RadialGradientBrush>
-                                            <GradientStop Color="{Binding OnDemandColor}"  Offset="0"/>
-                                            <GradientStop Color="{Binding OnDemandColorTransparent}" Offset="1"/>
-                                        </RadialGradientBrush>
-                                    </Rectangle.Fill>
-                                </Rectangle>
+                                    <Border BorderBrush="Orange" BorderThickness="1">
+                                        <Rectangle Width="{Binding Rectangle.Width}" Height="{Binding Rectangle.Height}">
+                                            <Rectangle.Fill>
+                                                <RadialGradientBrush>
+                                                    <GradientStop Color="{Binding OnDemandColor}"  Offset="0"/>
+                                                    <GradientStop Color="{Binding OnDemandColorTransparent}" Offset="0.9"/>
+                                                </RadialGradientBrush>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                    </Border>
                                     <Rectangle Visibility="{Binding IsFirst, Converter={StaticResource booleanToVisibilityConverter}}" Fill="Red"
                                                Width="{Binding Rectangle.Width}" 
                                                Height="{Binding Rectangle.Height}" />
