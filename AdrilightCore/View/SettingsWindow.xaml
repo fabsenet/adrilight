@@ -26,8 +26,6 @@
                                             Mode="Dark" DockPanel.Dock="Top">
                 <DockPanel>
                     <Image Source="Images/adrilight_icon.ico" DockPanel.Dock="Top"/>
-                    <materialDesign:PackIcon Kind="PollBox" Width="29" Height="29" Foreground="{DynamicResource SecondaryHueMidForegroundBrush}" DockPanel.Dock="Top" />
-
                     <TextBlock Padding="16" Text="{Binding Title}" TextAlignment="Center" />
                 </DockPanel>
             </materialDesign:ColorZone>

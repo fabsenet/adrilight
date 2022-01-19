@@ -107,7 +107,7 @@
                     <DockPanel>
                         <TextBlock FontWeight="Bold">Complete LED Count</TextBlock>
                         <TextBlock FontWeight="Bold" Text="{Binding LedCount}" 
-                               Foreground="{DynamicResource SecondaryHueMidForegroundBrush}"
+                               Foreground="{DynamicResource SecondaryHueMidBrush}"
                                DockPanel.Dock="Right"
                                TextWrapping="Wrap" HorizontalAlignment="Right" />
                     </DockPanel>
@@ -149,11 +149,6 @@
                     <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" TextAlignment="Justify" Margin="0 8 0 0">
                         Play around with mirroring X and/or Y until the direction of LEDs matches your screen. <LineBreak /><LineBreak />
                         You are basically changing only between clockwise and counter-clockwise.
-                    </TextBlock>
-
-                    <TextBlock TextWrapping="Wrap" VerticalAlignment="Center" Margin="0 8 0 0" TextAlignment="Justify"
-                               Foreground="{DynamicResource PrimaryHueMidBrush}">
-                        This will be simplified in a later release!
                     </TextBlock>
                 </StackPanel>
             </Grid>
