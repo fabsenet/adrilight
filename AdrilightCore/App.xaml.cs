@@ -146,7 +146,7 @@ namespace adrilight
                 kernel.Bind<IContext>().To<WpfContext>().InSingletonScope();
                 kernel.Bind<ISpotSet>().To<SpotSet>().InSingletonScope();
                 kernel.Bind<ISerialStream>().To<SerialStream>().InSingletonScope();
-                kernel.Bind<ISmarthome>().To<Smarthome>().InSingletonScope();
+                //kernel.Bind<ISmarthome>().To<Smarthome>().InSingletonScope();
                 kernel.Bind<IDesktopDuplicatorReader>().To<DesktopDuplicatorReader>().InSingletonScope();
 
                 var cts = new CancellationTokenSource();
@@ -164,8 +164,8 @@ namespace adrilight
             var desktopDuplicationReader = kernel.Get<IDesktopDuplicatorReader>();
             var serialStream = kernel.Get<ISerialStream>();
 
-            var smarthome = kernel.Get<ISmarthome>();
-            Task.Run(() => smarthome.DoWorkAsync());
+            //var smarthome = kernel.Get<ISmarthome>();
+            //Task.Run(() => smarthome.DoWorkAsync());
 
             return kernel;
         }

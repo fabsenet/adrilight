@@ -25,8 +25,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Util\Smarthome.cs" />
+    <Compile Remove="View\SettingsWindowComponents\MqttView.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="adrilight_icon.ico" />
     <None Remove="View\Images\adrilight_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="View\SettingsWindowComponents\MqttView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,6 +58,12 @@
 
   <ItemGroup>
     <EmbeddedResource Include="adrilight_icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Util\Smarthome.cs" />
+    <None Include="View\SettingsWindowComponents\MqttView.xaml" />
+    <None Include="View\SettingsWindowComponents\MqttView.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>
