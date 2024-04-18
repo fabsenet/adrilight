@@ -1,3 +1,20 @@
+# No active development here!
+
+Hi, 
+I do no longer any active development on adrilight. I no longer have the same TV setup at home and I switched my HTPC from Windows to Linux Mint also.
+
+What you can do now:
+
+- fork the project and let it live on. The main branch is the last .net framework version, the dotnetcore branch contains a more recent version of the project based on dotnetcore but was never released.
+- take a look at way better ambilight clones like [Hyperion](https://hyperion-project.org)
+
+Good luck!
+
+-------
+-------
+-------
+-------
+
 # adrilight V2
 
 ![adrilight logo](assets/adrilight_icon.jpg)
