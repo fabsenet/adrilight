@@ -26,7 +26,7 @@
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
-        <materialDesign:Card Margin="4 4 2 4" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
             <StackPanel Margin="38 28 38 18">
                 <TextBlock Margin="2,-10,72.4,49.4" FontWeight="Bold"
                            RenderTransformOrigin="0.5,0.5" Foreground="#FFFD7474" TextDecorations="{x:Null}">
@@ -48,6 +48,49 @@
                           SelectedValue="{Binding Settings.ColorMode, Mode=TwoWay}"/>
 
             </StackPanel>
+        </materialDesign:Card>
+        
+        <materialDesign:Card Margin="4 4 2 4" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
+                
+            <Grid Margin="38 28 8 38">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom" FontWeight="Bold">
+                    Static Color
+                </TextBlock>
+
+                <TextBlock Grid.Row="1" VerticalAlignment="Bottom">Red</TextBlock>
+                <TextBlock Grid.Row="2" VerticalAlignment="Bottom">Green</TextBlock>
+                <TextBlock Grid.Row="3" VerticalAlignment="Bottom">Blue</TextBlock>
+
+                <Slider Grid.Row="1" Grid.Column="1" Width="200" 
+                    Minimum="1" Maximum="100" Value="{Binding Settings.StaticColorModeRed}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                 />
+                <Slider Grid.Row="2" Grid.Column="1" Width="200" 
+                    Minimum="1" Maximum="100" Value="{Binding Settings.StaticColorModeGreen}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                 />
+                <Slider Grid.Row="3" Grid.Column="1" Width="200"
+                    Minimum="1" Maximum="100" Value="{Binding Settings.StaticColorModeBlue}" 
+                    Style="{StaticResource MaterialDesignDiscreteSlider}" 
+                                 />
+
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding Settings.StaticColorModeRed}" VerticalAlignment="Bottom" />
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding Settings.StaticColorModeGreen}" VerticalAlignment="Bottom" />
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Settings.StaticColorModeBlue}" VerticalAlignment="Bottom" />
+            </Grid>
+
         </materialDesign:Card>
     </Grid>
 </UserControl>

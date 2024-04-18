@@ -51,5 +51,9 @@ namespace adrilight.Fakes
 #pragma warning disable CS0067
         public event PropertyChangedEventHandler PropertyChanged;
 #pragma warning restore CS0067
+        
+        public byte StaticColorModeRed { get; set; } = 100;
+        public byte StaticColorModeGreen { get; set; } = 100;
+        public byte StaticColorModeBlue { get; set; } = 100;
     }
 }

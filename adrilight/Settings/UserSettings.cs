@@ -45,6 +45,10 @@ namespace adrilight
         private AlternateWhiteBalanceModeEnum _alternateWhiteBalanceModeEnum = AlternateWhiteBalanceModeEnum.Off;
         private ColorModeEnum _colorModeEnum = ColorModeEnum.Ambilight;
 
+        private byte _staticColorModeRed = 100;
+        private byte _staticColorModeGreen = 100;
+        private byte _staticColorModeBlue = 100;
+
         //support future config file migration
         public int ConfigFileVersion { get => _configFileVersion; set { Set(() => ConfigFileVersion, ref _configFileVersion, value); } }
 
@@ -86,5 +90,10 @@ namespace adrilight
         public AlternateWhiteBalanceModeEnum AlternateWhiteBalanceMode { get => _alternateWhiteBalanceModeEnum; set { Set(() => AlternateWhiteBalanceMode, ref _alternateWhiteBalanceModeEnum, value); } }
 
         public ColorModeEnum ColorMode { get => _colorModeEnum; set { Set(() => ColorMode, ref _colorModeEnum, value); } }
+        
+        public byte StaticColorModeRed { get => _staticColorModeRed; set { Set(() => StaticColorModeRed, ref _staticColorModeRed, value); } }
+        public byte StaticColorModeGreen { get => _staticColorModeGreen; set { Set(() => StaticColorModeGreen, ref _staticColorModeGreen, value); } }
+        public byte StaticColorModeBlue { get => _staticColorModeBlue; set { Set(() => StaticColorModeBlue, ref _staticColorModeBlue, value); } }
+
     }
 }

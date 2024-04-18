@@ -1,4 +1,5 @@
-﻿using System;
+﻿using adrilight.Settings;
+using System;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading;
@@ -50,7 +51,6 @@ namespace adrilight
             {
                 if (IsValid())
                 {
-
                     //start it
                     _log.Debug("starting the serial stream");
                     Start();
@@ -70,7 +70,7 @@ namespace adrilight
         }
 
         private readonly byte[] _messagePreamble = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09};
-        private readonly byte[] _messagePostamble = { 85, 204, 165 };
+        private readonly byte[] _messagePostamble = {85, 204, 165};
 
 
         private Thread _workerThread;
@@ -86,8 +86,7 @@ namespace adrilight
             if (_workerThread != null) return;
 
             _cancellationTokenSource = new CancellationTokenSource();
-            _workerThread = new Thread(DoWork)
-            {
+            _workerThread = new Thread(DoWork) {
                 Name = "Serial sending",
                 IsBackground = true
             };
@@ -119,25 +118,33 @@ namespace adrilight
             {
                 const int colorsPerLed = 3;
                 int bufferLength = _messagePreamble.Length
-                    + (SpotSet.Spots.Length * colorsPerLed)
-                    + _messagePostamble.Length;
+                                   + (SpotSet.Spots.Length * colorsPerLed)
+                                   + _messagePostamble.Length;
 
 
                 outputStream = ArrayPool<byte>.Shared.Rent(bufferLength);
 
                 Buffer.BlockCopy(_messagePreamble, 0, outputStream, 0, _messagePreamble.Length);
-                Buffer.BlockCopy(_messagePostamble, 0, outputStream, bufferLength - _messagePostamble.Length, _messagePostamble.Length);
+                Buffer.BlockCopy(_messagePostamble, 0, outputStream, bufferLength - _messagePostamble.Length,
+                    _messagePostamble.Length);
 
                 var allBlack = true;
                 foreach (Spot spot in SpotSet.Spots)
                 {
-                    if (!UserSettings.SendRandomColors)
+                    if (UserSettings.ColorMode.Equals(ColorModeEnum.Static))
+                    {
+                        outputStream[counter++] = UserSettings.StaticColorModeBlue; // blue
+                        outputStream[counter++] = UserSettings.StaticColorModeGreen; // green
+                        outputStream[counter++] = UserSettings.StaticColorModeRed; // red
+
+                        allBlack = allBlack && UserSettings.StaticColorModeRed == 0 &&
+                                   UserSettings.StaticColorModeGreen == 0 && UserSettings.StaticColorModeBlue == 0;
+                    }
+                    else if (!UserSettings.SendRandomColors)
                     {
                         outputStream[counter++] = spot.Blue; // blue
                         outputStream[counter++] = spot.Green; // green
                         outputStream[counter++] = spot.Red; // red
-
-                        allBlack = allBlack && spot.Red == 0 && spot.Green == 0 && spot.Blue == 0;
                     }
                     else
                     {
@@ -187,16 +194,18 @@ namespace adrilight
                         if (openedComPort != UserSettings.ComPort)
                         {
                             serialPort?.Close();
-                            
-                            serialPort = UserSettings.ComPort!= "Fake Port" 
-                                ? (ISerialPortWrapper) new WrappedSerialPort(new SerialPort(UserSettings.ComPort, baudRate)) 
+
+                            serialPort = UserSettings.ComPort != "Fake Port"
+                                ? (ISerialPortWrapper) new WrappedSerialPort(new SerialPort(UserSettings.ComPort,
+                                    baudRate))
                                 : new FakeSerialPort();
 
                             try
                             {
                                 serialPort.Open();
                             }
-                            catch {
+                            catch
+                            {
                                 // useless UnauthorizedAccessException 
                             }
 
@@ -208,6 +217,7 @@ namespace adrilight
                                 Thread.Sleep(500);
                                 continue;
                             }
+
                             openedComPort = UserSettings.ComPort;
                         }
 
@@ -219,15 +229,18 @@ namespace adrilight
                         {
                             //there is maybe something wrong here because most frames where black. report it once per run only
                             var settingsJson = JsonConvert.SerializeObject(UserSettings, Formatting.None);
-                            _log.Info($"Sent {frameCounter} frames already. {blackFrameCounter} were completely black. Settings= {settingsJson}");
+                            _log.Info(
+                                $"Sent {frameCounter} frames already. {blackFrameCounter} were completely black. Settings= {settingsJson}");
                         }
+
                         ArrayPool<byte>.Shared.Return(outputBuffer);
 
                         //ws2812b LEDs need 30 µs = 0.030 ms for each led to set its color so there is a lower minimum to the allowed refresh rate
                         //receiving over serial takes it time as well and the arduino does both tasks in sequence
                         //+1 ms extra safe zone
-                        var fastLedTime = (streamLength - _messagePreamble.Length - _messagePostamble.Length) /3.0*0.030d;
-                        var serialTransferTime = streamLength * 10.0*1000.0/ baudRate;
+                        var fastLedTime = (streamLength - _messagePreamble.Length - _messagePostamble.Length) / 3.0 *
+                                          0.030d;
+                        var serialTransferTime = streamLength * 10.0 * 1000.0 / baudRate;
                         var minTimespan = (int) (fastLedTime + serialTransferTime) + 1;
 
                         Thread.Sleep(minTimespan);
@@ -241,7 +254,8 @@ namespace adrilight
                 }
                 catch (Exception ex)
                 {
-                    if (ex.GetType() != typeof(AccessViolationException) && ex.GetType() != typeof(UnauthorizedAccessException))
+                    if (ex.GetType() != typeof(AccessViolationException) &&
+                        ex.GetType() != typeof(UnauthorizedAccessException))
                     {
                         _log.Debug(ex, "Exception catched.");
                     }
@@ -251,6 +265,7 @@ namespace adrilight
                     {
                         serialPort.Close();
                     }
+
                     serialPort?.Dispose();
                     serialPort = null;
 
@@ -266,7 +281,6 @@ namespace adrilight
                     }
                 }
             }
-
         }
 
         public void Dispose()
