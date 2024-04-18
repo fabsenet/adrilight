@@ -291,6 +291,7 @@
     <Compile Include="Fakes\SpotSetFake.cs" />
     <Compile Include="Fakes\UserSettingsFake.cs" />
     <Compile Include="DesktopDuplication\IDesktopDuplicatorReader.cs" />
+    <Compile Include="Settings\ColorModeEnum.cs" />
     <Compile Include="Settings\AlternateWhiteBalanceModeEnum.cs" />
     <Compile Include="Util\ColorUtil.cs" />
     <Compile Include="Util\FakeSerialPort.cs" />

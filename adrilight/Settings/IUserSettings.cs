@@ -42,5 +42,6 @@ namespace adrilight
 
         string AdrilightVersion { get; set; }
         AlternateWhiteBalanceModeEnum AlternateWhiteBalanceMode { get; set; }
+        ColorModeEnum ColorMode { get; set; }
     }
 }

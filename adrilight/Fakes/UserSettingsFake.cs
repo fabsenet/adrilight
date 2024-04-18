@@ -47,6 +47,7 @@ namespace adrilight.Fakes
         public string AdrilightVersion { get; set; } = "2.0.6";
 
         public AlternateWhiteBalanceModeEnum AlternateWhiteBalanceMode { get; set; } = AlternateWhiteBalanceModeEnum.Off;
+        public ColorModeEnum ColorMode { get; set; } = ColorModeEnum.Ambilight;
 #pragma warning disable CS0067
         public event PropertyChangedEventHandler PropertyChanged;
 #pragma warning restore CS0067
