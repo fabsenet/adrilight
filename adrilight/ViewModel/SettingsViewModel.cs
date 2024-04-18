@@ -20,6 +20,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Color = System.Drawing.Color;
 
 namespace adrilight.ViewModel
 {
@@ -296,6 +297,13 @@ namespace adrilight.ViewModel
                 {AlternateWhiteBalanceModeEnum.On, "Forced On" },
                 {AlternateWhiteBalanceModeEnum.Auto, "Auto detect" },
                 {AlternateWhiteBalanceModeEnum.Off, "Forced Off" },
+            };
+        
+        public IDictionary<ColorModeEnum, string> ColorModes { get; } =
+            new SortedDictionary<ColorModeEnum, string>() {
+                {ColorModeEnum.Ambilight, "Ambilight" },
+                {ColorModeEnum.Static, "Static" },
+                {ColorModeEnum.Rainbow, "Rainbow" },
             };
     }
 }
