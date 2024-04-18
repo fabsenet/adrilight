@@ -291,6 +291,7 @@
     <Compile Include="Fakes\SpotSetFake.cs" />
     <Compile Include="Fakes\UserSettingsFake.cs" />
     <Compile Include="DesktopDuplication\IDesktopDuplicatorReader.cs" />
+    <Compile Include="Settings\ColorModeEnum.cs" />
     <Compile Include="Settings\AlternateWhiteBalanceModeEnum.cs" />
     <Compile Include="Util\ColorUtil.cs" />
     <Compile Include="Util\FakeSerialPort.cs" />
@@ -325,6 +326,9 @@
     <Compile Include="ValidationRules\NumberRangeValidationRule.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\ValidationRules\NotEmptyValidationRule.cs" />
+    <Compile Include="View\SettingsWindowComponents\ColorModeSetup.xaml.cs">
+      <DependentUpon>ColorModeSetup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SettingsWindowComponents\WhatsNew.xaml.cs">
       <DependentUpon>WhatsNew.xaml</DependentUpon>
     </Compile>
@@ -388,6 +392,10 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="View\SettingsWindowComponents\ColorModeSetup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\SettingsWindowComponents\WhatsNew.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

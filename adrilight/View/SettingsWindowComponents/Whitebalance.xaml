@@ -137,7 +137,7 @@
 
         <materialDesign:Card Margin="4 4 2 4" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch">
             <StackPanel Margin="38 28 38 18">
-                <TextBlock FontWeight="bold">Controling alternate night light mode detection/usage:</TextBlock>
+                <TextBlock FontWeight="bold">Controlling alternate night light mode detection/usage:</TextBlock>
 
                 <TextBlock Margin="58 18 38 8" FontWeight="bold">Selected mode:</TextBlock>
                 <ComboBox Margin="58 0 0 40" 

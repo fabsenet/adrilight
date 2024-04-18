@@ -42,5 +42,10 @@ namespace adrilight
 
         string AdrilightVersion { get; set; }
         AlternateWhiteBalanceModeEnum AlternateWhiteBalanceMode { get; set; }
+        ColorModeEnum ColorMode { get; set; }
+        
+        byte StaticColorModeRed { get; set; }
+        byte StaticColorModeGreen { get; set; }
+        byte StaticColorModeBlue { get; set; }
     }
 }

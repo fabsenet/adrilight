@@ -22,6 +22,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Ninject.Extensions.Conventions;
 using adrilight.Resources;
+using adrilight.Settings;
 using adrilight.Util;
 
 namespace adrilight
@@ -227,6 +228,8 @@ namespace adrilight
             var contextMenu = new System.Windows.Forms.ContextMenu();
             contextMenu.MenuItems.Add(CreateSendingMenuItem());
             
+            contextMenu.MenuItems.Add(CreateColorModeMenuItem());
+            
             contextMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Settings...", (s, e) => OpenSettingsWindow()));
             contextMenu.MenuItems.Add(new System.Windows.Forms.MenuItem("Exit", (s, e) => Shutdown(0)));
 
@@ -260,6 +263,32 @@ namespace adrilight
             UserSettings.PropertyChanged += (s, e) => { if (e.PropertyName == nameof(UserSettings.TransferActive)) { UpdateMenuItem(); } };
 
             return menuItem;
+        }
+
+        private System.Windows.Forms.MenuItem CreateColorModeMenuItem()
+        {
+            var modeMenuItem = new System.Windows.Forms.MenuItem("Color Mode");
+
+            foreach (ColorModeEnum mode in Enum.GetValues(typeof(ColorModeEnum)))
+            {
+                var modeItem = new System.Windows.Forms.MenuItem(mode.ToString(), (s, e) => UserSettings.ColorMode = mode);
+                
+
+                void UpdateMenuItem()
+                {
+                    modeItem.Checked = (mode == UserSettings.ColorMode);
+                }
+
+                //initial update
+                UpdateMenuItem();
+
+                //update on changed setting
+                UserSettings.PropertyChanged += (s, e) => { if (e.PropertyName == nameof(UserSettings.ColorMode)) { UpdateMenuItem(); } };
+
+                
+                modeMenuItem.MenuItems.Add(modeItem);
+            }
+            return modeMenuItem;
         }
 
         public static bool IsPrivateBuild { get; private set; }

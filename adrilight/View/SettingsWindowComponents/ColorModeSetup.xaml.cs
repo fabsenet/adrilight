@@ -17,29 +17,29 @@ using System.Windows.Shapes;
 namespace adrilight.View.SettingsWindowComponents
 {
     /// <summary>
-    /// Interaction logic for LightingMode.xaml
+    /// Interaction logic for ColorModeSetup.xaml
     /// </summary>
-    public partial class Whitebalance : UserControl
+    public partial class ColorModeSetup : UserControl
     {
-        public Whitebalance()
+        public ColorModeSetup()
         {
             InitializeComponent();
         }
 
 
 
-        public class WhitebalanceSelectableViewPart : ISelectableViewPart
+        public class ColorModeSelectableViewPart : ISelectableViewPart
         {
-            private readonly Lazy<Whitebalance> lazyContent;
+            private readonly Lazy<ColorModeSetup> lazyContent;
 
-            public WhitebalanceSelectableViewPart(Lazy<Whitebalance> lazyContent)
+            public ColorModeSelectableViewPart(Lazy<ColorModeSetup> lazyContent)
             {
                 this.lazyContent = lazyContent ?? throw new ArgumentNullException(nameof(lazyContent));
             }
 
-            public int Order => 900;
+            public int Order => 800;
 
-            public string ViewPartName => "White Balance";
+            public string ViewPartName => "Color Mode";
 
             public object Content { get => lazyContent.Value; }
         }
